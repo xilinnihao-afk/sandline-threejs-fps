@@ -32,7 +32,9 @@ export function botObjective(actor:Actor,state:GameSnapshot,includePlayer=false)
   if(bomb.status==='dropped')return {point:bomb,role:'recover'};
   const site=state.sites[state.round%2];
   if(actor.hasBomb)return {point:site,role:'plant'};
-  return {point:{x:site.x+(actor.id%2?3:-3),z:site.z-3},role:'guard'};
+  const carrier=allies.find(a=>a.hasBomb);
+  if(carrier){const slot=allies.filter(a=>a!==carrier).findIndex(a=>a.id===actor.id);return {point:{x:carrier.x+(slot%2?2.5:-2.5),z:carrier.z+2+Math.floor(slot/2)*1.5},role:'guard'};}
+  return {point:site,role:'guard'};
  }
  // 按队员与回合分配路线；时间推进后轮换，而非读取墙后敌人坐标。
  const lane=[-17,3,17][(actor.id+state.round+Math.floor(state.time/12))%3];

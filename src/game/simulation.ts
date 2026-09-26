@@ -6,7 +6,7 @@ import {botObjective,findBotCover} from './botTactics';
 import {sampleBlast} from './blast';
 import {advanceGrenade} from './grenades';
 import {LOADOUTS} from './loadouts';
-import {buy as buyItem,resetEconomy,roundReward,STARTING_MONEY} from './economy';
+import {buy as buyItem,resetEconomy,roundReward,STARTING_MONEY,killEconomy,purchaseWindow} from './economy';
 export const WEAPONS={
  rifle:{magazine:30,reserve:90,damage:27,head:84,interval:.115,reload:2.15,spread:.006,pellets:1},
  pistol:{magazine:12,reserve:48,damage:24,head:66,interval:.29,reload:1.45,spread:.004,pellets:1},
@@ -33,7 +33,14 @@ export class Simulation {
  private rngState:number;
  private brains:Brain[]=[];
  private footTimer=0;
- private botFootTimers=new Float32Array(6);
+ private botFootTimers=new Float32Array(10);
+ private teammateBots=2;
+ private enemyBots=3;
+ private teamReports=new Map<Team,{x:number;z:number;until:number}>();
+ setBotCounts(teammates:number,enemies:number):boolean{
+  if(this.state.phase!=="menu"||!Number.isInteger(teammates)||!Number.isInteger(enemies)||teammates<0||teammates>4||enemies<1||enemies>5)return false;
+  this.teammateBots=teammates;this.enemyBots=enemies;this.state.actors=this.makeActors();this.state.player=this.state.actors[0];this.state.spectating=null;return true;
+ }
  private grenadeId=0;
   constructor(seed=20260915,settings:Settings={...DEFAULT_SETTINGS}){
   this.rngState=seed>>>0;const actors=this.makeActors();
@@ -42,10 +49,10 @@ export class Simulation {
  random(){let t=this.rngState+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}
  seed(seed:number){this.rngState=seed>>>0;}
  private gun(kind:WeaponKind):Gun {return {ammo:WEAPONS[kind].magazine,reserve:WEAPONS[kind].reserve,cooldown:0,reloadLeft:0};}
- private makeActors():Actor[]{return Array.from({length:6},(_,id)=>{const team=id<3?'blue':'red',faction=id<3?'ct':'t';const p=(team==='blue'?BLUE_SPAWNS:RED_SPAWNS)[id%3];const weapon='rifle';const actor={id,name:['你','隼鹰','霜刃','沙狐','蝰蛇','灰狼'][id],team,faction,player:id===0,x:p.x,z:p.z,yaw:team==='blue'?0:Math.PI,pitch:0,health:100,armor:0,money:STARTING_MONEY,crouched:false,moving:false,weapon,guns:{rifle:this.gun('rifle'),pistol:this.gun('pistol'),smg:this.gun('smg'),shotgun:this.gun('shotgun')},grenades:0,throwTime:-10,kills:0,deaths:0,shotTime:-10,hurtTime:-10,spread:0,hasBomb:faction==='t',defuseKit:false} as Actor;return actor;});}
+ private makeActors():Actor[]{return Array.from({length:1+this.teammateBots+this.enemyBots},(_,id)=>{const blueCount=1+this.teammateBots,team=id<blueCount?'blue':'red',faction=id<blueCount?'ct':'t',slot=team==='blue'?id:id-blueCount;const p=(team==='blue'?BLUE_SPAWNS:RED_SPAWNS)[slot];const weapon='rifle';const actor={id,name:id===0?'你':`${team==='blue'?'队友':'对手'} ${team==='blue'?slot:slot+1}`,team,faction,player:id===0,x:p.x,z:p.z,yaw:team==='blue'?0:Math.PI,pitch:0,health:100,armor:0,money:STARTING_MONEY,crouched:false,moving:false,weapon,guns:{rifle:this.gun('rifle'),pistol:this.gun('pistol'),smg:this.gun('smg'),shotgun:this.gun('shotgun')},grenades:0,throwTime:-10,kills:0,deaths:0,shotTime:-10,hurtTime:-10,spread:0,hasBomb:faction==='t',defuseKit:false} as Actor;return actor;});}
  start(){this.state.blueScore=0;this.state.redScore=0;this.state.round=1;this.state.totalKills=0;this.state.totalDeaths=0;this.state.feed=[];this.state.time=0;this.events=[];this.resetRound();}
- resetRound(){this.footTimer=0;this.botFootTimers.forEach((_,id)=>{this.botFootTimers[id]=.07+id*.063;});const s=this.state;const stats=s.actors.map(a=>({kills:a.kills,deaths:a.deaths,money:a.money}));s.actors=this.makeActors();s.grenades=[];s.actors.forEach((a,i)=>{if(s.round>1)Object.assign(a,stats[i]);resetEconomy(a,a.money);});const carrier=s.actors.find(a=>a.faction==='t');if(carrier)carrier.hasBomb=true;s.player=s.actors[0];s.spectating=null;s.phase='playing';s.roundTime=105;s.paused=false;s.winner=null;s.hitMarker=0;s.bomb={status:'carried',carrierId:carrier?.id??3,x:0,z:0,site:null,timer:40,progress:0,defuserId:null};this.brains=s.actors.map(a=>({avoidance:{side:1,hold:0},progressAt:{x:a.x,z:a.z},stalled:0,target:-1,react:.5,repath:0,path:[],strafe:1,memory:null,cover:null,decision:0,burst:0,rest:0,goal:''}));this.events.push({type:'round'});}
- purchase(item:Parameters<typeof buyItem>[1],actor=this.state.player):boolean{return this.state.phase==='prep'&&buyItem(actor,item,this.events);}
+ resetRound(){this.teamReports.clear();this.footTimer=0;this.botFootTimers.forEach((_,id)=>{this.botFootTimers[id]=.07+id*.063;});const s=this.state;const stats=s.actors.map(a=>({kills:a.kills,deaths:a.deaths,money:a.money}));s.actors=this.makeActors();s.grenades=[];s.actors.forEach((a,i)=>{if(s.round>1)Object.assign(a,stats[i]);resetEconomy(a,a.money);});const carrier=s.actors.find(a=>a.faction==='t');if(carrier)carrier.hasBomb=true;s.player=s.actors[0];s.spectating=null;s.phase='playing';s.roundTime=105;s.paused=false;s.winner=null;s.hitMarker=0;s.bomb={status:'carried',carrierId:carrier?.id??3,x:0,z:0,site:null,timer:40,progress:0,defuserId:null};this.brains=s.actors.map(a=>({avoidance:{side:1,hold:0},progressAt:{x:a.x,z:a.z},stalled:0,target:-1,react:.5,repath:0,path:[],strafe:1,memory:null,cover:null,decision:0,burst:0,rest:0,goal:''}));this.events.push({type:'round'});}
+ purchase(item:Parameters<typeof buyItem>[1],actor=this.state.player):boolean{return purchaseWindow(this.state,actor).allowed&&buyItem(actor,item,this.events);}
  menu(){this.state.phase='menu';this.state.paused=false;this.events=[];}
  setPaused(paused:boolean){if(this.state.phase!=='menu'&&this.state.phase!=='matchEnd')this.state.paused=paused;}
  reload(a:Actor){const g=a.guns[a.weapon],w=WEAPONS[a.weapon];if(!WEAPON_KINDS.includes(a.weapon)||a.health<=0||g.reloadLeft>0||g.ammo===w.magazine||g.reserve<=0)return false;g.reloadLeft=w.reload;this.events.push({type:'reload',actorId:a.id,weapon:a.weapon,shells:a.weapon==='shotgun'?Math.min(6,w.magazine-g.ammo):undefined});return true;}
@@ -57,7 +64,7 @@ export class Simulation {
   if(s.roundTime<=0){const delta=blue.length-red.length||blue.reduce((n,a)=>n+a.health,0)-red.reduce((n,a)=>n+a.health,0);this.finishRound(delta>0?'blue':delta<0?'red':'draw');}}
  update(dt:number,input:PlayerInput=EMPTY_INPUT,allBots=false){
   const s=this.state;if(input.pause)this.setPaused(!s.paused);if(s.paused||s.phase==='menu'||s.phase==='matchEnd')return;
-  s.time+=dt;s.hitMarker=Math.max(0,s.hitMarker-dt);s.feed=s.feed.filter(f=>s.time-f.at<6);s.roundTime-=dt;
+  s.time+=dt;s.hitMarker=Math.max(0,s.hitMarker-dt);s.feed=s.feed.filter(f=>s.time-f.at<10);s.roundTime-=dt;
   if(s.phase==='roundEnd'){if(s.roundTime<=0){s.round++;this.resetRound();}return;}
   const player=s.player;player.yaw=wrap(player.yaw+input.lookDX*s.settings.sensitivity);player.pitch=Math.max(-1.25,Math.min(1.25,player.pitch+input.lookDY*s.settings.sensitivity));player.crouched=input.crouch;
   this.separateActors();
@@ -119,7 +126,7 @@ export class Simulation {
   if(victim.health<=0)return;const s=this.state;const absorbed=Math.min(victim.armor,Math.ceil(amount*.35));victim.armor=Math.max(0,victim.armor-absorbed);victim.health=Math.max(0,victim.health-(amount-absorbed));victim.hurtTime=s.time;
   if(a.player&&a!==victim)s.hitMarker=.14;if(victim.player)s.damageAngle=Math.atan2(a.x-victim.x,a.z-victim.z)+victim.yaw;
   this.events.push({type:'hit',actorId:a.id,targetId:victim.id,headshot,surface:'character'});
-  if(victim.health===0){if(a!==victim){a.kills++;if(a.player)s.totalKills++;}victim.deaths++;if(victim.player)s.totalDeaths++;
+  if(victim.health===0){killEconomy(a,victim);if(a!==victim){a.kills++;if(a.player)s.totalKills++;}victim.deaths++;if(victim.player)s.totalDeaths++;
    s.feed.push({killer:a===victim?'自己的手雷':a.name,victim:victim.name,team:a.team,headshot,at:s.time});this.events.push({type:'kill',actorId:a.id,targetId:victim.id,headshot});}
  }
  throwGrenade(a:Actor){
@@ -166,8 +173,9 @@ export class Simulation {
    if(d<32&&inView){const h=this.visibleHeight(a,v);if(h!==null&&(d<vd||v.id===b.target)){visible=v;vd=d;aimHeight=h;}}
    if(!visible&&d<14&&s.time-v.shotTime>=0&&s.time-v.shotTime<.12&&!b.memory){b.memory={x:Math.round(v.x/2)*2,z:Math.round(v.z/2)*2,until:s.time+2};}
   }
-  if(visible)b.memory={x:visible.x,z:visible.z,until:s.time+4};
+  if(visible){b.memory={x:visible.x,z:visible.z,until:s.time+4};this.teamReports.set(a.team,{x:Math.round(visible.x/2)*2,z:Math.round(visible.z/2)*2,until:s.time+2});}
   else if(b.memory&&b.memory.until<s.time)b.memory=null;
+  const report=this.teamReports.get(a.team);if(!visible&&!b.memory&&report&&report.until>s.time)b.memory={...report};
   const objective=botObjective(a,s,allBots);
   // 即使最后一名敌人已倒下，也要继续完成拆弹。
   if(objective.role==='defuse'&&Math.hypot(a.x-s.bomb.x,a.z-s.bomb.z)<=2.4){
@@ -185,7 +193,11 @@ export class Simulation {
   if(gun.ammo===0&&visible&&vd<9&&a.weapon==='rifle'&&a.guns.pistol.ammo>0){a.weapon='pistol';gun=a.guns.pistol;}
   else if(!visible&&a.weapon==='pistol'&&a.guns.rifle.ammo>0){a.weapon='rifle';gun=a.guns.rifle;}
   if(gun.ammo===0){if(gun.reserve===0){const other=a.weapon==='rifle'?'pistol':'rifle';if(a.guns[other].ammo>0||a.guns[other].reserve>0)a.weapon=other;gun=a.guns[a.weapon];}this.reload(a);}
-  else if(!visible&&gun.ammo<8)this.reload(a);
+  else if(!visible&&gun.ammo<8){
+   const cover=b.memory?findBotCover(a,b.memory):null;
+   if(cover&&Math.hypot(a.x-cover.x,a.z-cover.z)>.7){this.botMove(a,b,cover,dt,2.8);return;}
+   this.reload(a);
+  }
   const threatened=visible??b.memory;
   if(threatened&&b.decision<=0&&(gun.reloadLeft>0||a.health<35)){
    b.cover=findBotCover(a,threatened);b.decision=1.4;

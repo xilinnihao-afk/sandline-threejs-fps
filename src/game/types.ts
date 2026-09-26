@@ -11,7 +11,7 @@ export interface BombState { status:BombStatus; carrierId:number|null; x:number;
 export interface PlayerInput { moveX:number; moveZ:number; lookDX:number; lookDY:number; fire:boolean; reload:boolean; switchWeapon:WeaponKind|null; grenade:boolean; crouch:boolean; pause:boolean; interact:boolean; }
 export const EMPTY_INPUT:PlayerInput = {moveX:0,moveZ:0,lookDX:0,lookDY:0,fire:false,reload:false,switchWeapon:null,grenade:false,crouch:false,pause:false,interact:false};
 export interface Gun { ammo:number; reserve:number; reloadLeft:number; cooldown:number; }
-export interface Actor { id:number; name:string; team:Team; faction:Faction; player:boolean; x:number; z:number; yaw:number; pitch:number; health:number; armor:number; money:number; crouched:boolean; moving:boolean; weapon:WeaponKind; guns:Record<WeaponKind,Gun>; grenades:number; throwTime:number; kills:number; deaths:number; shotTime:number; hurtTime:number; spread:number; hasBomb:boolean; defuseKit:boolean; }
+export interface Actor { id:number; name:string; team:Team; faction:Faction; player:boolean; x:number; z:number; yaw:number; pitch:number; health:number; armor:number; money:number; crouched:boolean; moving:boolean; weapon:WeaponKind; guns:Record<WeaponKind,Gun>; grenades:number; grenadePurchases?:number; throwTime:number; kills:number; deaths:number; shotTime:number; hurtTime:number; spread:number; hasBomb:boolean; defuseKit:boolean; }
 export interface Grenade { id:number; ownerId:number; x:number; y:number; z:number; vx:number; vy:number; vz:number; fuse:number; bounces:number; }
 export interface Settings { sensitivity:number; volume:number; aimAssist:boolean; quality:'low'|'high'; }
 export const DEFAULT_SETTINGS:Settings={sensitivity:1,volume:.6,aimAssist:true,quality:'low'};

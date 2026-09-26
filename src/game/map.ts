@@ -9,5 +9,5 @@ export const MAP_BOXES:MapBox[]=[
  {x:-8,z:13,w:6,d:2.7,h:2.5,kind:'container'},{x:8,z:-13,w:6,d:2.7,h:2.5,kind:'container'},
  {x:15,z:12,w:2.2,d:2.2,h:1.15,kind:'crate'},{x:-15,z:-12,w:2.2,d:2.2,h:1.15,kind:'crate'},
 ];
-export const BLUE_SPAWNS=[{x:0,z:16},{x:-8,z:17},{x:8,z:17}];
-export const RED_SPAWNS=[{x:0,z:-16},{x:4,z:-17},{x:-5,z:-17}];
+export const BLUE_SPAWNS=[{x:0,z:16},{x:-8,z:17},{x:8,z:17},{x:-10,z:18},{x:-6,z:18}];
+export const RED_SPAWNS=[{x:0,z:-16},{x:4,z:-17},{x:-5,z:-17},{x:-10,z:-18},{x:-2,z:-18}];
