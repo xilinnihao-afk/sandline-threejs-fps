@@ -4,7 +4,7 @@
 
 **[Play the live demo](http://39.105.40.112/)** · **[Development journal](DEVLOG.md)** · **[Donate](#donate)**
 
-No installation required. On mobile, rotate to landscape and open the demo in Chrome where available. The game UI is Chinese; this repository's documentation is in English. The latest source update uses short English voice callouts and a quieter combat mix. Deployment of this audio update to the hosted demo is pending.
+No installation required. On mobile, rotate to landscape and open the demo in Chrome where available. The game UI is Chinese; this repository's documentation is in English. The latest source update uses short English voice callouts and a quieter combat mix with distance-aware, limited-overlap footsteps. Deployment of this audio update to the hosted demo is pending.
 
 > Game source code and tests are now available under the [MIT License](LICENSE). Third-party game assets are distributed separately and are not included in this repository. See [ASSETS.md](ASSETS.md) for local setup and [NOTICE.md](NOTICE.md) for credits.
 
@@ -110,7 +110,7 @@ The [development journal](DEVLOG.md) explains the problems, fixes, and validatio
 
 Screenshots are current **in-engine fixed capture scenes**, not performance footage. The mobile image is a browser viewport preview, not a physical-phone capture. Chinese text in screenshots reflects the current game UI.
 
-The original game validation passed a production build and 67 automated tests covering gameplay and related systems. This public source release additionally passed a clean dependency installation, production build, and all 54 asset-independent tests. Vite was updated to 7.3.6 to address development-server advisories; the release dependency audit reported zero known vulnerabilities at publication. The full suite requires the original asset fixtures; `npm run test:core` runs the asset-independent checks. Those results do not establish performance on every mobile device.
+The original game validation passed a production build and 67 automated tests covering gameplay and related systems. This public source release additionally passed a clean dependency installation, production build, and all 56 asset-independent tests. Vite was updated to 7.3.6 to address development-server advisories; the release dependency audit reported zero known vulnerabilities at publication. The full suite requires the original asset fixtures; `npm run test:core` runs the asset-independent checks. Those results do not establish performance on every mobile device.
 
 ## Feedback
 

@@ -92,3 +92,9 @@ This repository now includes the game implementation, build configuration, asset
 ## Audio update: quieter combat and English callouts
 
 Combat now uses only a quiet wind loop, with no city or tension bed. Menu music is approximately 9.7 dB quieter; footsteps are about 2.6 dB louder. Ten short English tactical lines replace the original Mandarin recordings. Voice ducking leaves footsteps and gunfire unchanged and restores the quieter background levels. The local full-asset project passes 68 tests; synthetic playback tests do not replace listening on a real phone.
+
+## Footstep update: preventing a crowd from becoming noise
+
+Raising every footstep made several moving actors blend into a loud, unrealistic wash. The revised mix uses a shorter, footstep-specific distance curve and a 16 m cutoff. Cover and crouching reduce gain, while at most three audible footstep sources overlap; stronger incoming steps replace the weakest. Each actor has at most one active step. A low-pass filter softens gravel hiss and a short fade limits each tail to 200 ms. Bot cadence starts at different phases instead of all actors stepping together. These changes retain the existing synthesized samples, rather than claiming new real-world recordings.
+
+The full local project passes 70 tests; the source-only core suite passes 56. Browser combat starts without captured console errors. Listening on physical mobile hardware remains necessary, and deployment of the audio updates is pending.
