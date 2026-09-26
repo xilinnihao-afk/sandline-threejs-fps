@@ -40,10 +40,28 @@ test('combat removes menu music and dense beds while footsteps stay above wind',
  assert.deepEqual([...audio.loops.keys()],['wind']);
  audio.play({type:'step',actorId:0},0,.4);
  const step=[...audio.live].find((s:any)=>s.asset.startsWith('step-')) as any;
- assert.ok(step);assert.ok(step.nodes[2].gain.value>audio.loops.get('wind').nodes[2].gain.value*3);
+ assert.ok(step);assert.ok(step.stepStrength>audio.loops.get('wind').nodes[2].gain.value*.28*3);
  const stepLevel=step.nodes[2].gain.value;
  audio.announce([{type:'grenadeThrow',actorId:0}],state);
  assert.equal(audio.groups.sfx.gain.value,1);assert.equal(step.nodes[2].gain.value,stepLevel);
  audio.voiceSource.source.onended();
  assert.equal(audio.groups.ambience.gain.value,.28);assert.equal(audio.groups.music.gain.value,.18);
+});
+
+test('crowded steps keep at most three strongest sources and favour nearby movement',()=>{
+ const {audio}=fixture();for(let i=1;i<=4;i++)audio.buffers.set(`step-${i}`,{duration:.25});
+ for(let actor=1;actor<=5;actor++)audio.play({type:'step',actorId:actor},6-actor,0);
+ let steps=[...audio.live].filter((x:any)=>x.stepActor!==undefined) as any[];
+ assert.equal(steps.length,3);assert.deepEqual(steps.map(x=>x.stepActor).sort(),[3,4,5]);
+ audio.play({type:'step',actorId:0},0,0);
+ steps=[...audio.live].filter((x:any)=>x.stepActor!==undefined) as any[];
+ assert.equal(steps.length,3);assert.ok(steps.some(x=>x.stepActor===0));
+ audio.ctx.currentTime=.5;audio.play({type:'step',actorId:0},0,0);
+ assert.equal([...audio.live].filter((x:any)=>x.stepActor!==undefined).length,1);
+});
+test('footsteps fade with distance, cover and crouching, with an inaudible cutoff',()=>{
+ const gain=(distance:number,extra:any={})=>{const {audio}=fixture();for(let i=1;i<=4;i++)audio.buffers.set(`step-${i}`,{duration:.25});audio.play({type:'step',actorId:1,...extra},distance,.5);return ([...audio.live].find((x:any)=>x.stepActor===1) as any)?.stepStrength??0;};
+ assert.ok(gain(2)>gain(8)*5);assert.equal(gain(16),0);
+ assert.ok(gain(2,{occluded:true})<gain(2)*.3);
+ assert.ok(gain(2,{crouched:true})<gain(2)*.3);
 });
