@@ -30,5 +30,5 @@ test('assets still loading wait within their TTL rather than losing an immediate
 test('all voice assets are non-clipping PCM with recorded provenance and matching checksums',()=>{
  const base='public/assets/audio/voice/';const manifest=JSON.parse(readFileSync(base+'manifest.json','utf8'));
  assert.equal(manifest.length,10);
- for(const item of manifest){const file=readFileSync(base+item.file);assert.equal(file.toString('ascii',0,4),'RIFF');assert.equal(file.toString('ascii',8,12),'WAVE');assert.equal(createHash('sha256').update(file).digest('hex'),item.sha256);assert.ok(item.duration>.3&&item.duration<5);assert.ok(item.peak<.9&&item.rms>.03);}
+ for(const item of manifest){assert.match(item.language,/^en-/);assert.doesNotMatch(item.text,/[\u3400-\u9fff]/);const file=readFileSync(base+item.file);assert.equal(file.toString('ascii',0,4),'RIFF');assert.equal(file.toString('ascii',8,12),'WAVE');assert.equal(createHash('sha256').update(file).digest('hex'),item.sha256);assert.ok(item.duration>.3&&item.duration<5);assert.ok(item.peak<.9&&item.rms>.03);}
 });
