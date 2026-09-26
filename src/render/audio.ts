@@ -17,7 +17,7 @@ type Group = 'sfx' | 'ui' | 'ambience' | 'music' | 'voice';
 export type AudioScene = 'menu' | 'combat' | 'paused';
 type ErrorStage = 'context' | 'resume' | 'fetch' | 'decode' | 'suspend';
 type AudioIssue = {stage:ErrorStage; message:string; at:number};
-type LiveSource = {source:AudioBufferSourceNode; nodes:AudioNode[]; group:Group; asset:Asset; loop:boolean; startsAt:number};
+type LiveSource = {source:AudioBufferSourceNode; nodes:AudioNode[]; group:Group; asset:Asset; loop:boolean; startsAt:number; stepActor?:number; stepStrength?:number; stepEndsAt?:number};
 type PendingEvent = {event:GameEvent; distance:number; pan:number; queuedAt:number};
 type LoopSpec = {id:Asset; group:'ambience'|'music'; gain:number; pan:number};
 const GROUP_LEVELS = {sfx:1, ui:.65, ambience:.28, music:.18, voice:.8} as const;
@@ -390,10 +390,27 @@ export class GameAudio {
         break;
       }
       case 'step': {
-        const actor = event.actorId ?? 0;
-        if (this.ctx.currentTime - (this.lastSteps.get(actor) ?? -Infinity) > .15) {
-          this.lastSteps.set(actor, this.ctx.currentTime);
-          this.sample(`step-${1 + (this.variants % 4)}` as Asset, 'sfx', .62, distance, pan, 0, variation);
+        const actor=event.actorId??0, now=this.ctx.currentTime;
+        if(distance>=16 || now-(this.lastSteps.get(actor)??-Infinity)<.25)break;
+        this.lastSteps.set(actor,now);
+        // Steps have a much shorter audible range than weapons. No team bias.
+        const strength=(distance<.15?.20:.34) * Math.pow(Math.max(0,1-distance/16),2)
+          /(1+Math.pow(distance/4,2)) * (event.occluded?.25:1) * (event.crouched?.28:1);
+        if(strength<.008)break;
+        for(const item of [...this.live])if(item.stepEndsAt!==undefined && (item.stepEndsAt<=now || item.stepActor===actor))this.stopSource(item);
+        const steps=[...this.live].filter(item=>item.stepActor!==undefined);
+        if(steps.length>=3){
+          const quietest=steps.reduce((a,b)=>(a.stepStrength??0)<(b.stepStrength??0)?a:b);
+          if((quietest.stepStrength??0)>=strength)break;
+          this.stopSource(quietest);
+        }
+        const item=this.sample(`step-${1+(actor+Math.round(now*3))%4}` as Asset,'sfx',strength,0,pan,0,variation);
+        if(item){
+          item.stepActor=actor;item.stepStrength=strength;item.stepEndsAt=now+.20;
+          // Soften gravel hiss and fade the tail instead of stacking full washes.
+          (item.nodes[1] as BiquadFilterNode).frequency.value=event.occluded?900:Math.max(1400,3500-distance*170);
+          (item.nodes[2] as GainNode).gain.setTargetAtTime(.0001,now+.085,.035);
+          item.source.stop(now+.20);
         }
         break;
       }
@@ -435,8 +452,8 @@ export class GameAudio {
     this.sample('reload-out', 'sfx', .61, 0, -.12, 4.8);
     this.sample('reload-in', 'sfx', .69, 0, -.12, 5.55);
     this.sample('reload-bolt', 'sfx', .64, 0, -.12, 5.88);
-    this.sample('step-1', 'sfx', .62, 0, -.15, 6.55);
-    this.sample('step-3', 'sfx', .62, 0, .15, 6.88);
+    this.sample('step-1', 'sfx', .20, 0, -.15, 6.55);
+    this.sample('step-3', 'sfx', .20, 0, .15, 6.88);
     this.sample('ricochet-1', 'sfx', .28, 0, .55, 7.20);
     this.sample('grenade-throw', 'sfx', .63, 0, -.12, 7.55);
     this.sample('grenade-explosion', 'sfx', 1.08, 0, .12, 8.25);
