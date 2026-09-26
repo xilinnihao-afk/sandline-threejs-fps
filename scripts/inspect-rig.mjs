@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const root=new URL('../public/assets/characters/',import.meta.url);
+const json=JSON.parse(await fs.readFile(new URL('soldier.gltf',root),'utf8'));
+for(const b of json.buffers)b.uri='data:application/octet-stream;base64,'+(await fs.readFile(new URL(b.uri,root))).toString('base64');
+json.materials=[{}];delete json.images;delete json.textures;delete json.samplers;
+for(const m of json.meshes)for(const p of m.primitives)p.material=0;
+globalThis.ProgressEvent=class ProgressEvent{};
+const gltf=await new GLTFLoader().parseAsync(JSON.stringify(json),'');
+gltf.scene.updateMatrixWorld(true);
+gltf.scene.traverse(o=>{if(o.isBone&&/Hips|Spine|Head|Neck|Arm|Hand$|Leg|Foot$|ToeBase/.test(o.name))console.log(o.name,o.matrixWorld.elements.slice(12,15).map(n=>+n.toFixed(3)));});
