@@ -2,7 +2,7 @@
 
 **A tactical first-person shooter built with Three.js, playable in desktop and mobile browsers.**
 
-**[Play the live demo](http://39.105.40.112/)** · **[Development journal](DEVLOG.md)**
+**[Play the live demo](http://39.105.40.112/)** · **[Development journal](DEVLOG.md)** · **[Donate](#donate)**
 
 No installation required. On mobile, rotate to landscape and open the demo in Chrome where available. The current game UI is Chinese, with short Mandarin voice callouts; this repository's documentation is in English.
 
@@ -115,3 +115,15 @@ The original game validation passed a production build and 67 automated tests co
 ## Feedback
 
 Please open a GitHub issue with your device, OS, browser version, steps to reproduce, and expected/actual behavior. A screenshot is helpful. The live demo also includes an in-game feedback entry.
+
+## Donate
+
+If you enjoy SANDLINE, you can support its development with a voluntary donation via **Alipay**. Thank you for your support!
+
+Open Alipay and scan the QR code below. On the same phone, save the image and select it from your album in Alipay's scanner. Choose your own amount and confirm the recipient in Alipay before paying.
+
+<a href="donate-alipay.png"><img src="donate-alipay.png" alt="Donate to SANDLINE via Alipay — scan this payment QR code in Alipay" width="320"></a>
+
+[Open the full-size Alipay QR code](donate-alipay.png)
+
+Donations are optional. The game and its source remain free to access.
