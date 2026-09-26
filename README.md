@@ -6,9 +6,45 @@
 
 No installation required. On mobile, rotate to landscape and open the demo in Chrome where available. The current game UI is Chinese, with short Mandarin voice callouts; this repository's documentation is in English.
 
-> This is a public demo showcase: screenshots and development notes. Game source code and binary assets are not distributed here. See [NOTICE.md](NOTICE.md) for scope and credits.
+> Game source code and tests are now available under the [MIT License](LICENSE). Third-party game assets are distributed separately and are not included in this repository. See [ASSETS.md](ASSETS.md) for local setup and [NOTICE.md](NOTICE.md) for credits.
 
 ![SANDLINE desktop gameplay scene](gameplay.png)
+
+## Run and build from source
+
+Requires **Node.js 22.12+** and npm.
+
+```sh
+git clone https://github.com/xilinnihao-afk/sandline-threejs-fps.git
+cd sandline-threejs-fps
+npm ci
+npm run test:core
+npm run build
+```
+
+Compilation and the core tests work without proprietary asset files. **Playing locally requires separately supplied character assets**; a fresh clone is not a complete playable asset bundle. Follow [ASSETS.md](ASSETS.md) to prepare the assets, then run:
+
+```sh
+npm run dev
+# Open http://localhost:5190/
+```
+
+`npm run preview` serves the production build. `npm test` runs the complete original test suite and needs the model and audio fixtures listed in the asset guide. The hosted demo remains the quickest way to play.
+
+Public configuration lives in `public/site-config.js`. Analytics and the personal feedback QR are disabled in this source release. Configure your own public analytics identifier and optional feedback image; never add server secrets.
+
+## Source layout
+
+| Directory | Contents |
+| --- | --- |
+| `src/game/` | Match simulation, bots, avoidance, collision, grenades and objectives |
+| `src/render/` | Three.js world, characters, animation, weapons, effects and audio |
+| `src/ui/` | HUD, mobile input, aiming, browser behavior and startup |
+| `src/analytics/` | Session tracking and optional analytics providers |
+| `tests/` | Gameplay, input, effects, animation and audio tests |
+| `scripts/` | Build helpers, asset inspection/preparation and audio generation |
+
+The game UI and some source comments remain in Chinese. Repository setup and development documentation are in English.
 
 ## The game
 
@@ -74,7 +110,7 @@ The [development journal](DEVLOG.md) explains the problems, fixes, and validatio
 
 Screenshots are current **in-engine fixed capture scenes**, not performance footage. The mobile image is a browser viewport preview, not a physical-phone capture. Chinese text in screenshots reflects the current game UI.
 
-The underlying project passed a production build and 67 automated tests covering gameplay and related systems during the latest validation. This showcase contains no runnable source or test suite; those results do not establish performance on every mobile device.
+The original game validation passed a production build and 67 automated tests covering gameplay and related systems. This public source release additionally passed a clean dependency installation, production build, and all 53 asset-independent tests. Vite was updated to 7.3.6 to address development-server advisories; the release dependency audit reported zero known vulnerabilities at publication. The full suite requires the original asset fixtures; `npm run test:core` runs the asset-independent checks. Those results do not establish performance on every mobile device.
 
 ## Feedback
 

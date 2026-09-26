@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/><meta name="theme-color" content="#171c1b"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="description" content="沙线行动：原创手机单机战术射击游戏。"/><link rel="manifest" href="./manifest.webmanifest"/><link rel="icon" href="./icon.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="./icon-192.png"/><title>沙线行动 · SANDLINE</title><script>
+// Preserve a readable recovery path even if the lightweight module cannot load.
+(function () {
+  function showEntryFailure() {
+    var error = document.getElementById('entry-failure');
+    if (error) error.hidden = false;
+    else document.addEventListener('DOMContentLoaded', showEntryFailure, {once:true});
+  }
+  window.addEventListener('error', function (event) {
+    if (event.target && event.target.tagName === 'SCRIPT' && event.target.type === 'module') showEntryFailure();
+  }, true);
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      var loading = document.getElementById('startup-status');
+      if (loading && loading.dataset.started !== 'true') showEntryFailure();
+    }, 30000);
+  });
+})();
+</script><link rel="stylesheet" href="/src/ui/welcome.css"/></head><body>
+<section id="startup-status" class="loading-shell" aria-label="游戏加载">
+ <div class="loading-card">
+  <div class="loading-brand">沙线行动 · SANDLINE</div>
+  <div id="startup-progress-area" role="status" aria-live="polite">
+   <strong id="startup-label">正在加载游戏程序…</strong>
+   <progress id="startup-progress" value="0" max="7" aria-label="游戏启动阶段进度"></progress>
+   <span id="startup-progress-text">启动阶段 0 / 7</span>
+   <p id="startup-detail">首次需下载人物、枪械和场景资源，请保持页面打开。</p>
+   <button id="startup-retry" hidden>重新加载</button>
+  </div>
+  <p class="loading-browser-tip">移动端建议使用 Chrome，微信内置浏览器性能一般。建议横屏，并使用 Wi-Fi 下载首次资源。</p>
+  <nav class="loading-links" aria-label="加载帮助"><button data-community="help">操作说明</button><button data-community="feedback">问题反馈</button></nav>
+  <noscript><p>请启用 JavaScript 后重新打开游戏。</p></noscript>
+  <p id="entry-failure" hidden>入口程序加载失败，请检查网络后 <a href="" onclick="location.reload();return false">重新加载</a>。</p>
+ </div>
+</section>
+<script src="./site-config.js"></script>
+<script type="module" src="/src/entry.ts"></script>
+</body></html>

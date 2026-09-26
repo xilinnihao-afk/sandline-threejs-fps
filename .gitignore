@@ -1,0 +1,13 @@
+node_modules/
+dist/
+artifacts/
+tmp/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.zip
+public/feedback-wechat.png
+public/assets/

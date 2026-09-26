@@ -87,4 +87,4 @@ The latest project validation included a successful production build and 67 auto
 
 ## What this repository includes
 
-This repository publishes the demo link, screenshots, and these notes. It does not include the implementation, model files, audio files, deployment configuration, or a runnable test suite. See [NOTICE.md](NOTICE.md) for asset-credit and distribution context.
+This repository now includes the game implementation, build configuration, asset tooling, and original tests alongside the demo link, screenshots, and these notes. Model, texture, and audio files are excluded from the source release. See [ASSETS.md](ASSETS.md) for setup and [NOTICE.md](NOTICE.md) for distribution context.

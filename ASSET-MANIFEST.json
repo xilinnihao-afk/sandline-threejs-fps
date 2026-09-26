@@ -1,0 +1,405 @@
+{
+  "note": "Reference inventory only. Files are not included or licensed by this manifest. Obtain your own authorized copies; replacements may need loader changes.",
+  "files": [
+    {
+      "path": "public/assets/CREDITS.html",
+      "bytes": 2060,
+      "sha256": "c4b88b5ed55a727ba6cee4c59bf3e9a8d412d1b5a5319cf58743d40d8be7e8dc"
+    },
+    {
+      "path": "public/assets/audio/CREDITS.html",
+      "bytes": 2755,
+      "sha256": "eef11f2e3215434e378ec72fa7dc4b120b61e3e592c7ad6ccb2d23be04937571"
+    },
+    {
+      "path": "public/assets/audio/city-bed.wav",
+      "bytes": 1152044,
+      "sha256": "3360b823cc4b07584b7876b7e4bae1a622a09957bad8b3df7a5756aa1f999b82"
+    },
+    {
+      "path": "public/assets/audio/gear-rustle.wav",
+      "bytes": 16684,
+      "sha256": "d4c50c27e20dcfc76b8a567807a9401e6379f7fd33799ce2fb840d26fe112ee1"
+    },
+    {
+      "path": "public/assets/audio/grenade-distant.wav",
+      "bytes": 100650,
+      "sha256": "87c7d0a14ecc5406719c21ffa6655445c05b0460859c63a891b36c370557b225"
+    },
+    {
+      "path": "public/assets/audio/grenade-explosion.wav",
+      "bytes": 110320,
+      "sha256": "c69bb277d32d4310abe68ecc30fb00a18ebc244500f796017ad073aa26d8cd0a"
+    },
+    {
+      "path": "public/assets/audio/grenade-throw.wav",
+      "bytes": 28844,
+      "sha256": "4f3928880136313dc44eeed0c2f762184e814754ef4e1700d31d858e582386bd"
+    },
+    {
+      "path": "public/assets/audio/hit.wav",
+      "bytes": 8364,
+      "sha256": "cbf39b597a6c645939d763738b4ea06e12b466426866c2c70aac607f320c9bf2"
+    },
+    {
+      "path": "public/assets/audio/impact.wav",
+      "bytes": 11564,
+      "sha256": "29f5521ee79f4c638b98602c837fb4e19fef75282fc625733196eedaf6014de6"
+    },
+    {
+      "path": "public/assets/audio/kill.wav",
+      "bytes": 9324,
+      "sha256": "2561eb7d9ad2b091c4f3f491ee0641883d60fff6c40f2aad56a5e639e7cf6f65"
+    },
+    {
+      "path": "public/assets/audio/manifest.json",
+      "bytes": 20332,
+      "sha256": "c9be8c5d05bbecc3cd7337b08416da23b8169948f7a7244406167027ff2ec6f4"
+    },
+    {
+      "path": "public/assets/audio/menu-score.wav",
+      "bytes": 2304044,
+      "sha256": "0ca2b832ccfbab38b095112a16b4535ed8a62fcbc5c19e69d180c51b1ce99c7a"
+    },
+    {
+      "path": "public/assets/audio/pistol-in.wav",
+      "bytes": 21804,
+      "sha256": "82dac3233d24a6d5f37a2da8d8d78e1ed7f2d84c6cd9140a27de263fe3028251"
+    },
+    {
+      "path": "public/assets/audio/pistol-out.wav",
+      "bytes": 20524,
+      "sha256": "3c5d071e87dc3150852416a73dbacd644546b58625dd87a1490cbfd84b7aa262"
+    },
+    {
+      "path": "public/assets/audio/pistol-shot.wav",
+      "bytes": 33274,
+      "sha256": "b7e01eeba63dddc64c20160b202a2fa62d17ce8aeda25b2ed332ceea4b8fafb4"
+    },
+    {
+      "path": "public/assets/audio/reload-bolt.wav",
+      "bytes": 20524,
+      "sha256": "182aef3103690294ae5c01947ced9ff7f4f2708704955d8d87d0fffdc1c2a0eb"
+    },
+    {
+      "path": "public/assets/audio/reload-in.wav",
+      "bytes": 14124,
+      "sha256": "99f0baed53b4ffdd17fffb4d875e36b4212f86e621fff9ca6c365c30f6d9e798"
+    },
+    {
+      "path": "public/assets/audio/reload-out.wav",
+      "bytes": 21164,
+      "sha256": "30ff041a6b54e76a9eafe4d3148725cc6903f67d1b92bd5919c717225ed9f157"
+    },
+    {
+      "path": "public/assets/audio/ricochet-1.wav",
+      "bytes": 19244,
+      "sha256": "3b858333ed76ce31d91f243655cdae17e642f8d33815dad265f213658f935300"
+    },
+    {
+      "path": "public/assets/audio/ricochet-2.wav",
+      "bytes": 19244,
+      "sha256": "f7509133cc60ccc83296799d0e0bf6d4e42b00226bb7abe7d65511f7382833a8"
+    },
+    {
+      "path": "public/assets/audio/rifle-shot.wav",
+      "bytes": 35808,
+      "sha256": "e9bcda4be4213fc77c847b4d418766105c896d9dfafc639ec526549af9c6a98e"
+    },
+    {
+      "path": "public/assets/audio/shell-1.wav",
+      "bytes": 30764,
+      "sha256": "4550b32d86dff1f86a314f226bf1f141c27770e30e404a5e60bbc3ca0ecfcacb"
+    },
+    {
+      "path": "public/assets/audio/shell-2.wav",
+      "bytes": 30764,
+      "sha256": "baa8667d9fdf6b646c7bc35b9b318f08aaa22450b2f7c6d43e0af049e640af68"
+    },
+    {
+      "path": "public/assets/audio/shot-tail.wav",
+      "bytes": 38444,
+      "sha256": "f2212082eb1f27b98f6e1121e179ae6230a3ed4fdee3440e83141a8af7d24d73"
+    },
+    {
+      "path": "public/assets/audio/shotgun-pump.wav",
+      "bytes": 27884,
+      "sha256": "7c85749be6fe55e38d8f8d9663b07f27a346c2da417bc8d658306e05f62394fe"
+    },
+    {
+      "path": "public/assets/audio/shotgun-shot.wav",
+      "bytes": 41576,
+      "sha256": "917785b17500ddcebb2afdc922411c88433f5168c2444e789c8b7a804810f396"
+    },
+    {
+      "path": "public/assets/audio/smg-shot.wav",
+      "bytes": 18484,
+      "sha256": "72c665ae56c6b1ca07f479ea5d5a557a418cd9b87e27b3b12926c93c5ac281ba"
+    },
+    {
+      "path": "public/assets/audio/step-1.wav",
+      "bytes": 15404,
+      "sha256": "7e74a4218127489484e0ba0d5d9115b690d0f4a850d0b42c8ecaf1b97da5c1cd"
+    },
+    {
+      "path": "public/assets/audio/step-2.wav",
+      "bytes": 16044,
+      "sha256": "750486fe44d68ec98f641840b43a7c464d59cc12b5dae6cff69e755cc74bb389"
+    },
+    {
+      "path": "public/assets/audio/step-3.wav",
+      "bytes": 16684,
+      "sha256": "3ef299609adc1c91e5757657e21747820e4be4ecfef6cfe82d9c8ec63383602d"
+    },
+    {
+      "path": "public/assets/audio/step-4.wav",
+      "bytes": 17324,
+      "sha256": "fe08ef50ae5617421e48f756d84033bc446281b1bc6999934a102f8929736331"
+    },
+    {
+      "path": "public/assets/audio/tension-bed.wav",
+      "bytes": 768044,
+      "sha256": "7b7522860c25bdbb041b4645fa7a8fbfe8e9027fadeede23cc340e3ee1169426"
+    },
+    {
+      "path": "public/assets/audio/ui-cancel.wav",
+      "bytes": 6780,
+      "sha256": "ac19716e29d85eb248db459d09234b5f66b6d655acf586dc531df3dc6bc24fff"
+    },
+    {
+      "path": "public/assets/audio/ui-confirm.wav",
+      "bytes": 8396,
+      "sha256": "2cbbdda76d6c947f729eea62d29b4d711609bcdaa5876f0366ad0cf3c0c9a505"
+    },
+    {
+      "path": "public/assets/audio/ui-round.wav",
+      "bytes": 16502,
+      "sha256": "ade40680729d01c44794b7eb0c067eb3e9459c3f3a3ff22455937bad277e9078"
+    },
+    {
+      "path": "public/assets/audio/voice/defused.wav",
+      "bytes": 30210,
+      "sha256": "8374a1d5986803c2729c4e6dbbe45ccb8b67726426b69faa4a14bc9c54e71c11"
+    },
+    {
+      "path": "public/assets/audio/voice/defusing.wav",
+      "bytes": 55906,
+      "sha256": "b6d3154a3e209a1818f34072c89f4647d14a4baf5ced397e7f5cab91efdcd017"
+    },
+    {
+      "path": "public/assets/audio/voice/grenade.wav",
+      "bytes": 36614,
+      "sha256": "8ef91d4c74c442fe4ec35ca2f57f113a90b64aee32634308b9fa0623ad8b74c5"
+    },
+    {
+      "path": "public/assets/audio/voice/manifest.json",
+      "bytes": 5208,
+      "sha256": "7cf8c977dabdedb6f4561cce5f5c1ff598b3a40f5b387618ab708d33e8c3cbae"
+    },
+    {
+      "path": "public/assets/audio/voice/match-loss.wav",
+      "bytes": 59620,
+      "sha256": "65d2f819c4625ea45da5546e9a215c1d4f059a6076542616b3cf3b1f59420936"
+    },
+    {
+      "path": "public/assets/audio/voice/match-win.wav",
+      "bytes": 59324,
+      "sha256": "bae5314edef883c7f4335c14c5ff79ce110d069967a0facd9d5812a60c0012d9"
+    },
+    {
+      "path": "public/assets/audio/voice/planted.wav",
+      "bytes": 64776,
+      "sha256": "71a16fc7348e9ecbb7ec928e2f676a314bd09d38856b96f5e8869393c6a842e9"
+    },
+    {
+      "path": "public/assets/audio/voice/round-draw.wav",
+      "bytes": 65568,
+      "sha256": "f5cc810971edf9c1311fd30efa6e1683b12c840bf19b85fd4315483c8cf1d956"
+    },
+    {
+      "path": "public/assets/audio/voice/round-loss.wav",
+      "bytes": 65716,
+      "sha256": "a90046f9fa0a443164bd509d2bdff3b4aba0fd3016dc4760b0b2b2070bd7c439"
+    },
+    {
+      "path": "public/assets/audio/voice/round-start.wav",
+      "bytes": 31478,
+      "sha256": "e4b3ee550564a8b677e7038ed016845b714be1bec8c5d24016e2bb1af32aa0c3"
+    },
+    {
+      "path": "public/assets/audio/voice/round-win.wav",
+      "bytes": 33016,
+      "sha256": "7c9075452761cf19147d4cf09e607fa108483f5aa603f99172e5542d4342570e"
+    },
+    {
+      "path": "public/assets/audio/weapon-mech.wav",
+      "bytes": 7084,
+      "sha256": "9454b1eaf05bfef97e34299328f7b9811e43e6a9e0ba37f3986ad58aa1fb0f53"
+    },
+    {
+      "path": "public/assets/audio/wind.wav",
+      "bytes": 768044,
+      "sha256": "8ad34e71e08d4b4b800df201ffbcecf3b62e4b4459f955c88ec56dfb01fff58f"
+    },
+    {
+      "path": "public/assets/characters/ct-uniform.jpg",
+      "bytes": 254932,
+      "sha256": "fc13bae1f96195a13be91f2485d4a3cd65629e8c54972896521ca01059504893"
+    },
+    {
+      "path": "public/assets/characters/insurgent-uniform.jpg",
+      "bytes": 261982,
+      "sha256": "d99ec740cd93f711ad52e9203276180f42a64c293f6b23ed2134bd3c203f7250"
+    },
+    {
+      "path": "public/assets/characters/modern_tactical_female_character.glb",
+      "bytes": 15361744,
+      "sha256": "e06c4e4b2863936effe00e139df3e689a2a9796f0aaa4949a5d30815fc2e7b2a"
+    },
+    {
+      "path": "public/assets/characters/soldier-texture-0.jpg",
+      "bytes": 365808,
+      "sha256": "64e72c583d859ac947b83abbc6bcf58ff8001589565f81ce5d76589a9e7a9e47"
+    },
+    {
+      "path": "public/assets/characters/soldier-texture-1.jpg",
+      "bytes": 296774,
+      "sha256": "1269e411b662f8ede260861670a4c53835c1c25a316471b955a3b56426df1a14"
+    },
+    {
+      "path": "public/assets/characters/soldier.bin",
+      "bytes": 1808464,
+      "sha256": "c4f399978b9cad52b1ea45a4e98984e9ce85d596e0296870638da9aef7f5215d"
+    },
+    {
+      "path": "public/assets/characters/soldier.glb",
+      "bytes": 2160468,
+      "sha256": "dfb230fc1f942f259dd00281a1186953ad602fc5d69067ce63e24b2aa439736b"
+    },
+    {
+      "path": "public/assets/characters/soldier.gltf",
+      "bytes": 351741,
+      "sha256": "28917c71437cc0fba53be0122d11fea06f2c1ca033e085b8aac2110a5e4d25bc"
+    },
+    {
+      "path": "public/assets/characters/soldier_fully_rigged_character.glb",
+      "bytes": 10666740,
+      "sha256": "7342655ec00ec326d24b70864c23146f7d34b31a088ef0f3749c317a8d736857"
+    },
+    {
+      "path": "public/assets/characters/spetsnaz_gru_operator__high-poly_3d_character.glb",
+      "bytes": 37194588,
+      "sha256": "df378660e3da42933aa1bf89e4b3e1a1f7a4577cc1a850f83e6a605eb6e04ff1"
+    },
+    {
+      "path": "public/assets/environment/V03-SOURCES.md",
+      "bytes": 1337,
+      "sha256": "fc090e710bba34e40fe044f6ba52bb0224c90e4b1fbb53955633b60b1bc7d134"
+    },
+    {
+      "path": "public/assets/environment/dirt-diff.jpg",
+      "bytes": 224705,
+      "sha256": "4074063e143e2b8083b27d3f970145e7487011f375e6ce1272578bc09dc8f559"
+    },
+    {
+      "path": "public/assets/environment/dirt-nor_gl.jpg",
+      "bytes": 102600,
+      "sha256": "8913b8bedac25bdb8fd8e8a080b6a48f0532c3909358f3aec5ed45812bcc3ba9"
+    },
+    {
+      "path": "public/assets/environment/dirt-rough.jpg",
+      "bytes": 45517,
+      "sha256": "4769cf877fa07c864585b4c4a741421210aead7b43f6deae6eed0881d9909506"
+    },
+    {
+      "path": "public/assets/environment/freight_station_4k.hdr",
+      "bytes": 25778949,
+      "sha256": "e6ca4d20067ce5ac1c4747208c50a3cde0f6eae03fe713528f0f46ba872f20d7"
+    },
+    {
+      "path": "public/assets/environment/paving-diff.jpg",
+      "bytes": 279565,
+      "sha256": "e904b7ba4a147fd89dab5a3d7c378e4e856a1517300593743404a47b016e9c2a"
+    },
+    {
+      "path": "public/assets/environment/paving-nor_gl.jpg",
+      "bytes": 93227,
+      "sha256": "25abd640b5d2c27ace7a823502c301dbf902bc1892aaed0ba2a0692a0ff43732"
+    },
+    {
+      "path": "public/assets/environment/paving-rough.jpg",
+      "bytes": 76863,
+      "sha256": "15d0d0186b245832d5350baa99ccfb90352301c5eb0aa2abd9388ccda49fd076"
+    },
+    {
+      "path": "public/assets/environment/plaster-diff.jpg",
+      "bytes": 30084,
+      "sha256": "87d72ca4a849f3a88810c260be18998e60e98cead70f23e5dc33bd72c985e226"
+    },
+    {
+      "path": "public/assets/environment/plaster-nor_gl.jpg",
+      "bytes": 9379,
+      "sha256": "bedcd1506c9efc398bb622528acf433160e08db936b1784187463821d9843079"
+    },
+    {
+      "path": "public/assets/environment/plaster-rough.jpg",
+      "bytes": 8881,
+      "sha256": "9e0f1806e531495cd6481cc2d549bdadfba247edabb333c8ed614e0fd2e4b570"
+    },
+    {
+      "path": "public/assets/environment/sandstone-diff.jpg",
+      "bytes": 316471,
+      "sha256": "034c901331fea0581263a35a9a7a6d90136b276ce0a4b8467ffc827c623fbdfb"
+    },
+    {
+      "path": "public/assets/environment/sandstone-nor_gl.jpg",
+      "bytes": 124006,
+      "sha256": "5cc352193c1d74ee12745e53765ea6452a5e06889f3ded56f7317125cb0d4bd7"
+    },
+    {
+      "path": "public/assets/environment/sandstone-rough.jpg",
+      "bytes": 39820,
+      "sha256": "2318211fb4627e4340014c4177e8a180be497038952c31ca4615feb7fc2c686e"
+    },
+    {
+      "path": "public/assets/environment/wood-diff.jpg",
+      "bytes": 84187,
+      "sha256": "896390a81361a6a3b1e6e2b53c4fad03c31773df5130df4ee492f822f4be543a"
+    },
+    {
+      "path": "public/assets/player/fps_arms.glb",
+      "bytes": 10314692,
+      "sha256": "35fa9f574e53ee8008238e5d2a4d25827ef17737f42aef65af86f72a93f30edc"
+    },
+    {
+      "path": "public/assets/player/fps_arms_albedo.png",
+      "bytes": 4280276,
+      "sha256": "c388b8708509cd606c6257d01a48a3fd04022659cf6bc129c9868a165cb45ae4"
+    },
+    {
+      "path": "public/assets/player/fps_arms_ao.png",
+      "bytes": 1339194,
+      "sha256": "9f7f37d86a9d818c9063a40a427bbaa92589d42773c285508d70a4f639059075"
+    },
+    {
+      "path": "public/assets/player/fps_arms_normal.png",
+      "bytes": 2902274,
+      "sha256": "9f78779b21248cbef81ccb9988d53e0b349c011ef7c00b0f94c000094bb1ba38"
+    },
+    {
+      "path": "public/assets/player/fps_arms_specgloss.png",
+      "bytes": 1401292,
+      "sha256": "484489addcbae2c46ea1972bca754fd03d0624dd7bbbcbba2397f1356a183c3f"
+    },
+    {
+      "path": "public/assets/weapons/beretta_apx_a1_full_size_standard.glb",
+      "bytes": 9024620,
+      "sha256": "8db6a0c29a1fa88acec0135ee3edc40d681548e0fa6e1b411ed4e0e7bb3af527"
+    },
+    {
+      "path": "public/assets/weapons/ss2-v5_a1_kal.5.56_mm_pindad.glb",
+      "bytes": 12170436,
+      "sha256": "27446982dc8ef386880f4ce4e330fdb319111c9127c3573202dcf8535e23cee8"
+    }
+  ]
+}
