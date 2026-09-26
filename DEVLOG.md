@@ -75,7 +75,7 @@ Two bots walking toward each other could remain stuck even with collision separa
 
 ## 5. Voice feedback: timing and browser policy matter
 
-Short Mandarin callouts cover combat and objective/result events. The current bundle contains ten synthesized lines, about 502 KB in total. Announcements use priorities and a queue, temporarily lower ambience/music, and respect mute, pause, and background state.
+Short English callouts cover combat and objective/result events. The current bundle contains ten synthesized lines, about 381 KB in total. Announcements use priorities and a queue, temporarily lower ambience/music, and respect mute, pause, and background state.
 
 Browsers may block audio until a trusted user gesture. The audio system therefore unlocks on interaction and avoids replaying stale queued lines when the player returns to the tab. A late objective callout can be more confusing than no callout.
 
@@ -88,3 +88,7 @@ The latest project validation included a successful production build and 67 auto
 ## What this repository includes
 
 This repository now includes the game implementation, build configuration, asset tooling, and original tests alongside the demo link, screenshots, and these notes. Model, texture, and audio files are excluded from the source release. See [ASSETS.md](ASSETS.md) for setup and [NOTICE.md](NOTICE.md) for distribution context.
+
+## Audio update: quieter combat and English callouts
+
+Combat now uses only a quiet wind loop, with no city or tension bed. Menu music is approximately 9.7 dB quieter; footsteps are about 2.6 dB louder. Ten short English tactical lines replace the original Mandarin recordings. Voice ducking leaves footsteps and gunfire unchanged and restores the quieter background levels. The local full-asset project passes 68 tests; synthetic playback tests do not replace listening on a real phone.

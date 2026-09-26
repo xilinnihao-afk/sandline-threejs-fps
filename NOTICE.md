@@ -10,7 +10,7 @@ The game uses Three.js, TypeScript, Vite, and Rapier. Project asset records incl
 - Poly Haven environmental textures (CC0).
 - Michel Baradari / OpenGameArt gun and explosion sounds (CC BY 3.0).
 - SpringySpringo / OpenGameArt reload recordings (CC0).
-- Synthesized Mandarin voice callouts generated with the macOS Reed voice.
+- Synthesized English voice callouts generated with the macOS Daniel voice.
 
 These acknowledgments describe the demo's recorded asset sources; they do not relicense third-party material. Additional attribution is available in the live game's credit pages:
 

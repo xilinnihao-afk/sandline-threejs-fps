@@ -50,6 +50,6 @@ The full suite requires the inventory's model and audio fixtures, including the 
 - `scripts/prepare-uniforms.py`: generate team texture variants from the supplied donor texture (Python and Pillow).
 - `scripts/inspect-rig.mjs`: inspect the supplied donor rig.
 - `scripts/generate-audio*.py`: offline audio processing; inspect each script's imports and source URLs before use. Downloaded recordings retain their own licenses.
-- `scripts/generate-voice.py`: optional macOS `say` / `afconvert` workflow with an installed Reed voice. Output terms depend on the voice/system license.
+- `scripts/generate-voice.py`: optional macOS `say` / `afconvert` workflow with an installed Daniel voice. Output terms depend on the voice/system license.
 
 None of these asset-generation tools run during `npm ci` or `npm run build`. Review rights before distributing generated or transformed media.

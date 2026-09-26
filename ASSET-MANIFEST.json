@@ -8,8 +8,8 @@
     },
     {
       "path": "public/assets/audio/CREDITS.html",
-      "bytes": 2755,
-      "sha256": "eef11f2e3215434e378ec72fa7dc4b120b61e3e592c7ad6ccb2d23be04937571"
+      "bytes": 2757,
+      "sha256": "7b12af47e12e869ad3c36f1e43e9dfa07a2a5538540bffec16f9d67d3da5b878"
     },
     {
       "path": "public/assets/audio/city-bed.wav",
@@ -178,58 +178,58 @@
     },
     {
       "path": "public/assets/audio/voice/defused.wav",
-      "bytes": 30210,
-      "sha256": "8374a1d5986803c2729c4e6dbbe45ccb8b67726426b69faa4a14bc9c54e71c11"
+      "bytes": 40648,
+      "sha256": "ab8fae8d7247e25d837119b28c4a48abae09483e19fac6d443506fae8762f517"
     },
     {
       "path": "public/assets/audio/voice/defusing.wav",
-      "bytes": 55906,
-      "sha256": "b6d3154a3e209a1818f34072c89f4647d14a4baf5ced397e7f5cab91efdcd017"
+      "bytes": 69330,
+      "sha256": "beee07713a2dde6bb64bf551082ed0d5ebf16227d08328342d608e85a159b7f2"
     },
     {
       "path": "public/assets/audio/voice/grenade.wav",
-      "bytes": 36614,
-      "sha256": "8ef91d4c74c442fe4ec35ca2f57f113a90b64aee32634308b9fa0623ad8b74c5"
+      "bytes": 29708,
+      "sha256": "e0d6f55dd27f6777a5679421e5e3774e29e22b5b1099daca6ca81b1157f5e673"
     },
     {
       "path": "public/assets/audio/voice/manifest.json",
-      "bytes": 5208,
-      "sha256": "7cf8c977dabdedb6f4561cce5f5c1ff598b3a40f5b387618ab708d33e8c3cbae"
+      "bytes": 5086,
+      "sha256": "a0a550b3cf7e2848c2b58b47d45005755fd82559100a39371ee541220c98d837"
     },
     {
       "path": "public/assets/audio/voice/match-loss.wav",
-      "bytes": 59620,
-      "sha256": "65d2f819c4625ea45da5546e9a215c1d4f059a6076542616b3cf3b1f59420936"
+      "bytes": 40660,
+      "sha256": "6ebe6ef792d68504ab1274e075a3390ab215ac32b50d06b0a6f3e0773bb0f23e"
     },
     {
       "path": "public/assets/audio/voice/match-win.wav",
-      "bytes": 59324,
-      "sha256": "bae5314edef883c7f4335c14c5ff79ce110d069967a0facd9d5812a60c0012d9"
+      "bytes": 44756,
+      "sha256": "99fcbfb43c84c722f71688055c05e466aff5e02f64e9d7538093c4812bbe6c62"
     },
     {
       "path": "public/assets/audio/voice/planted.wav",
-      "bytes": 64776,
-      "sha256": "71a16fc7348e9ecbb7ec928e2f676a314bd09d38856b96f5e8869393c6a842e9"
+      "bytes": 36552,
+      "sha256": "482ed15e299381a9a14d73de9372f86152249b34ae0a4d4660efe0f1f8352138"
     },
     {
       "path": "public/assets/audio/voice/round-draw.wav",
-      "bytes": 65568,
-      "sha256": "f5cc810971edf9c1311fd30efa6e1683b12c840bf19b85fd4315483c8cf1d956"
+      "bytes": 28888,
+      "sha256": "eb04079a555b5e8eabf909c4c07119138f5fa38d152d292420b71230a6a6ce3f"
     },
     {
       "path": "public/assets/audio/voice/round-loss.wav",
-      "bytes": 65716,
-      "sha256": "a90046f9fa0a443164bd509d2bdff3b4aba0fd3016dc4760b0b2b2070bd7c439"
+      "bytes": 34008,
+      "sha256": "84bb0ba172f2e10132a713444a8d0e9af33ad0eb641590bc19dd7eb290d7455d"
     },
     {
       "path": "public/assets/audio/voice/round-start.wav",
-      "bytes": 31478,
-      "sha256": "e4b3ee550564a8b677e7038ed016845b714be1bec8c5d24016e2bb1af32aa0c3"
+      "bytes": 25300,
+      "sha256": "3d261b19efb1145a4353c360c7f519811e8f89e398968fcaedd025179bdba71c"
     },
     {
       "path": "public/assets/audio/voice/round-win.wav",
-      "bytes": 33016,
-      "sha256": "7c9075452761cf19147d4cf09e607fa108483f5aa603f99172e5542d4342570e"
+      "bytes": 30936,
+      "sha256": "880e2cb5992cb9b25d01f428b1f5759e407365064bc2daff37fc16ad6da8e805"
     },
     {
       "path": "public/assets/audio/weapon-mech.wav",
