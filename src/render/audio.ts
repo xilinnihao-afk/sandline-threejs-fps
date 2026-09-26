@@ -20,11 +20,11 @@ type AudioIssue = {stage:ErrorStage; message:string; at:number};
 type LiveSource = {source:AudioBufferSourceNode; nodes:AudioNode[]; group:Group; asset:Asset; loop:boolean; startsAt:number};
 type PendingEvent = {event:GameEvent; distance:number; pan:number; queuedAt:number};
 type LoopSpec = {id:Asset; group:'ambience'|'music'; gain:number; pan:number};
+const GROUP_LEVELS = {sfx:1, ui:.65, ambience:.28, music:.18, voice:.8} as const;
 const BEDS:Record<Exclude<AudioScene, 'paused'>, LoopSpec[]> = {
   combat:[
-    {id:'wind', group:'ambience', gain:.48, pan:0},
-    {id:'city-bed', group:'ambience', gain:.32, pan:-.14},
-    {id:'tension-bed', group:'ambience', gain:.23, pan:.10},
+    // Keep the combat soundscape sparse so footsteps carry useful information.
+    {id:'wind', group:'ambience', gain:.16, pan:0},
   ],
   menu:[
     {id:'wind', group:'ambience', gain:.27, pan:0},
@@ -113,7 +113,7 @@ export class GameAudio {
         this.analyser = ctx.createAnalyser();
         this.analyser.fftSize = 512;
         this.master.connect(compressor).connect(this.analyser).connect(ctx.destination);
-        for (const [name, level] of [['sfx', 1], ['ui', .65], ['ambience', .80], ['music', .55], ['voice', .9]] as const) {
+        for (const [name, level] of Object.entries(GROUP_LEVELS) as [Group, number][]) {
           const gain = ctx.createGain(); gain.gain.value = level; gain.connect(this.master); this.groups[name] = gain;
         }
         const silent = ctx.createBufferSource();
@@ -305,7 +305,8 @@ export class GameAudio {
 
   private duckVoice(active:boolean):void {
     if(!this.ctx)return;
-    for(const [group,base] of [['ambience',.80],['music',.55]] as const){
+    for(const group of ['ambience','music'] as const){
+      const base=GROUP_LEVELS[group];
       const gain=this.groups[group]?.gain;if(!gain)continue;
       gain.cancelScheduledValues(this.ctx.currentTime);
       gain.setTargetAtTime(base*(active?.5:1),this.ctx.currentTime,active?.04:.15);
@@ -392,7 +393,7 @@ export class GameAudio {
         const actor = event.actorId ?? 0;
         if (this.ctx.currentTime - (this.lastSteps.get(actor) ?? -Infinity) > .15) {
           this.lastSteps.set(actor, this.ctx.currentTime);
-          this.sample(`step-${1 + (this.variants % 4)}` as Asset, 'sfx', .46, distance, pan, 0, variation);
+          this.sample(`step-${1 + (this.variants % 4)}` as Asset, 'sfx', .62, distance, pan, 0, variation);
         }
         break;
       }
@@ -434,8 +435,8 @@ export class GameAudio {
     this.sample('reload-out', 'sfx', .61, 0, -.12, 4.8);
     this.sample('reload-in', 'sfx', .69, 0, -.12, 5.55);
     this.sample('reload-bolt', 'sfx', .64, 0, -.12, 5.88);
-    this.sample('step-1', 'sfx', .46, 0, -.15, 6.55);
-    this.sample('step-3', 'sfx', .46, 0, .15, 6.88);
+    this.sample('step-1', 'sfx', .62, 0, -.15, 6.55);
+    this.sample('step-3', 'sfx', .62, 0, .15, 6.88);
     this.sample('ricochet-1', 'sfx', .28, 0, .55, 7.20);
     this.sample('grenade-throw', 'sfx', .63, 0, -.12, 7.55);
     this.sample('grenade-explosion', 'sfx', 1.08, 0, .12, 8.25);
