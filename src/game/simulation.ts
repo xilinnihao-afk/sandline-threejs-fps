@@ -44,7 +44,7 @@ export class Simulation {
  private gun(kind:WeaponKind):Gun {return {ammo:WEAPONS[kind].magazine,reserve:WEAPONS[kind].reserve,cooldown:0,reloadLeft:0};}
  private makeActors():Actor[]{return Array.from({length:6},(_,id)=>{const team=id<3?'blue':'red',faction=id<3?'ct':'t';const p=(team==='blue'?BLUE_SPAWNS:RED_SPAWNS)[id%3];const weapon='rifle';const actor={id,name:['你','隼鹰','霜刃','沙狐','蝰蛇','灰狼'][id],team,faction,player:id===0,x:p.x,z:p.z,yaw:team==='blue'?0:Math.PI,pitch:0,health:100,armor:0,money:STARTING_MONEY,crouched:false,moving:false,weapon,guns:{rifle:this.gun('rifle'),pistol:this.gun('pistol'),smg:this.gun('smg'),shotgun:this.gun('shotgun')},grenades:0,throwTime:-10,kills:0,deaths:0,shotTime:-10,hurtTime:-10,spread:0,hasBomb:faction==='t',defuseKit:false} as Actor;return actor;});}
  start(){this.state.blueScore=0;this.state.redScore=0;this.state.round=1;this.state.totalKills=0;this.state.totalDeaths=0;this.state.feed=[];this.state.time=0;this.events=[];this.resetRound();}
- resetRound(){const s=this.state;const stats=s.actors.map(a=>({kills:a.kills,deaths:a.deaths,money:a.money}));s.actors=this.makeActors();s.grenades=[];s.actors.forEach((a,i)=>{if(s.round>1)Object.assign(a,stats[i]);resetEconomy(a,a.money);});const carrier=s.actors.find(a=>a.faction==='t');if(carrier)carrier.hasBomb=true;s.player=s.actors[0];s.spectating=null;s.phase='playing';s.roundTime=105;s.paused=false;s.winner=null;s.hitMarker=0;s.bomb={status:'carried',carrierId:carrier?.id??3,x:0,z:0,site:null,timer:40,progress:0,defuserId:null};this.brains=s.actors.map(a=>({avoidance:{side:1,hold:0},progressAt:{x:a.x,z:a.z},stalled:0,target:-1,react:.5,repath:0,path:[],strafe:1,memory:null,cover:null,decision:0,burst:0,rest:0,goal:''}));this.events.push({type:'round'});}
+ resetRound(){this.footTimer=0;this.botFootTimers.forEach((_,id)=>{this.botFootTimers[id]=.07+id*.063;});const s=this.state;const stats=s.actors.map(a=>({kills:a.kills,deaths:a.deaths,money:a.money}));s.actors=this.makeActors();s.grenades=[];s.actors.forEach((a,i)=>{if(s.round>1)Object.assign(a,stats[i]);resetEconomy(a,a.money);});const carrier=s.actors.find(a=>a.faction==='t');if(carrier)carrier.hasBomb=true;s.player=s.actors[0];s.spectating=null;s.phase='playing';s.roundTime=105;s.paused=false;s.winner=null;s.hitMarker=0;s.bomb={status:'carried',carrierId:carrier?.id??3,x:0,z:0,site:null,timer:40,progress:0,defuserId:null};this.brains=s.actors.map(a=>({avoidance:{side:1,hold:0},progressAt:{x:a.x,z:a.z},stalled:0,target:-1,react:.5,repath:0,path:[],strafe:1,memory:null,cover:null,decision:0,burst:0,rest:0,goal:''}));this.events.push({type:'round'});}
  purchase(item:Parameters<typeof buyItem>[1],actor=this.state.player):boolean{return this.state.phase==='prep'&&buyItem(actor,item,this.events);}
  menu(){this.state.phase='menu';this.state.paused=false;this.events=[];}
  setPaused(paused:boolean){if(this.state.phase!=='menu'&&this.state.phase!=='matchEnd')this.state.paused=paused;}
@@ -70,12 +70,12 @@ export class Simulation {
    if(input.reload)this.reload(player);
    if(input.grenade)this.throwGrenade(player);
    if(input.interact)this.interact(player);
-   if(input.fire){if(s.settings.aimAssist)this.assist(player,dt);this.fire(player);}if(player.moving){this.footTimer-=dt;if(this.footTimer<=0){this.footTimer=player.crouched?.62:.38;this.events.push({type:'step',actorId:0});}}
+   if(input.fire){if(s.settings.aimAssist)this.assist(player,dt);this.fire(player);}if(player.moving){this.footTimer-=dt;if(this.footTimer<=0){this.footTimer=player.crouched?.62:.38;this.events.push({type:'step',actorId:0,crouched:player.crouched});}}
   }
   for(const a of s.actors)if((!a.player||allBots)&&a.health>0){
    this.bot(a,dt,allBots);
-   if(a.moving){this.botFootTimers[a.id]-=dt;if(this.botFootTimers[a.id]<=0){this.botFootTimers[a.id]=a.crouched?.62:.46;this.events.push({type:'step',actorId:a.id});}}
-   else this.botFootTimers[a.id]=.12;
+   if(a.moving){this.botFootTimers[a.id]-=dt;if(this.botFootTimers[a.id]<=0){this.botFootTimers[a.id]=a.crouched?.62:.46;this.events.push({type:'step',actorId:a.id,crouched:a.crouched});}}
+   else this.botFootTimers[a.id]=.07+a.id*.031;
   }
   this.separateActors();
   this.updateBomb(dt);this.updateGrenades(dt);
