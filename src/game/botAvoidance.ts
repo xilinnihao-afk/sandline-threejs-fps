@@ -1,6 +1,6 @@
 import { moveBody } from './collision';
 import type { Actor } from './types';
-type Point = { x: number; z: number };
+type Point = { x: number; z: number; y?:number };
 export type Avoidance = { side: number; hold: number };
 
 /** Local steering before contact; each walker prefers its own right-hand side.
@@ -12,7 +12,7 @@ export function avoidActors(actor: Actor, desired: Point, actors: Actor[], dt: n
   const length = Math.hypot(desired.x, desired.z);
   if (length < .001) return { x: actor.x, z: actor.z };
   const forward = { x: desired.x / length, z: desired.z / length };
-  const peers = actors.filter(p => p.id !== actor.id && p.health > 0 && Math.hypot(p.x-actor.x,p.z-actor.z) < 3);
+  const peers = actors.filter(p => p.id !== actor.id && p.health > 0 && Math.hypot(p.x-actor.x,p.z-actor.z) < 3 && Math.abs((p.y??0)-(actor.y??0))<1.8);
   const danger = peers.some(p => {
     const dx = p.x-actor.x, dz = p.z-actor.z;
     const along = dx*forward.x+dz*forward.z;
@@ -27,15 +27,15 @@ export function avoidActors(actor: Actor, desired: Point, actors: Actor[], dt: n
     return distance >= Math.min(.68,Math.hypot(actor.x-p.x,actor.z-p.z))-.001;
   });
   if (!danger) {
-    const point=moveBody(actor.x,actor.z,forward.x*step,forward.z*step);
+    const point=moveBody(actor.x,actor.z,forward.x*step,forward.z*step,undefined,actor.y,actor.crouched);
     if(clear(point))return point;
   }
   let best: Point={x:actor.x,z:actor.z}, bestScore=-Infinity, chosen=state.side||1;
   for (const angle of [.65,1.05,1.57,-.65,-1.05,-1.57,0,2.2,-2.2,Math.PI]) {
     const c=Math.cos(angle),s=Math.sin(angle),x=forward.x*c-forward.z*s,z=forward.x*s+forward.z*c;
-    const point=moveBody(actor.x,actor.z,x*step,z*step);
+    const point=moveBody(actor.x,actor.z,x*step,z*step,undefined,actor.y,actor.crouched);
     if(Math.hypot(point.x-actor.x,point.z-actor.z)<step*.7||!clear(point))continue;
-    const horizon=.9, probe=moveBody(actor.x,actor.z,x*horizon,z*horizon);
+    const horizon=.9, probe=moveBody(actor.x,actor.z,x*horizon,z*horizon,undefined,actor.y,actor.crouched);
     const travel=Math.hypot(probe.x-actor.x,probe.z-actor.z);
     if(travel<horizon*.7)continue;
     let clearance=1.5;

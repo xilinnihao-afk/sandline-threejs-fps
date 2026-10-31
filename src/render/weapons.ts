@@ -1,11 +1,16 @@
-import { normalizePistol } from './pistolAsset';
-import { detachRifleMagazine } from './rifleMagazine';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { WEAPONS } from '../game/simulation';
-import type { Actor, WeaponKind } from '../game/types';
+import { FIREARM_KINDS,isHandgun, type Actor, type WeaponKind } from '../game/types';
+import {createKnifeModel,knifeAssetSource} from './knifeModel';
+import {MELEE_ATTACKS} from '../game/melee';
+import {weaponRackPose} from '../game/weaponSwitch';
+import {prepareSmgChargingHandle} from './smgChargingHandle';
+import {createClassicAkView,updateClassicAkView} from './classicAk';
+import {CLASSIC_VIEW_CONTACTS} from './classicHandContacts';
+import {sampleKnifeMotion,KNIFE_VIEW_GRIP_ROTATION,KNIFE_ACTION_GRIP_ROTATION,KNIFE_VIEW_READY_ADJUSTMENT} from './knifeMotion';
 
 // Original, articulated weapon models. Metres, +Y up, -Z forward; the trigger
 // is close to the origin. Static details are merged by material, not drawn singly.
@@ -15,50 +20,91 @@ const geometryCache = new Map<string, THREE.BufferGeometry>();
 let surfaces: Record<Surface, THREE.MeshStandardMaterial> | undefined;
 let markingMaterial: THREE.MeshBasicMaterial | undefined;
 const assemblyTemplates = new Map<WeaponKind, THREE.Group>();
-let berettaAsset:THREE.Group|null=null;
-let akAsset:THREE.Group|null=null;
-const UP = new THREE.Vector3(0, 1, 0);
-const scratchA = new THREE.Vector3(), scratchB = new THREE.Vector3(), wristSocket = new THREE.Vector3();
-const dimensions: Record<WeaponKind, { muzzle: V3; support: V3; label: string; row: number }> = {
-  rifle: { muzzle: [0, .066, -.686], support: [-.044, -.014, -.324], label: 'S-47 / 7.62', row: 0 },
-  smg: { muzzle: [0, .061, -.501], support: [-.043, -.013, -.303], label: 'MP-9 / 9×19', row: 1 },
-  shotgun: { muzzle: [0, .076, -.788], support: [-.045, -.001, -.398], label: 'M-12 / 12 GA', row: 2 },
-  pistol: { muzzle: [0, .069, -.196], support: [-.047, -.071, -.044], label: 'USP / .45', row: 3 },
-};
-function supportSocket(kind:WeaponKind):V3{
-  return kind==='pistol'&&berettaAsset?[-.035,-.046,.048]:kind==='rifle'&&akAsset?[-.030,-.065,-.165]:dimensions[kind].support;
+const importedAssets = new Map<WeaponKind, THREE.Group>();
+let importedAssetLoad: Promise<void> | undefined;
+function activeAsset(kind: WeaponKind): THREE.Group | undefined {
+  return importedAssets.get(kind);
 }
-function primaryGripSocket(kind:WeaponKind):V3{
-  // The imported SS2 grip sits farther toward the stock than the authored
-  // placeholder. Keeping this socket separate makes the wrist line meet the
-  // trigger guard instead of floating below the receiver.
-  return kind==='pistol'&&berettaAsset?[.022,-.041,.085]:kind==='rifle'&&akAsset?[.024,-.086,.092]:[.024,-.095,.032];
+export function weaponAssetSource(kind: WeaponKind): string {
+  return kind==='knife'?knifeAssetSource():activeAsset(kind)?.userData.assetSource ?? 'procedural';
+}
+const scratchA = new THREE.Vector3();
+// Independent left-hand guard: back of glove visible, index above thumb.
+const knifeSupportInverse=new THREE.Quaternion(),knifeSupportRotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(1.4818965,-.5430672,-1.5936480));
+// Close the guard ten degrees toward the knife hand in the body frame,
+// exposing a little more of the finger pads while keeping the palm open.
+const knifeViewSupportRotation=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-Math.PI/18)
+ .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(1.28578,-.280016,-1.939283)))
+ // Supinate gently about the forearm's elbow-to-wrist direction so the
+ // staggered finger pads stay readable beside the back of the glove.
+ .premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(.60,.50,-.70).normalize(),Math.PI*2/15));
+const knifeStrokeGrip=new THREE.Quaternion(),knifeViewGripInverse=KNIFE_VIEW_GRIP_ROTATION.clone().invert(),knifeReadyAdjustment=new THREE.Quaternion();
+const dimensions: Record<WeaponKind, { muzzle: V3; support: V3; label: string; row: number }> = {
+  knife: {muzzle:[.014,.281,0],support:[-.3087,-.0048,-.0346],label:'FIELD KNIFE',row:6},
+  m4: { muzzle: [0, .061, -.646], support: [-.033, .016, -.30], label: 'M4 / 5.56', row: 4 },
+  sniper: { muzzle: [0, .061, -.876], support: [-.036, -.012, -.365], label: 'AWP / .338', row: 5 },
+  rifle: { muzzle: [0, .066, -.686], support: [-.044, -.014, -.324], label: 'AK-47 / 7.62', row: 0 },
+  smg: { muzzle: [0, .061, -.501], support: [-.043, -.013, -.303], label: 'MP5 / 9×19', row: 1 },
+  shotgun: { muzzle: [0, .076, -.788], support: [-.045, -.001, -.398], label: 'NOVA / 12 GA', row: 2 },
+  deagle: {muzzle:[0,.069,-.225],support:[-.039,-.015,-.030],label:'DEAGLE / .50 AE',row:3},
+  pistol: { muzzle: [0, .069, -.199], support: [-.047, -.071, -.044], label: 'USP / .45', row: 3 },
+};
+// Presentation contacts measured on the imported gun fore-ends. These are palm
+// centres; gripSockets adds the anatomical wrist offset in the rotated basis.
+const importedSupport: Record<WeaponKind,V3> = {
+  knife:[-.3087,-.0048,-.0346],
+  rifle: [-.015,-.023,-.405], sniper: [-.010,-.055,-.380],
+  m4: [-.012,.012,-.330], smg: [-.012,-.010,-.315],
+  deagle: [-.039,-.015,-.030],
+  shotgun: [-.010,.004,-.430], pistol: [-.039,-.015,-.030],
+};
+function supportSocket(kind:WeaponKind,view=false):V3 {
+  if(view&&CLASSIC_VIEW_CONTACTS[kind])return CLASSIC_VIEW_CONTACTS[kind]!.left;
+  if (weaponAssetSource(kind)==='sketchfab') return importedSupport[kind];
+  return activeAsset(kind)?.userData.weaponSockets?.support ?? dimensions[kind].support;
+}
+function primaryGripSocket(kind:WeaponKind,view=false):V3 {
+  if(view&&CLASSIC_VIEW_CONTACTS[kind])return CLASSIC_VIEW_CONTACTS[kind]!.right;
+  if(kind==='knife')return [.018,-.009,.012];
+  // These imported grips differ from the authored models. Calibrate the palm
+  // against actual grip triangles rather than reusing the old generic anchor.
+  if(weaponAssetSource(kind)==='sketchfab'){
+    if(kind==='rifle')return [.038,-.060,-.020];
+    if(kind==='smg')return [.038,-.065,-.090];
+    if(kind==='deagle')return [.014762,-.023001,-.011958];
+    if(isHandgun(kind))return [.020,-.025,.000];
+  }
+  return activeAsset(kind)?.userData.weaponSockets?.primaryGrip ?? (isHandgun(kind) ? [.024,-.070,.024] : [.024,-.095,.032]);
 }
 
-/** Load the supplied Beretta APX model once. The procedural pistol remains a
- * fallback when an offline build omits the optional asset. */
-export async function loadWeaponAssets():Promise<void>{
-  try{
-    const gltf=await new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'assets/weapons/beretta_apx_a1_full_size_standard.glb');
-    const normalized=normalizePistol(gltf.scene.clone(true));
-    normalized.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;const mats=Array.isArray(o.material)?o.material:[o.material];for(const m of mats as THREE.MeshStandardMaterial[]){m.roughness=Math.min(.82,m.roughness??.65);m.metalness=Math.max(m.metalness??0,.18);}}});
-    berettaAsset=normalized;
-  }catch(error){console.warn('Beretta asset unavailable; using authored pistol fallback',error);}
-  try{
-    const gltf=await new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'assets/weapons/ss2-v5_a1_kal.5.56_mm_pindad.glb');
-    const source=gltf.scene.clone(true);
-    // The export contains loose bullets/magazines and a second complete gun.
-    // Remove those before measuring: their layout offsets are not gun sockets.
-    const root=source.getObjectByName('RootNode');
-    if(root){for(const child of [...root.children])if(!/Magazine_Low\.?001$/.test(child.name))root.remove(child);}
-    source.rotation.y=-Math.PI/2;source.updateWorldMatrix(true,true);
-    const bounds=new THREE.Box3().setFromObject(source),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-    const scale=.76/Math.max(size.z,.001),normalized=new THREE.Group();normalized.name='ss2-v5-a1-imported';
-    source.scale.multiplyScalar(scale);source.position.addScaledVector(center,-scale);normalized.add(source);
-    normalized.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;const mats=Array.isArray(o.material)?o.material:[o.material];for(const m of mats as THREE.MeshStandardMaterial[]){m.roughness=Math.min(.84,m.roughness??.66);m.metalness=Math.max(m.metalness??0,.22);}}});
-    detachRifleMagazine(normalized);
-    akAsset=normalized;
-  }catch(error){console.warn('SS2 rifle asset unavailable; using authored rifle fallback',error);}
+/** Load the mobile derivatives once, for both maps before creating any weapon views.
+ * Originals remain in assets-source; the browser never requests those 500 MiB. */
+export function loadImportedWeaponAssets(maxTextureAnisotropy = 1): Promise<void> {
+  return importedAssetLoad ??= (async () => {
+    const loaded = await Promise.all(FIREARM_KINDS.map(async kind => {
+      const gltf = await new GLTFLoader().loadAsync(`${(import.meta.env?.BASE_URL ?? "/")}assets/runtime/${kind}.glb?v=glb3-20261023`);
+      const source = gltf.scene;
+      if(kind==='smg')prepareSmgChargingHandle(source);
+      // glTF scene extras and the authored root node's extras are separate.
+      const metadata = source.getObjectByName(`sketchfab-${kind}`)?.userData;
+      if (metadata) Object.assign(source.userData, metadata);
+      source.traverse(object => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.castShadow = object.receiveShadow = true;
+        for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+          if (!(material instanceof THREE.MeshStandardMaterial)) continue;
+          for (const texture of [material.map, material.normalMap, material.roughnessMap, material.metalnessMap, material.aoMap]) {
+            if (texture) texture.anisotropy = Math.max(1, Math.min(4, maxTextureAnisotropy));
+          }
+        }
+      });
+      source.name = `sketchfab:${kind}`;
+      source.userData.assetSource = 'sketchfab';
+      source.userData.assetKind = kind;
+      return [kind, source] as const;
+    }));
+    for (const [kind, source] of loaded) importedAssets.set(kind, source);
+  })().catch(error => { importedAssetLoad = undefined; throw error; });
 }
 
 export interface WeaponPresentation {
@@ -71,8 +117,12 @@ export interface WeaponPresentation {
 }
 
 export const WEAPON_PRESENTATION: Record<WeaponKind, WeaponPresentation> = {
+  knife: {recoilDistance:0,recoilPitch:0,recoilYaw:0,cameraKick:.008,flashScale:0,tracerChance:0},
+  m4: { recoilDistance: .045, recoilPitch: .063, recoilYaw: .010, cameraKick: .025, flashScale: .14, tracerChance: .62 },
+  sniper: { recoilDistance: .115, recoilPitch: .145, recoilYaw: .018, cameraKick: .080, flashScale: .24, tracerChance: 1 },
   rifle: { recoilDistance: .054, recoilPitch: .072, recoilYaw: .012, cameraKick: .030, flashScale: .16, tracerChance: .62 },
   smg: { recoilDistance: .030, recoilPitch: .045, recoilYaw: .018, cameraKick: .020, flashScale: .14, tracerChance: .56 },
+  deagle: {recoilDistance:.090,recoilPitch:.155,recoilYaw:.018,cameraKick:.062,flashScale:.20,tracerChance:.85},
   pistol: { recoilDistance: .060, recoilPitch: .092, recoilYaw: .010, cameraKick: .040, flashScale: .13, tracerChance: .72 },
   shotgun: { recoilDistance: .105, recoilPitch: .135, recoilYaw: .020, cameraKick: .070, flashScale: .22, tracerChance: .86 },
 };
@@ -190,7 +240,7 @@ function receiverDetails(b: Builder, z: number, length: number): void {
 function addMarking(parent: THREE.Group, kind: WeaponKind, z: number, x = -.04): void {
   if (!markingMaterial) {
     if (typeof document === 'undefined') return;
-    const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 256;
+    const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
     const ctx = canvas.getContext('2d')!;
     for (const entry of Object.values(dimensions)) {
       ctx.fillStyle = '#b8b6a9'; ctx.font = 'bold 27px monospace'; ctx.fillText(entry.label, 12, entry.row * 64 + 29);
@@ -201,7 +251,7 @@ function addMarking(parent: THREE.Group, kind: WeaponKind, z: number, x = -.04):
     markingMaterial.name = 'weapon:engraved-marking-atlas';
   }
   const plane = new THREE.PlaneGeometry(.125, .025), uv = plane.getAttribute('uv');
-  for (let i = 0; i < uv.count; i++) uv.setY(i, (uv.getY(i) + 3 - dimensions[kind].row) / 4);
+  for (let i = 0; i < uv.count; i++) uv.setY(i, (uv.getY(i) + 7 - dimensions[kind].row) / 8);
   const mark = new THREE.Mesh(plane, markingMaterial); mark.name = 'engraved-calibre-and-serial';
   mark.position.set(x, .041, z); mark.rotation.y = -Math.PI / 2; parent.add(mark);
 }
@@ -210,7 +260,47 @@ function buildAssembly(kind: WeaponKind): THREE.Group {
   const root = new THREE.Group(); root.name = `weapon-assembly:${kind}`;
   const body = new Builder(), movingMagazine = new Builder(), boltParts = new Builder(), pumpParts = new Builder();
   const magazine = namedGroup(root, 'magazine'), bolt = namedGroup(root, 'bolt'), pump = namedGroup(root, 'pump');
-  if (kind === 'rifle') {
+  if (kind === 'm4' || kind === 'sniper') {
+    const sniper = kind === 'sniper', barrelY = sniper ? .076 : .066;
+    body.profile('steel', [[.04, -.014], [-.245, -.014], [-.26, .060], [-.225, .102], [.035, .096]], .070);
+    body.cylinder('steel', [0, barrelY, sniper ? -.575 : -.49], sniper ? .015 : .010, sniper ? .64 : .40);
+    body.cylinder('black', [0, barrelY, sniper ? -.875 : -.675], .019, .048);
+    body.ring('edge', [0, barrelY, sniper ? -.90 : -.70], .012, .003);
+    body.profile(sniper ? 'rubber' : 'black', [[-.25,.013],[-.48,.013],[-.49,.061],[-.27,.075]], .075);
+    body.box('rubber', [0,-.080,.016], [.050,.125,.062], [-.26,0,0]);
+    body.cylinder('steel', [0,.034,.125], .019,.20);
+    body.profile('rubber', [[.055,.05],[.252,.048],[.262,-.118],[.214,-.129],[.083,-.017]], .065);
+    body.box('rubber',[0,-.037,.258],[.075,.180,.021]);
+    body.box('black',[0,.112,-.125],[.05,.013,.25]);
+    for(let i=0;i<10;i++)body.box('edge',[0,.120,-.016-i*.024],[.051,.004,.008], [0,0,0],false);
+    if(sniper){
+      // Scope rings share the receiver rail datum, supporting the full optic.
+      for(const z of [-.075,-.235]){
+        body.box('black',[0,.145,z],[.045,.05,.025]);
+        body.ring('steel',[0,.178,z],.028,.005);
+      }
+      body.cylinder('black',[0,.178,-.16],.024,.32);
+      body.cylinder('black',[0,.178,-.342],.038,.068,'z',.026);
+      body.cylinder('black',[0,.178,.014],.030,.035);
+      body.cylinder('edge',[0,.178,-.377],.031,.002);
+      body.cylinder('black',[0,.218,-.15],.017,.034,'y');
+      boltParts.cylinder('steel',[0,.080,-.066],.023,.16);
+      boltParts.cylinder('steel',[.052,.070,.004],.006,.10,'x');
+      boltParts.cylinder('black',[.098,.057,.004],.014,.025,'y');
+      movingMagazine.profile('steel',[[-.191,-.012],[-.10,-.012],[-.10,-.122],[-.191,-.122]],.054);
+      body.box('rubber',[0,.071,.166],[.068,.053,.13]);
+    }else{
+      body.profile('black',[[-.215,.123],[-.215,.178],[-.047,.178],[-.047,.123]],.016);
+      body.box('black',[0,.18,-.132],[.044,.017,.195]);
+      body.box('steel',[0,.110,-.552],[.02,.095,.018]);
+      body.ring('black',[0,.156,-.552],.016,.004);
+      for(let i=0;i<9;i++)body.box('black',[0,.08,-.279-i*.023],[.073,.016,.010]);
+      movingMagazine.profile('steel',[[-.20,-.012],[-.126,-.012],[-.105,-.207],[-.181,-.216]],.048);
+      for(const x of [-.025,.025])for(let i=0;i<3;i++)movingMagazine.box('black',[x,-.116,-.184+i*.018],[.002,.157,.004]);
+      boltParts.box('edge',[.038,.065,-.10],[.010,.026,.10]);
+    }
+    receiverDetails(body,-.11,.17);
+  } else if (kind === 'rifle') {
     body.box('steel', [0, .036, -.120], [.072, .081, .250]);
     body.cylinder('steel', [0, .077, -.129], .032, .233);
     body.box('black', [0, .092, -.13], [.028, .007, .227]);
@@ -340,59 +430,19 @@ function buildAssembly(kind: WeaponKind): THREE.Group {
   }
   body.finish(root, 'receiver'); movingMagazine.finish(magazine, 'detachable-magazine');
   boltParts.finish(bolt, 'charging-and-bolt'); pumpParts.finish(pump, 'sliding-fore-end');
-  addMarking(kind === 'pistol' ? bolt : root, kind, kind === 'pistol' ? -.074 : -.105, kind === 'pistol' ? -.0327 : -.0405);
+  addMarking(isHandgun(kind) ? bolt : root, kind, isHandgun(kind) ? -.074 : -.105, isHandgun(kind) ? -.0327 : -.0405);
   const muzzle = new THREE.Object3D(); muzzle.name = 'muzzle'; muzzle.position.set(...dimensions[kind].muzzle); root.add(muzzle);
   const eject = new THREE.Object3D(); eject.name = 'eject';
-  eject.position.set(kind === 'pistol' ? .042 : .052, kind === 'shotgun' ? .075 : .065, kind === 'smg' ? -.19 : -.075);
+  eject.position.set(isHandgun(kind) ? .042 : .052, kind === 'shotgun' ? .075 : .065, kind === 'smg' ? -.19 : -.075);
   root.add(eject);
   return root;
 }
 
-function hand(parent: THREE.Group, side: 'left' | 'right'): THREE.Group {
-  const root = namedGroup(parent, `${side}-hand`), b = new Builder(), handed = side === 'left' ? -1 : 1;
-  // A padded palm, articulated knuckle guard and short segmented fingers read
-  // as a real tactical glove. The fingers stay broad and overlap the grip so
-  // the hand does not collapse into separated cartoon tubes at close range.
-  b.box('glove', [0, 0, 0], [.068, .045, .085], [0, 0, .08]);
-  b.box('rubber', [0, .022, .003], [.052, .012, .060]);
-  b.box('edge', [0, .035, -.014], [.056, .006, .014], [0, 0, .08]);
-  for (let i = 0; i < 4; i++) {
-    const x = -.034 + i * .022;
-    const curl = -.035 + Math.abs(i - 1.5) * .006;
-    b.cylinder('glove', [x*.82, -.001, -.032], .007, .034, 'z');
-    b.cylinder('glove', [x*.82, -.016, -.056], .006, .022, 'z');
-    b.box('edge', [x*.82, -.027, -.066], [.010, .004, .009], [curl + .18, 0, handed * (i - 1.5) * .055], false);
-  }
-  b.box('glove', [side === 'left' ? .033 : -.033, -.005, -.010], [.014, .022, .046], [0, 0, handed * -.22]);
-  b.box('glove', [side === 'left' ? .039 : -.039, -.021, -.038], [.012, .014, .024], [.18, 0, handed * -.28]);
-  b.cylinder('cloth', [0, -.008, .056], .034, .050);
-  b.box('black', [0, .022, .054], [.062, .007, .015]);
-  b.finish(root, `${side}-articulated-glove`); return root;
-}
-
-function forearm(parent: THREE.Group, side: 'left' | 'right'): THREE.Group {
-  const root = namedGroup(parent, `${side}-forearm`), b = new Builder();
-  // Bare forearm and rolled sleeve, like a classic tactical viewmodel. A
-  // shaped silhouette replaces the old straight tube from wrist to screen edge.
-  const sleeve=new THREE.LatheGeometry([
-    new THREE.Vector2(.028,0),new THREE.Vector2(.032,.09),
-    new THREE.Vector2(.039,.30),new THREE.Vector2(.047,.58),
-    new THREE.Vector2(.044,.79),new THREE.Vector2(.043,1),
-  ],18);
-  b.add('cloth',sleeve,[0,0,0],[0,0,0],[1,1,.82]);sleeve.dispose();
-  b.cylinder('cloth', [0, .075, 0], .034, .12, 'y', .037);
-  b.cylinder('cloth', [0, .16, 0], .043, .075, 'y', .043);
-  b.box('glove', [0, .30, -.030], [.036, .062, .008]);
-  b.cylinder('rubber', [0, .035, 0], .027, .060, 'y');
-  b.box('black', [0, .045, -.028], [.030, .030, .006]);
-  b.finish(root, `${side}-sleeve`); return root;
-}
-
 interface ViewRig {
   kind: WeaponKind; pivot: THREE.Group; magazine: THREE.Object3D; bolt: THREE.Object3D; pump: THREE.Object3D;
-  left: THREE.Group; right: THREE.Group; leftForearm?: THREE.Group; rightForearm?: THREE.Group; shell: THREE.Group;
+  left: THREE.Group; right: THREE.Group; shell: THREE.Group;
   motion: number; swayX: number; swayY: number; lastYaw: number; lastPitch: number; loading: boolean; loadCount: number;
-  lastTime: number | null; view: boolean;
+  lastTime: number | null; view: boolean; stridePhase?: number;
 }
 
 /** Grip sockets target the anatomical wrist, not the middle of the palm.
@@ -408,81 +458,80 @@ function gripSockets(root: THREE.Group, left: THREE.Group, right: THREE.Group): 
 
 function loadingShell(parent: THREE.Group): THREE.Group {
   const shell = namedGroup(parent, 'reload-shell'), b = new Builder();
-  b.cylinder('shell', [0, 0, 0], .0075, .034); b.cylinder('brass', [0, 0, .019], .008, .007);
+  // 12-gauge loaded shell: 58 mm overall, brass head toward the loading hand.
+  b.cylinder('shell', [0, 0, -.004], .0095, .050); b.cylinder('brass', [0, 0, .024], .0102, .010);
   b.finish(shell, 'shell'); shell.visible = false; return shell;
 }
 
 export function createViewWeapon(kind: WeaponKind): THREE.Group {
-  if (!assemblyTemplates.has(kind)) assemblyTemplates.set(kind, buildAssembly(kind));
+  if(kind==='rifle'){const classic=createClassicAkView();if(classic)return classic;}
   const root = new THREE.Group(); root.name = `viewmodel:${kind}`;
   const pivot = namedGroup(root, 'weapon-pivot');
-  const gun=kind==='pistol'&&berettaAsset?berettaAssembly():kind==='rifle'&&akAsset?akAssembly():assemblyTemplates.get(kind)!.clone(true); pivot.add(gun);
-  const left = hand(pivot, 'left'), right = hand(pivot, 'right');
-  const leftForearm = forearm(pivot, 'left'), rightForearm = forearm(pivot, 'right');
+  const gun = weaponAssembly(kind); pivot.add(gun);
+  root.userData.assetSource = gun.userData.assetSource; root.userData.assetKind = kind;
+  const left = namedGroup(pivot, 'left-grip-pose'), right = namedGroup(pivot, 'right-grip-pose');
   const shell = loadingShell(pivot);
   root.userData.rig = { kind, pivot, magazine: gun.getObjectByName('magazine')!, bolt: gun.getObjectByName('bolt')!, pump: gun.getObjectByName('pump')!,
-    left, right, leftForearm, rightForearm, shell, motion: 0, swayX: 0, swayY: 0, lastYaw: 0, lastPitch: 0, loading: false, loadCount: 1, lastTime: null, view: true } as ViewRig;
+    left, right, shell, motion: 0, swayX: 0, swayY: 0, lastYaw: 0, lastPitch: 0, loading: false, loadCount: 1, lastTime: null, view: true } as ViewRig;
   root.userData.muzzle = root.getObjectByName('muzzle');
   root.userData.pose = { phase: 'ready', progress: 0, magazineOffset: 0, boltTravel: 0, weapon: kind };
-  left.position.set(...supportSocket(kind)); right.position.set(...primaryGripSocket(kind));
+  left.position.set(...supportSocket(kind,true)); right.position.set(...primaryGripSocket(kind,true));
   gripSockets(root, left, right);
-  positionForearm(leftForearm, left.position, [-.22, -.29, .34]);
-  positionForearm(rightForearm, right.position, [.19, -.30, .36]);
   return root;
 }
 
-function berettaAssembly():THREE.Group{
-  const gun=berettaAsset!.clone(true);gun.name='beretta-apx-a1';
-  // Sockets are authored against the normalized model and keep muzzle flash,
-  // casing ejection and reload choreography compatible with every weapon rig.
-  const magazine=namedGroup(gun,'magazine'),bolt=namedGroup(gun,'bolt'),pump=namedGroup(gun,'pump');
-  magazine.position.set(0,-.09,.035);bolt.position.set(0,.035,-.055);
-  const muzzle=new THREE.Object3D();muzzle.name='muzzle';muzzle.position.set(0,.063,-.115);gun.add(muzzle);
-  const eject=new THREE.Object3D();eject.name='eject';eject.position.set(.047,.037,-.055);gun.add(eject);
+function importedSockets(gun:THREE.Group, muzzle:V3, eject:V3):THREE.Group {
+  for (const name of ['magazine', 'bolt', 'pump']) if (!gun.getObjectByName(name)) namedGroup(gun, name);
+  if (!gun.getObjectByName('muzzle')) {const node=new THREE.Object3D();node.name='muzzle';node.position.set(...muzzle);gun.add(node);}
+  if (!gun.getObjectByName('eject')) {const node=new THREE.Object3D();node.name='eject';node.position.set(...eject);gun.add(node);}
   return gun;
 }
 
-function importedSockets(gun:THREE.Group, muzzle:V3, eject:V3):THREE.Group{
-  // Imported exports often name the complete receiver "Magazine_Low.*".
-  // Keep that mesh static and use dedicated empty sockets for animation.
-  const magazine=gun.getObjectByName('magazine')??namedGroup(gun,'magazine');
-  magazine.name='magazine';
-  if(!gun.getObjectByName('bolt'))namedGroup(gun,'bolt');
-  if(!gun.getObjectByName('pump'))namedGroup(gun,'pump');
-  const muzzleNode=new THREE.Object3D();muzzleNode.name='muzzle';muzzleNode.position.set(...muzzle);gun.add(muzzleNode);
-  const ejectNode=new THREE.Object3D();ejectNode.name='eject';ejectNode.position.set(...eject);gun.add(ejectNode);
-  return gun;
-}
-
-function akAssembly():THREE.Group{
-  const gun=akAsset!.clone(true);gun.name='ss2-v5-a1';
-  // The asset contains three exported LOD/variant bodies. Keep the detailed
-  // first body and hide the duplicate variants so the viewmodel is singular.
-  const rootNode=gun.getObjectByName('RootNode');
-  if(rootNode){
-    const variants=rootNode.children.filter(o=>/Magazine_Low/i.test(o.name));
-    variants.slice(1).forEach(o=>o.visible=false);
+/** Animation owns zero-origin wrappers; exported mesh bind transforms stay intact. */
+function animationWrappers(gun: THREE.Group): THREE.Group {
+  for (const name of ['magazine', 'bolt', 'pump']) {
+    const part = gun.getObjectByName(name);
+    if (!part) { namedGroup(gun, name); continue; }
+    const parent = part.parent!;
+    part.name = `${name}-bind`;
+    const wrapper = namedGroup(parent as THREE.Group, name);
+    wrapper.add(part);
   }
-  // Keep the original mesh names for socket inspection; the parent visibility
-  // filter above removes the duplicate exported bodies.
-  // Normalized dimensions: muzzle at roughly -Z, magazine and trigger near
-  // the origin. These sockets are also used by third-person arm IK.
-  const result=importedSockets(gun,[0,.030,-.385],[.052,.030,-.055]);
+  return gun;
+}
 
-  // Viewmodel-only wrist targets. They live in the same pivot space as the
-  // hands, so the palm and forearm can follow the receiver without guessing
-  // from the imported mesh's nested FBX transforms.
-  const support=new THREE.Object3D();support.name='grip-support';support.position.set(-.030,-.065,-.165);result.add(support);
-  const primary=new THREE.Object3D();primary.name='grip-primary';primary.position.set(.024,-.086,.092);result.add(primary);
-  return result;
+function weaponAssembly(kind: WeaponKind): THREE.Group {
+  if(kind==='knife')return animationWrappers(createKnifeModel());
+  let gun: THREE.Group;
+  const source = activeAsset(kind);
+  if (source) {
+    gun = source.clone(true);
+    importedSockets(gun, dimensions[kind].muzzle, [.052, .075, -.075]);
+    gun.userData.assetSource = source.userData.assetSource;
+  } else {
+    if (!assemblyTemplates.has(kind)) assemblyTemplates.set(kind, buildAssembly(kind));
+    gun = assemblyTemplates.get(kind)!.clone(true);
+    gun.userData.assetSource = 'procedural';
+  }
+  gun.userData.assetKind = kind;
+  return animationWrappers(gun);
+}
+
+/** Bare gun for floor pickups: caller owns ground pose and height. Geometry and
+ * materials are shared, but transforms are independent from held/view rigs. */
+export function createGroundWeapon(kind: WeaponKind): THREE.Group {
+  const gun = weaponAssembly(kind);
+  gun.name = `ground-weapon:${kind}`;
+  gun.userData.weapon = kind;
+  return gun;
 }
 
 /** Third-person model shares immutable geometry/materials, while owning its
  * moving magazine, bolt, pump and grip guides. No hand/arm meshes are included. */
 export function createHeldWeapon(kind: WeaponKind): THREE.Group {
-  if (!assemblyTemplates.has(kind)) assemblyTemplates.set(kind, buildAssembly(kind));
   const root = new THREE.Group(); root.name = `held:${kind}`;
-  const pivot = namedGroup(root, 'weapon-pivot'), gun = kind==='rifle'&&akAsset?akAssembly():assemblyTemplates.get(kind)!.clone(true); pivot.add(gun);
+  const pivot = namedGroup(root, 'weapon-pivot'), gun = weaponAssembly(kind); pivot.add(gun);
+  root.userData.assetSource = gun.userData.assetSource; root.userData.assetKind = kind;
   const left = namedGroup(pivot, 'left-grip-pose'), right = namedGroup(pivot, 'right-grip-pose');
   const shell = kind === 'shotgun' ? loadingShell(pivot) : namedGroup(pivot, 'reload-shell');
   root.userData.rig = { kind, pivot, magazine: gun.getObjectByName('magazine')!, bolt: gun.getObjectByName('bolt')!, pump: gun.getObjectByName('pump')!,
@@ -499,22 +548,92 @@ function ease(from: number, to: number, value: number): number { const n = clamp
 function lerpPose(target: THREE.Vector3, start: V3, end: V3, value: number): void {
   target.set(start[0] + (end[0] - start[0]) * value, start[1] + (end[1] - start[1]) * value, start[2] + (end[2] - start[2]) * value);
 }
-function positionForearm(arm: THREE.Group, wrist: THREE.Vector3, elbow: V3): void {
-  arm.position.copy(wrist); scratchA.set(...elbow).sub(wrist); arm.quaternion.setFromUnitVectors(UP, scratchB.copy(scratchA).normalize()); arm.scale.y = scratchA.length();
+
+
+// Measured in each imported model's seated frame. The contact is the palm
+// anchor; the same rigid transform drives both the magazine and the hand.
+const SNOW_RELOAD:Partial<Record<WeaponKind,{contact:V3;travel:V3;rotation:V3;rack:V3}>>={
+  deagle:{contact:[-.002,-.065,.010],travel:[0,-.17,.043],rotation:[0,0,Math.PI],rack:[-.026,.078,.009]},
+  pistol:{contact:[-.002,-.093,.008],travel:[0,-.17,.043],rotation:[0,0,Math.PI],rack:[-.033,.083,.006]},
+  smg:{contact:[-.028,-.115,-.250],travel:[0,-.21,-.018],rotation:[0,0,Math.PI/2],rack:[-.034,.078,-.356]},
+  m4:{contact:[-.024,-.090,-.120],travel:[0,-.23,-.025],rotation:[0,0,Math.PI/2],rack:[-.030,.083,.040]},
+  sniper:{contact:[-.029,-.023,-.012],travel:[0,-.17,0],rotation:[0,0,Math.PI/2],rack:[.065,.060,.015]},
+};
+const reloadQuaternion=new THREE.Quaternion();
+function blendHandRotation(hand:THREE.Group,rotation:V3,mix:number):void {
+  reloadQuaternion.setFromEuler(new THREE.Euler(...rotation));
+  hand.quaternion.slerp(reloadQuaternion,mix);
+}
+function snowMagazineReload(r:ViewRig,p:number):string {
+  const cfg=SNOW_RELOAD[r.kind]!,support=supportSocket(r.kind,r.view);
+  const out=ease(.18,.38,p)*(1-ease(.53,.73,p));
+  r.magazine.position.set(...cfg.travel).multiplyScalar(out);
+  // The magazine remains in the grasp during the brief low ready exchange.
+  r.magazine.position.x=-.035*Math.sin(Math.PI*ease(.38,.53,p));
+  if(p>=.53)r.magazine.position.x=0;
+  const contact=scratchA.set(...cfg.contact).add(r.magazine.position);
+  if(p<.18)lerpPose(r.left.position,support,cfg.contact,ease(0,.18,p));
+  else if(p<.80)r.left.position.copy(contact);
+  else if(p<.93){
+    lerpPose(r.left.position,cfg.contact,cfg.rack,ease(.8,.85,p));
+    // USP slide / AWP bolt are actual moving source pieces. Other guns use
+    // the release/charging control without pretending an empty node is a bolt.
+    const travel=(isHandgun(r.kind)?.037:r.kind==='sniper'?.095:r.kind==='m4'?.06:0)*ease(.85,.89,p)*(1-ease(.9,.93,p));
+    r.bolt.position.z=travel;r.left.position.z+=travel;
+    if(r.kind==='sniper')r.bolt.rotation.z=-.55*ease(.81,.85,p)*(1-ease(.9,.93,p));
+  }else lerpPose(r.left.position,cfg.rack,support,ease(.93,1,p));
+  blendHandRotation(r.left,cfg.rotation,ease(0,.18,p)*(1-ease(.8,1,p)));
+  return p<.18?'grasp-magazine':p<.38?'magazine-out':p<.53?'retrieve-magazine':p<.73?'insert-magazine':p<.8?'seat-magazine':p<.93?'rack-bolt':'return-to-ready';
+}
+function snowShellReload(r:ViewRig,p:number,pose:Record<string,any>):string {
+  const support=supportSocket('shotgun',r.view);
+  const fetch:V3=[-.045,-.135,-.095],align:V3=[0,-.012,-.129],raised:V3=[0,.043,-.129],seated:V3=[0,.043,-.202];
+  // Palm cradles the shell from the side; fingers point along its axis. The
+  // final push uses the thumb at the brass head while the palm clears the lip.
+  const palmOffset:V3=[-.027,-.010,.018];
+  const handAt=(pos:V3):V3=>[pos[0]+palmOffset[0],pos[1]+palmOffset[1],pos[2]+palmOffset[2]];
+  blendHandRotation(r.left,[0,0,Math.PI/2],ease(0,.15,p)*(1-ease(.83,.94,p)));
+  const gate=r.pivot.getObjectByName('loading-gate');
+  let phase='tilt-for-loading';
+  if(p<.15)lerpPose(r.left.position,support,handAt(fetch),ease(0,.15,p));
+  else if(p<.83){
+    const cycle=(p-.15)/.68*r.loadCount,t=cycle%1;
+    r.shell.rotation.set(0,0,0);r.shell.visible=t>=.04&&t<.78;
+    if(t<.38)lerpPose(r.shell.position,fetch,align,ease(.04,.38,t));
+    else if(t<.54)lerpPose(r.shell.position,align,raised,ease(.38,.54,t));
+    else lerpPose(r.shell.position,raised,seated,ease(.54,.78,t));
+    if(gate)gate.position.y=.025*ease(.34,.50,t)*(1-ease(.84,.94,t));
+    r.left.position.copy(r.shell.position).add(scratchA.set(...palmOffset));
+    pose.shellPush=ease(.45,.62,t)*(1-ease(.88,1,t));
+    if(t>=.78){
+      const end=handAt(seated),clear:V3=[end[0],end[1]-.10,end[2]];
+      if(t<.88)lerpPose(r.left.position,end,clear,ease(.78,.88,t));
+      else lerpPose(r.left.position,clear,handAt(fetch),ease(.88,1,t));
+    }
+    phase=`${t<.38?'align-shell':t<.78?'insert-shell':'withdraw-hand'}-${Math.floor(cycle)+1}`;
+  }else{
+    lerpPose(r.left.position,handAt(fetch),support,ease(.83,.92,p));
+    r.pump.position.z=.11*ease(.92,.955,p)*(1-ease(.97,1,p));r.left.position.z+=r.pump.position.z;
+    phase='pump-and-settle';
+  }
+  return phase;
 }
 
 /** Animation is entirely inside weapon-pivot. The caller owns the root transform.
  * Reload stages derive from simulation reloadLeft so pausing/captures stay exact. */
 function updateWeaponRig(group: THREE.Group, actor: Actor, time: number, delta: number): void {
+  if(group.userData.embeddedArms){updateClassicAkView(group,actor,time,delta);return;}
   const r = group.userData.rig as ViewRig;
   if (!r) return;
+  if(r.kind==='knife'){updateKnifeRig(group,actor,time,delta);return;}
   if (r.lastTime === null || time < r.lastTime) {
     r.lastYaw = actor.yaw; r.lastPitch = actor.pitch; r.motion = r.swayX = r.swayY = 0; r.loading = false;
+    r.stridePhase = 0;
   }
   r.lastTime = time;
   const kind = r.kind, gun = actor.guns[kind], duration = WEAPONS[kind].reload;
   const loading = gun.reloadLeft > 0, p = loading ? clamp(1 - gun.reloadLeft / duration) : 0;
-  if (loading && !r.loading) r.loadCount = Math.max(1, Math.min(6, WEAPONS[kind].magazine - gun.ammo));
+  if (loading && !r.loading) r.loadCount = Math.max(1, Math.min(gun.reserve, WEAPONS[kind].magazine - gun.ammo));
   r.loading = loading;
   const dt = Math.min(.1, Math.max(0, delta));
   r.motion = THREE.MathUtils.damp(r.motion, actor.moving ? 1 : 0, 10, dt);
@@ -528,29 +647,47 @@ function updateWeaponRig(group: THREE.Group, actor: Actor, time: number, delta: 
   const kick = firing ? Math.exp(-age * 24) * (1 - Math.exp(-age * 155)) : 0;
   const settle = firing ? Math.sin(Math.min(age, .24) * 42) * Math.exp(-age * 18) : 0;
   const lift = loading ? ease(0, .15, p) * (1 - ease(.88, 1, p)) : 0;
-  const stride = time * (actor.crouched ? 8 : 11), motion = r.motion * (loading ? .2 : 1);
+  const quietPistol = r.view && isHandgun(kind);
+  // Integrate the pistol stride: changing crouch/speed cannot jump its phase.
+  if(quietPistol)r.stridePhase=(r.stridePhase??0)+dt*(actor.crouched?6:8)*r.motion;
+  const stride = quietPistol ? r.stridePhase! : time * (actor.crouched ? 8 : 11);
+  // First-person travel is owned by FirstPersonMotion on the shared root.
+  const motion = r.view ? 0 : r.motion * (loading ? .2 : 1);
+  const stepLift = quietPistol ? .5-.5*Math.cos(stride*2) : Math.abs(Math.cos(stride));
   const presentation = WEAPON_PRESENTATION[kind];
-  const importedRifle=kind==='rifle'&&akAsset&&r.view;
-  r.pivot.position.set(Math.sin(stride) * .006 * motion - r.swayX - lift * .05, Math.abs(Math.cos(stride)) * .009 * motion + lift * (r.view ? .12 : .12) + r.swayY, kick * presentation.recoilDistance - lift * (r.view ? .04 : 0) + settle * .004);
-  r.pivot.rotation.set(kick * presentation.recoilPitch + lift * .11, (r.view ? .19 : 0) + r.swayX * 1.7 + lift * (r.view ? .16 : -.19), Math.sin(stride) * .009 * motion - lift * (kind === 'pistol' ? .42 : .32) + kick * presentation.recoilYaw + settle * .012);
-  r.magazine.position.set(0, 0, 0); r.magazine.rotation.set(0, 0, 0); r.bolt.position.z = kick * (kind === 'pistol' ? .039 : .023);
-  if(importedRifle)r.magazine.visible=true;
+  const authoredRifle=kind==='rifle' && weaponAssetSource(kind)==='blender';
+  // Keep the view reload close to the shoulder; raising every gun 12 cm
+  // exposed both forearm ends and made the short MP5 reach look detached.
+  const reloadLift=r.view?(kind==='shotgun'?.035:.055):.12;
+  r.pivot.position.set(Math.sin(stride) * .006 * motion - r.swayX - lift * .05, stepLift * .009 * motion + lift * reloadLift + r.swayY, kick * presentation.recoilDistance - lift * (r.view ? .04 : 0) + settle * .004);
+  r.pivot.rotation.set(kick * presentation.recoilPitch + lift * .11, (r.view ? .19 : 0) + r.swayX * 1.7 + lift * (r.view ? .16 : -.19), Math.sin(stride) * .009 * motion - lift * (isHandgun(kind) ? .42 : .32) + kick * presentation.recoilYaw + settle * .012);
+  r.magazine.position.set(0, 0, 0); r.magazine.rotation.set(0, 0, 0); r.bolt.position.set(0,0,kick * (isHandgun(kind) ? .039 : kind === 'sniper' || kind === 'm4' ? 0 : .023)); r.bolt.rotation.z = 0;
+  r.magazine.visible=true;
+  const boltCycle = firing && kind === 'sniper' ? ease(.13, .28, age) * (1 - ease(.44, .65, age)) : 0;
+  if (kind === 'sniper') { r.bolt.position.z = boltCycle * .105; r.bolt.rotation.z = -.55 * ease(.10,.19,age) * (1-ease(.56,.68,age)) * (firing ? 1 : 0); }
   const pumpCycle = firing && kind === 'shotgun' ? ease(.09, .21, age) * (1 - ease(.34, .48, age)) : 0;
   r.pump.position.z = pumpCycle * .112;
-  r.left.position.set(...supportSocket(kind)); r.left.position.z += r.pump.position.z;
+  r.left.position.set(...supportSocket(kind,r.view)); r.left.position.z += r.pump.position.z;
   // Palm faces up/inward; curled fingers wrap across the fore-end, rather
   // than presenting the dorsal glove pad to the underside of the barrel.
-  r.left.rotation.set(kind === 'pistol' ? .30 : importedRifle ? 0 : .12, kind === 'pistol' ? -.06 : importedRifle ? 0 : -Math.PI/2 + .08, kind === 'pistol' ? Math.PI/2 : importedRifle ? Math.PI/2 : Math.PI * .91);
-  r.right.position.set(...primaryGripSocket(kind)); r.right.rotation.set(importedRifle ? .10 : .08, importedRifle ? .06 : .12, .025); r.shell.visible = false;
-  if(importedRifle&&!loading){
-    const support=group.getObjectByName('grip-support'),primary=group.getObjectByName('grip-primary');
-    if(support)r.left.position.copy(support.position);
-    if(primary)r.right.position.copy(primary.position);
+  r.left.rotation.set(isHandgun(kind) ? .30 : .15, isHandgun(kind) ? -.06 : -1.10, isHandgun(kind) ? Math.PI/2 : Math.PI * .98);
+  r.right.position.set(...primaryGripSocket(kind,r.view)); r.right.rotation.set(.08, .12, .025); r.shell.visible = false;
+  const gate=r.pivot.getObjectByName('loading-gate');if(gate)gate.position.y=0;
+  group.userData.pose.shellPush=0;
+  if (boltCycle > 0) {
+    lerpPose(r.right.position, primaryGripSocket(kind,r.view), [.098, .057, .004 + r.bolt.position.z], Math.min(1, boltCycle * 2));
   }
-  let phase = firing && kick > .01 ? 'recoil' : pumpCycle > 0 ? 'pump-cycle' : 'ready';
-  if (loading && kind === 'shotgun') {
+  let phase = boltCycle > 0 ? 'bolt-cycle' : firing && kick > .01 ? 'recoil' : pumpCycle > 0 ? 'pump-cycle' : 'ready';
+  if(loading&&group.userData.assetSource==='sketchfab'&&kind==='shotgun'){
+    // A restrained cant exposes the port while the stock stays at the shoulder.
+    r.pivot.rotation.z-=lift*(r.view?.62:1.38);
+    if(r.view)r.pivot.rotation.y+=lift*.20;
+    phase=snowShellReload(r,p,group.userData.pose);
+  } else if(loading&&group.userData.assetSource==='sketchfab'&&SNOW_RELOAD[kind]){
+    phase=snowMagazineReload(r,p);
+  } else if (loading && kind === 'shotgun') {
     phase = p < .15 ? 'tilt-for-loading' : p < .83 ? 'insert-shell' : 'pump-and-settle';
-    if (p < .15) lerpPose(r.left.position, supportSocket(kind), [-.15, -.19, .00], ease(0, .15, p));
+    if (p < .15) lerpPose(r.left.position, supportSocket(kind,r.view), [-.15, -.19, .00], ease(0, .15, p));
     else if (p < .83) {
       const cycle = clamp((p - .15) / .68) * r.loadCount, local = cycle % 1;
       const insert = Math.sin(local * Math.PI);
@@ -559,19 +696,19 @@ function updateWeaponRig(group: THREE.Group, actor: Actor, time: number, delta: 
       r.shell.position.copy(r.left.position).add(scratchA.set(.02, .022, -.027)); r.shell.rotation.set(0, -.2, .25);
       phase = `insert-shell-${Math.min(r.loadCount, Math.floor(cycle) + 1)}`;
     } else {
-      lerpPose(r.left.position, [-.018, -.066, -.065], supportSocket(kind), ease(.83, .9, p));
+      lerpPose(r.left.position, [-.018, -.066, -.065], supportSocket(kind,r.view), ease(.83, .9, p));
       r.pump.position.z = .11 * ease(.88, .93, p) * (1 - ease(.95, 1, p)); r.left.position.z += r.pump.position.z;
     }
     r.bolt.position.z = r.pump.position.z * .55;
   } else if (loading) {
-    const magY = kind === 'pistol' ? -.074 : -.136, magZ = kind === 'pistol' ? .015 : -.12;
-    const grasp: V3 = importedRifle ? [-.008,-.108,-.040] : [-.052, magY, magZ];
-    const lowered: V3 = importedRifle ? [-.008,-.353,.087] : [-.07, magY - .225, magZ + .12];
-    const rackGrip: V3 = importedRifle ? [.062,.030,-.045] : kind === 'pistol' ? [-.038, .092, -.03] : kind === 'smg' ? [-.05, .108, -.293] : [.054, .085, -.036];
+    const magY = isHandgun(kind) ? -.074 : -.136, magZ = isHandgun(kind) ? .015 : -.12;
+    const grasp: V3 = authoredRifle ? [-.032,-.133,-.180] : [-.052, magY, magZ];
+    const lowered: V3 = authoredRifle ? [-.055,-.358,-.060] : [-.07, magY - .225, magZ + .12];
+    const rackGrip: V3 = authoredRifle ? [.066,.066,-.020] : isHandgun(kind) ? [-.038, .092, -.03] : kind === 'smg' ? [-.05, .108, -.293] : [.054, .085, -.036];
     const out = ease(.18, .38, p) * (1 - ease(.53, .73, p));
     r.magazine.position.y = -.245 * out; r.magazine.position.z = .10 * out;
     r.magazine.rotation.x = -.25 * out;
-    const supportPose:V3=importedRifle?[-.030,-.065,-.165]:supportSocket(kind);
+    const supportPose:V3=supportSocket(kind,r.view);
     if (p < .18) { phase = 'grasp-magazine'; lerpPose(r.left.position, supportPose, grasp, ease(0, .18, p));  }
     else if (p < .38) { phase = 'magazine-out'; lerpPose(r.left.position, grasp, lowered, ease(.18, .38, p));  }
     else if (p < .53) { phase = 'retrieve-magazine'; r.left.position.set(...lowered); r.left.position.x -= Math.sin(ease(.38, .53, p) * Math.PI) * .065; }
@@ -579,23 +716,88 @@ function updateWeaponRig(group: THREE.Group, actor: Actor, time: number, delta: 
     else if (p < .8) { phase = 'seat-magazine'; r.left.position.set(...grasp); r.left.position.y += Math.sin((p - .73) / .07 * Math.PI) * .018; }
     else if (p < .93) {
       phase = 'rack-bolt'; lerpPose(r.left.position, grasp, rackGrip, ease(.8, .85, p));
-      r.bolt.position.z = (kind === 'pistol' ? .047 : .075) * ease(.83, .88, p) * (1 - ease(.89, .93, p)); r.left.position.z += r.bolt.position.z;
+      r.bolt.position.z = (isHandgun(kind) ? .047 : kind === 'sniper' ? .105 : .075) * ease(.83, .88, p) * (1 - ease(.89, .93, p)); r.left.position.z += r.bolt.position.z;
+      if (kind === 'sniper') r.bolt.rotation.z = -.55 * ease(.80,.85,p) * (1-ease(.90,.93,p));
     } else { phase = 'return-to-ready'; lerpPose(r.left.position, rackGrip, supportPose, ease(.93, 1, p)); }
     const gripMix=ease(0,.16,p)*(1-ease(.93,1,p));
-    if(kind!=='pistol'){r.left.rotation.y=THREE.MathUtils.lerp(importedRifle?0:-Math.PI/2,-.15,gripMix);r.left.rotation.z=THREE.MathUtils.lerp(importedRifle?Math.PI/2:Math.PI,-.25,gripMix);}
+    if(!isHandgun(kind)){r.left.rotation.y=THREE.MathUtils.lerp(r.left.rotation.y,-.15,gripMix);r.left.rotation.z=THREE.MathUtils.lerp(r.left.rotation.z,-.25,gripMix);}
     r.left.rotation.z -= out * .45;
-    if(importedRifle && p >= .18 && p < .8){
+    if(authoredRifle && p >= .18 && p < .8){
       // A single magazine-local contact drives the supporting wrist throughout extraction/insertion.
       r.left.position.set(...grasp).applyEuler(r.magazine.rotation).add(r.magazine.position);
     }
   }
-  // Elbows stay below the first-person frame while the wrists follow the raised gun.
-  // Otherwise the open sleeve caps float visibly in the middle of a reload.
-  if (r.leftForearm) {wristSocket.set(0,-.006,.055).applyEuler(r.left.rotation).add(r.left.position);positionForearm(r.leftForearm,wristSocket,[-.22,-.29-lift*.48,.34+lift*.12]);}
-  if (r.rightForearm) {wristSocket.set(0,-.006,.055).applyEuler(r.right.rotation).add(r.right.position);positionForearm(r.rightForearm,wristSocket,[.19,-.30-lift*.48,.36+lift*.12]);}
+
+  const rack=r.view?weaponRackPose(actor,kind):null;
+  if(rack?.active&&!loading){
+    const {reach,pull,turn}=rack;
+    const travel=pull*(isHandgun(kind)?.040:kind==='sniper'?.095:kind==='shotgun'?.105:kind==='m4'?.060:.075);
+    r.pivot.position.x-=reach*.025;r.pivot.position.y+=reach*.025;
+    r.pivot.rotation.z-=reach*(isHandgun(kind)?.24:kind==='sniper'?.10:.16);
+    if(kind==='shotgun'){
+      r.pump.position.z=travel;r.left.position.z+=travel;
+    }else{
+      r.bolt.position.z=travel;
+      const target=kind==='smg'?[-.032,.088,-.376]:SNOW_RELOAD[kind]?.rack??[.054,.085,-.036];
+      const hand=kind==='sniper'?r.right:r.left;
+      scratchA.set(target[0],target[1],target[2]+travel);
+      if(kind==='sniper'){
+        // Unlock upward around the receiver axis, then pull straight back.
+        const angle=.8*turn;r.bolt.rotation.z=angle;
+        r.bolt.position.x=.061*Math.sin(angle);r.bolt.position.y=.061*(1-Math.cos(angle));
+        scratchA.set(.052,.052-.061,.037).applyAxisAngle(new THREE.Vector3(0,0,1),angle);scratchA.y+=.061;scratchA.z+=travel;
+      }
+      hand.position.lerp(scratchA,reach);
+    }
+    phase=rack.phase;
+  }
   const pose = group.userData.pose;
-  pose.phase = phase; pose.progress = p; pose.magazineOffset = r.magazine.position.y; pose.boltTravel = r.bolt.position.z;
+  pose.phase = phase; pose.progress = p;pose.equipProgress=rack?.progress??0;pose.equipReach=rack?.reach??0;pose.equipHand=kind==='sniper'?'right':kind==='shotgun'?'pump':'left';
+  pose.magazineOffset = r.magazine.position.y; pose.boltTravel = r.bolt.position.z;
+  pose.rightHand = {x:r.right.position.x,y:r.right.position.y,z:r.right.position.z};
   pose.pumpTravel = r.pump.position.z; pose.recoil = +kick.toFixed(3); pose.leftHand = { x: r.left.position.x, y: r.left.position.y, z: r.left.position.z };
+}
+
+function updateKnifeRig(group:THREE.Group,actor:Actor,time:number,delta:number):void {
+  const r=group.userData.rig as ViewRig;
+  const attack=actor.meleeAttack??'slash',spec=MELEE_ATTACKS[attack];
+  const age=time-actor.shotTime,active=age>=0&&age<spec.interval;
+  const dt=Math.max(0,Math.min(.1,delta));
+  if(r.lastTime===null||time<r.lastTime)r.motion=0;
+  r.motion=THREE.MathUtils.damp(r.motion,actor.moving?1:0,10,dt);r.lastTime=time;
+  const bob=r.view?0:Math.sin(time*10)*.006*r.motion;
+  sampleKnifeMotion(attack,active?age:-1,r.pivot.position,r.pivot.quaternion);
+  r.pivot.position.y+=bob;
+  r.right.position.set(...primaryGripSocket('knife',r.view));
+  if(r.view){
+    // The more open palm presentation turns the wrist away from the camera.
+    // Bring the complete knife grip back toward the body; the guarding hand
+    // below stays in its existing body-space frame.
+    r.pivot.position.z+=.027;
+    // Pronate the blade and closed hand together. The stroke keeps its
+    // forearm-safe wrist path, while the handle cannot rotate inside the fist.
+    const turn=active?ease(0,spec.contactDelay*.8,age)*(1-ease(spec.interval*.65,spec.interval-.025,age)):0;
+    knifeStrokeGrip.slerpQuaternions(KNIFE_VIEW_GRIP_ROTATION,KNIFE_ACTION_GRIP_ROTATION,turn);
+    r.pivot.quaternion.multiply(knifeStrokeGrip).multiply(knifeViewGripInverse);
+    r.pivot.quaternion.premultiply(knifeReadyAdjustment.identity().slerp(KNIFE_VIEW_READY_ADJUSTMENT,1-turn));
+    r.right.quaternion.copy(KNIFE_VIEW_GRIP_ROTATION);
+  }
+  else r.right.rotation.set(.08,.12,.025);
+  // The free hand guards the torso and yields space to the cutting arc. It
+  // stays in the body frame while the gripping hand and blade move together.
+  const guard=active?ease(0,spec.contactDelay,age)*(1-ease(spec.contactDelay+.1,spec.interval-.025,age)):0;
+  knifeSupportInverse.copy(r.pivot.quaternion).invert();
+  r.left.position.set(...(r.view?CLASSIC_VIEW_CONTACTS.knife!.left:dimensions.knife.support));
+  // Put the relaxed hand ahead of the knife hand. This independent body-space
+  // offset leaves the right-hand grip and third-person sockets untouched.
+  if(r.view)r.left.position.add(scratchA.set(-.018,.010,-.130));
+  r.left.position.x-=guard*(attack==='slash'?.045:.02);
+  r.left.position.y-=guard*(attack==='slash'?.075:.035);
+  r.left.position.z+=guard*(attack==='slash'?.07:.035);
+  r.left.position.sub(r.pivot.position).applyQuaternion(knifeSupportInverse);
+  r.left.quaternion.copy(knifeSupportInverse).multiply(r.view?knifeViewSupportRotation:knifeSupportRotation);r.shell.visible=false;
+
+  Object.assign(group.userData.pose,{attack,supportTime:time,phase:active?(age<spec.contactDelay?'windup':age<spec.contactDelay+.10?attack:'recover'):'ready',progress:active?age/spec.interval:0,magazineOffset:0,boltTravel:0,pumpTravel:0,recoil:0,leftHand:{x:r.left.position.x,y:r.left.position.y,z:r.left.position.z},rightHand:{x:r.right.position.x,y:r.right.position.y,z:r.right.position.z}});
 }
 
 export function updateViewWeapon(group: THREE.Group, actor: Actor, time: number, delta: number): void {

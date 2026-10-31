@@ -1,55 +1,37 @@
-# Local asset setup
+# 本地资源接入
 
-The source is buildable and its core tests run without binary game assets. The default game startup requires character files, so **a fresh clone alone will not start a playable match**. Use the [hosted demo](http://39.105.40.112/) to play immediately.
+公开仓库包含最新版源码、测试和资源元数据，不附带第三方模型、BSP 地图、贴图或音频文件。`npm ci`、`npm run test:core`、`npm run build` 可以独立运行；完整游玩请使用 [在线版](https://ihca.cn/sandline/)，或在具备相应使用权的情况下配置本地资源。
 
-[ASSET-MANIFEST.json](ASSET-MANIFEST.json) lists the original demo's asset paths, sizes, and SHA-256 checksums. It is a reference inventory, not a download script or a license. Obtain authorized copies from the relevant rights holders or use your own licensed replacements. Do not assume a filename or availability on a website establishes redistribution rights.
+[ASSET-MANIFEST.json](ASSET-MANIFEST.json) 记录版本 `0.39-bloodstrike-team-rounds` 的全部原始公开资源路径、大小与 SHA-256。此清单用于核对本地资源，不是下载器或再分发授权。
 
-## Required character assets
+## 目录
 
-Place the following under `public/assets/characters/`:
+将授权资源按清单路径放回项目的 `public/assets/`，保留仓库已有元数据：
 
-- `soldier.gltf`, `soldier.bin`, and the referenced `soldier-texture-0.jpg` and `soldier-texture-1.jpg`: donor rig and Idle/Walk/Run reference clips.
-- `soldier_fully_rigged_character.glb`: the default target character rig.
-- `ct-uniform.jpg` and `insurgent-uniform.jpg`: needed when using the optional `?character=legacy` mode.
-
-The reference animation source is the Three.js Soldier example / Mixamo. Consult the [Mixamo FAQ](https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html) and the relevant model licenses. This repository does not redistribute those files or assert that standalone redistribution is permitted.
-
-Replacement models may need changes to `src/render/riggedSoldier.ts`, `characters.ts`, `operators.ts`, and the IK setup. Matching only the filename is insufficient: joint names, bind poses, materials, and animation clips must also match the loader's assumptions.
-
-## Other assets
-
-| Directory | Purpose |
+| 目录 | 用途 |
 | --- | --- |
-| `public/assets/environment/` | Surface textures and optional HDR environment |
-| `public/assets/weapons/` | Imported rifle and pistol; procedural weapon fallbacks exist |
-| `public/assets/player/` | First-person arm GLB and texture maps; legacy arm fallback exists |
-| `public/assets/audio/` | Combat, ambience, music, and UI sounds |
-| `public/assets/audio/voice/` | Short voice WAV files and their provenance manifest |
+| `characters/` | 七种角色 GLB、`locomotion.glb` 动画供体 |
+| `runtime/` | CS16 第一人称手臂、AK、经典匕首及其他枪械模型 |
+| `maps/dust2/` | Dust2 BSP、导航、地图贴图和天空 |
+| `maps/assault/` | Assault BSP、导航、地图贴图和天空 |
+| `maps/bloodstrike/` | Bloodstrike BSP、导航与地图贴图 |
+| `hostages/` | 人质模型 |
+| `environment/` | 环境表面贴图与反射光照 |
+| `audio/` | 枪械、脚步、环境、UI、音乐与语音 |
+| `ui/` | 地图预览和商店枪械图片 |
 
-Consult the inventory for exact filenames. Environment, audio, and optional model omissions can produce missing-resource warnings or reduced presentation even after the required character assets are supplied. To reproduce the hosted demo, supply the complete authorized asset set.
+精确文件名见资源清单，以及 `src/render/soldierRoster.ts`、`public/assets/runtime/manifest.json` 和各地图的 `manifest.json`。替换模型还需匹配加载器的骨骼、朝向、节点命名与尺寸；只改成相同文件名不足以完成适配。
 
-## Tests
+## 测试夹具
+
+`scripts/asset-dependent-tests.json` 显式列出需要资源的测试文件。`npm run test:core` 只运行其他测试；`npm test` 仍运行全部测试并报告缺失资源。
+
+部分制作回归还需要原项目的 `assets-source/` 归档、`artifacts/` 制作报告及历史源文件，例如旧模型与衍生模型的顶点比较。这些本地制作夹具没有纳入公开仓库。仅补齐运行资源仍不足以运行全部历史制作测试；可单独运行所需测试文件：
 
 ```sh
-npm run typecheck
-npm run test:core
-npm run build
+node --import tsx --test tests/bounty.test.ts
 ```
 
-These commands require no binary asset fixtures. The core runner explicitly omits seven original test files that load models or voice recordings. Those files remain in the repository unchanged.
+## 署名
 
-```sh
-npm test
-```
-
-The full suite requires the inventory's model and audio fixtures, including the two static character candidates used by `characterModelLoader.test.ts`. Some integration tests assert original geometry, skeleton properties, or audio checksums, so replacing files with different assets also requires updating the relevant expectations. Missing fixtures are reported as failures rather than silently passed tests.
-
-## Asset tools
-
-- `scripts/prepare-character.py`: inspect and unpack an authorized Soldier GLB (Python and Pillow; create `artifacts/v02/` first).
-- `scripts/prepare-uniforms.py`: generate team texture variants from the supplied donor texture (Python and Pillow).
-- `scripts/inspect-rig.mjs`: inspect the supplied donor rig.
-- `scripts/generate-audio*.py`: offline audio processing; inspect each script's imports and source URLs before use. Downloaded recordings retain their own licenses.
-- `scripts/generate-voice.py`: optional macOS `say` / `afconvert` workflow with an installed Daniel voice. Output terms depend on the voice/system license.
-
-None of these asset-generation tools run during `npm ci` or `npm run build`. Review rights before distributing generated or transformed media.
+资源来源记录保留在 `public/assets/CREDITS.html`、`public/assets/audio/CREDITS.html` 和各子目录元数据中。Mixamo 动画、Valve / Counter-Strike 相关地图及模型、Sketchfab 模型、CC0 / CC BY 资源分别适用原权利人的条款，不受本项目 MIT 源码许可统一覆盖。

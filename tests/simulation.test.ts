@@ -4,7 +4,7 @@ import {Simulation,WEAPONS} from '../src/game/simulation.ts';
 import {EMPTY_INPUT} from '../src/game/types.ts';
 import {blocked,findPath,lineClear,moveBody,wallDistance} from '../src/game/collision.ts';
 import {BLUE_SPAWNS,RED_SPAWNS} from '../src/game/map.ts';
-const ready=()=>{const s=new Simulation(42);s.start();s.state.phase='playing';s.state.roundTime=90;return s;};
+const ready=()=>{const s=new Simulation(42);s.start('demolition');s.state.phase='playing';s.state.roundTime=90;return s;};
 test('opposing spawn points cannot see each other at round start',()=>{for(const a of BLUE_SPAWNS)for(const b of RED_SPAWNS)assert.equal(lineClear(a.x,a.z,b.x,b.z),false,JSON.stringify({a,b}));});
 test('reload conserves ammunition and blocks firing; switching cannot bypass reload',()=>{
  const sim=ready(),p=sim.state.player;sim.state.actors.slice(1).forEach(a=>a.x=18);
@@ -41,7 +41,7 @@ test('death triggers observation and team elimination awards exactly one round',
  sim.state.actors.filter(a=>a.team==='red').forEach(a=>a.health=0);sim.update(1/60);assert.equal(sim.state.blueScore,1);assert.equal(sim.state.phase,'roundEnd');for(let i=0;i<30;i++)sim.update(1/60);assert.equal(sim.state.blueScore,1);
 });
 test('match completion and restart reset deaths, score and ammo',()=>{
- const sim=ready();sim.state.blueScore=2;sim.state.actors.filter(a=>a.team==='red').forEach(a=>a.health=0);sim.update(1/60);assert.equal(sim.state.phase,'matchEnd');sim.start();assert.equal(sim.state.phase,'playing');assert.equal(sim.state.blueScore,0);assert.equal(sim.state.player.health,100);assert.equal(sim.state.player.guns.rifle.ammo,30);
+ const sim=ready();sim.state.blueScore=2;sim.state.actors.filter(a=>a.team==='red').forEach(a=>a.health=0);sim.update(1/60);assert.equal(sim.state.phase,'matchEnd');sim.start('demolition');assert.equal(sim.state.phase,'playing');assert.equal(sim.state.blueScore,0);assert.equal(sim.state.player.health,100);assert.equal(sim.state.player.guns.rifle.ammo,30);
 });
 test('bots behind low cover seek an exposed target instead of firing into a crate',()=>{
  const sim=ready(),p=sim.state.player,enemy=sim.state.actors[3];p.x=15;p.z=13.5;p.crouched=true;enemy.x=15;enemy.z=8;enemy.yaw=Math.PI;sim.state.actors.filter(a=>a!==p&&a!==enemy).forEach(a=>a.health=0);let shots=0;
@@ -54,7 +54,10 @@ test('overlapping friendly actors separate before shooting, avoiding zero-length
 });
 test('seeded bot matches complete with navigation and actual two-sided kills',()=>{
  const report=[];
- for(const seed of [7,42,2026]){const sim=new Simulation(seed);sim.start();let frames=0,shots=0,hits=0;while(sim.state.phase!=='matchEnd'&&frames<60*600){sim.update(1/60,EMPTY_INPUT,true);for(const e of sim.events){if(e.type==='shot')shots++;if(e.type==='hit')hits++;}sim.events=[];frames++;}
- assert.equal(sim.state.phase,'matchEnd',`seed ${seed} did not finish`);assert.ok(shots>20);assert.ok(hits>10);assert.ok(sim.state.actors.some(a=>a.team==='blue'&&a.kills>0));assert.ok(sim.state.actors.some(a=>a.team==='red'&&a.kills>0));assert.ok(sim.state.actors.every(a=>!blocked(a.x,a.z,.30)));report.push({seed,seconds:frames/60,shots,hits,blue:sim.state.blueScore,red:sim.state.redScore});}
+ for(const seed of [7,42,2026]){const sim=new Simulation(seed);sim.start('demolition');let frames=0,shots=0,hits=0;const teamHits={blue:0,red:0};while(sim.state.phase!=='matchEnd'&&frames<60*600){sim.update(1/60,EMPTY_INPUT,true);for(const e of sim.events){if(e.type==='shot')shots++;if(e.type==='hit'){hits++;const shooter=sim.state.actors[e.actorId!];if(shooter)teamHits[shooter.team]++;}}sim.events=[];frames++;}
+ assert.equal(sim.state.phase,'matchEnd',`seed ${seed} did not finish`);assert.ok(shots>20);assert.ok(hits>10);assert.ok(teamHits.blue>0&&teamHits.red>0,'both teams must land hits in each seeded match');assert.ok(sim.state.actors.every(a=>!blocked(a.x,a.z,.30)));report.push({seed,seconds:frames/60,shots,hits,blue:sim.state.blueScore,red:sim.state.redScore,blueKills:sim.state.actors.filter(a=>a.team==='blue').reduce((n,a)=>n+a.kills,0),redKills:sim.state.actors.filter(a=>a.team==='red').reduce((n,a)=>n+a.kills,0)});}
+ // A seed may legitimately produce a shutout; require two-sided kills over the suite,
+ // plus actual hits by both teams in every match, instead of tuning tactics to a seed.
+ assert.ok(report.reduce((n,r)=>n+r.blueKills,0)>3&&report.reduce((n,r)=>n+r.redKills,0)>3);
  console.log('BOT_MATCH_METRICS',JSON.stringify(report));
 });

@@ -16,18 +16,23 @@
     }, 30000);
   });
 })();
-</script><link rel="stylesheet" href="/src/ui/welcome.css"/></head><body>
+</script><link rel="stylesheet" href="/src/ui/welcome.css"/><script defer src="./visit-metrics.js" data-site="sandline"></script>
+<script defer src="./feedback-entry.js" data-site="sandline"></script>
+</head><body>
+<section id="portrait-startup" role="status" aria-label="横屏提示"><span aria-hidden="true">↻</span><strong>请横屏游玩《沙线行动》</strong><p>转动手机后继续</p></section>
 <section id="startup-status" class="loading-shell" aria-label="游戏加载">
+ <img id="loading-art" class="loading-art" src="./assets/ui/desert-preview.jpg" alt="沙线行动战场" fetchpriority="high"><div class="loading-shade"></div>
+ <div class="loading-title"><span>SANDLINE / TACTICAL OPERATIONS</span><h1>沙线行动</h1><p>选择战场 · 整装出击</p></div>
  <div class="loading-card">
-  <div class="loading-brand">沙线行动 · SANDLINE</div>
+  <div class="loading-brand">LOADING OPERATION</div>
   <div id="startup-progress-area" role="status" aria-live="polite">
    <strong id="startup-label">正在加载游戏程序…</strong>
-   <progress id="startup-progress" value="0" max="7" aria-label="游戏启动阶段进度"></progress>
-   <span id="startup-progress-text">启动阶段 0 / 7</span>
-   <p id="startup-detail">首次需下载人物、枪械和场景资源，请保持页面打开。</p>
+   <progress id="startup-progress" value="0" max="100" aria-label="游戏加载进度"></progress>
+   <span id="startup-progress-text">0%</span>
+   <p id="startup-detail">首次加载需要下载资源，请保持页面打开。</p>
    <button id="startup-retry" hidden>重新加载</button>
   </div>
-  <p class="loading-browser-tip">移动端建议使用 Chrome，微信内置浏览器性能一般。建议横屏，并使用 Wi-Fi 下载首次资源。</p>
+  <p class="loading-browser-tip">横屏作战 · 推荐使用 Chrome / Safari</p>
   <nav class="loading-links" aria-label="加载帮助"><button data-community="help">操作说明</button><button data-community="feedback">问题反馈</button></nav>
   <noscript><p>请启用 JavaScript 后重新打开游戏。</p></noscript>
   <p id="entry-failure" hidden>入口程序加载失败，请检查网络后 <a href="" onclick="location.reload();return false">重新加载</a>。</p>

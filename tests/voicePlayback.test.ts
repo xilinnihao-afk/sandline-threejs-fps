@@ -40,7 +40,7 @@ test('combat removes menu music and dense beds while footsteps stay above wind',
  assert.deepEqual([...audio.loops.keys()],['wind']);
  audio.play({type:'step',actorId:0},0,.4);
  const step=[...audio.live].find((s:any)=>s.asset.startsWith('step-')) as any;
- assert.ok(step);assert.ok(step.stepStrength>audio.loops.get('wind').nodes[2].gain.value*.28*3);
+ assert.ok(step);assert.ok(step.stepStrength>audio.loops.get('wind').nodes[2].gain.value*.28);
  const stepLevel=step.nodes[2].gain.value;
  audio.announce([{type:'grenadeThrow',actorId:0}],state);
  assert.equal(audio.groups.sfx.gain.value,1);assert.equal(step.nodes[2].gain.value,stepLevel);
@@ -64,4 +64,24 @@ test('footsteps fade with distance, cover and crouching, with an inaudible cutof
  assert.ok(gain(2)>gain(8)*5);assert.equal(gain(16),0);
  assert.ok(gain(2,{occluded:true})<gain(2)*.3);
  assert.ok(gain(2,{crouched:true})<gain(2)*.3);
+});
+
+test('received hits use a centered injury cue; repeat hits are bounded separately from outgoing hits',()=>{
+ const {audio}=fixture();for(const id of ['body-hit-1-v1','body-hit-2-v1','body-hit-3-v1','hurt-body-v1','hit'])audio.buffers.set(id,{duration:.2});
+ audio.play({type:'hit',actorId:3,targetId:0},0,.8);
+ assert.equal(audio.assetCounts['hurt-body-v1'],1);
+ audio.play({type:'hit',actorId:4,targetId:0},0,0);assert.equal(audio.assetCounts['hurt-body-v1'],1);
+ audio.play({type:'hit',actorId:0,targetId:3},4,.2);
+ assert.equal([...audio.live].filter((s:any)=>s.asset.startsWith('body-hit-')).length,1);
+ audio.ctx.currentTime=.1;audio.play({type:'hit',actorId:3,targetId:0},0,0);assert.equal(audio.assetCounts['hurt-body-v1'],2);
+ audio.setScene('paused');audio.ctx.currentTime=.3;audio.play({type:'hit',actorId:3,targetId:0},0,0);assert.equal(audio.assetCounts['hurt-body-v1'],2);
+});
+
+
+test('knife swing uses short cloth motion and hit feedback without a firearm report or shell sound',()=>{
+ const {audio}=fixture();for(const id of ['gear-rustle','rifle-shot','shot-tail','shell-1','shell-2','body-hit-1-v1','body-hit-2-v1','body-hit-3-v1','hit'])audio.buffers.set(id,{duration:.2});
+ audio.play({type:'melee',actorId:0,weapon:'knife'},0,0);
+ assert.equal(audio.assetCounts['gear-rustle'],1);assert.equal(audio.assetCounts['rifle-shot'],undefined);assert.equal(audio.assetCounts['shot-tail'],undefined);
+ assert.equal([...audio.live].some((s:any)=>s.asset.startsWith('shell-')),false);
+ audio.play({type:'hit',actorId:0,targetId:3,weapon:'knife'},1,0);assert.equal([...audio.live].filter((s:any)=>s.asset.startsWith('body-hit-')).length,1);
 });

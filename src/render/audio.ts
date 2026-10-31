@@ -1,18 +1,27 @@
+import {VOICE_ASSET_DIRECTORY} from './voiceAssetVersion';
 import {VOICE_IDS,VoiceQueue,voiceCues} from './voiceCues';
-import type {GameEvent, GameSnapshot, WeaponKind} from '../game/types';
+import {isHandgun,type GameEvent,type GameSnapshot,type WeaponKind} from '../game/types';
 import {WEAPONS} from '../game/simulation';
 
 const SOUND_LIBRARY = [
   'rifle-shot', 'pistol-shot', 'smg-shot', 'shotgun-shot', 'shot-tail', 'weapon-mech',
   'grenade-explosion', 'grenade-distant', 'reload-out', 'reload-in', 'reload-bolt',
   'pistol-out', 'pistol-in', 'shotgun-pump', 'step-1', 'step-2', 'step-3', 'step-4',
+  'step-snow-1-v1','step-snow-2-v1','step-snow-3-v1','step-snow-4-v1',
   'shell-1', 'shell-2', 'ricochet-1', 'ricochet-2', 'gear-rustle',
+  'body-hit-1-v1','body-hit-2-v1','body-hit-3-v1','hurt-body-v1',
+  'sniper-shot-v4','sniper-hit-v2','grenade-explosion-v2','bomb-explosion-v3',
   'impact', 'hit', 'kill', 'grenade-throw', 'ui-confirm', 'ui-cancel', 'ui-round',
   'wind', 'city-bed', 'tension-bed', 'menu-score',
   ...VOICE_IDS.map(id=>`voice/${id}` as const),
 ] as const;
-const ASSETS=SOUND_LIBRARY.filter(name=>!['smg-shot','shotgun-shot','shotgun-pump'].includes(name));
+const ASSETS = SOUND_LIBRARY;
 type Asset = typeof SOUND_LIBRARY[number];
+// Every weapon resolves to an existing, preloaded local sample.
+const SHOT_ASSETS: Record<WeaponKind, Asset> = {
+  knife: 'gear-rustle', rifle: 'rifle-shot', m4: 'rifle-shot', sniper: 'sniper-shot-v4',
+  pistol: 'pistol-shot', deagle:'pistol-shot', smg: 'smg-shot', shotgun: 'shotgun-shot',
+};
 type Group = 'sfx' | 'ui' | 'ambience' | 'music' | 'voice';
 export type AudioScene = 'menu' | 'combat' | 'paused';
 type ErrorStage = 'context' | 'resume' | 'fetch' | 'decode' | 'suspend';
@@ -20,7 +29,7 @@ type AudioIssue = {stage:ErrorStage; message:string; at:number};
 type LiveSource = {source:AudioBufferSourceNode; nodes:AudioNode[]; group:Group; asset:Asset; loop:boolean; startsAt:number; stepActor?:number; stepStrength?:number; stepEndsAt?:number};
 type PendingEvent = {event:GameEvent; distance:number; pan:number; queuedAt:number};
 type LoopSpec = {id:Asset; group:'ambience'|'music'; gain:number; pan:number};
-const GROUP_LEVELS = {sfx:1, ui:.65, ambience:.28, music:.18, voice:.8} as const;
+const GROUP_LEVELS = {sfx:1, ui:.65, ambience:.28, music:.18, voice:1} as const;
 const BEDS:Record<Exclude<AudioScene, 'paused'>, LoopSpec[]> = {
   combat:[
     // Keep the combat soundscape sparse so footsteps carry useful information.
@@ -37,6 +46,8 @@ const BEDS:Record<Exclude<AudioScene, 'paused'>, LoopSpec[]> = {
  * Creating/resuming the context always happens before the first await, inside
  * the caller's trusted gesture. Saved zero volume is never changed by unlock. */
 export class GameAudio {
+  private lastBodyHit=-Infinity;
+  private lastPlayerHurt=-Infinity;
   private ctx:AudioContext|null = null;
   private master:GainNode|null = null;
   private groups:Partial<Record<Group, GainNode>> = {};
@@ -59,6 +70,7 @@ export class GameAudio {
   private skipped = 0;
   private variants = 0;
   private lastSteps = new Map<number, number>();
+  private stepSequence = new Map<number, number>();
   private lastImpact = -Infinity;
   private rms = 0;
   private peak = 0;
@@ -191,7 +203,8 @@ export class GameAudio {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 14000);
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}assets/audio/${id}.wav`, {signal:controller.signal});
+        const file=id.startsWith('voice/')?`${VOICE_ASSET_DIRECTORY}/${id.slice(6)}`:id;
+        const response = await fetch(`${import.meta.env.BASE_URL}assets/audio/${file}.wav`, {signal:controller.signal});
         if (!response.ok) throw new Error(`HTTP ${response.status}: ${id}.wav`);
         const bytes = await response.arrayBuffer();
         clearTimeout(timeout); stage = 'decode';
@@ -236,7 +249,7 @@ export class GameAudio {
 
   stop():void {
     this.scene = 'paused'; this.cancelAudition(); this.pending = []; this.stopSources();
-    this.lastSteps.clear(); this.lastImpact = -Infinity;
+    this.lastSteps.clear();this.stepSequence.clear(); this.lastImpact = -Infinity;this.lastBodyHit=this.lastPlayerHurt=-Infinity;
   }
 
   private cancelAudition():void {
@@ -280,7 +293,7 @@ export class GameAudio {
     const pool = [...this.live].filter(item => item.group === group && !item.loop);
     if (pool.length >= (group === 'sfx' ? 48 : 8)) {
       // Prefer evicting an old casing/tail before a scheduled reload phase.
-      this.stopSource(pool.find(item => /^(shell|shot-tail|ricochet)/.test(item.asset)) ?? pool[0]);
+      this.stopSource(pool.find(item => /^(shell|shot-tail|ricochet|grenade-distant)/.test(item.asset)) ?? pool[0]);
     }
     const source = ctx.createBufferSource();
     source.buffer = buffer; source.loop = loop; source.playbackRate.value = speed;
@@ -338,20 +351,39 @@ export class GameAudio {
   }
 
   private shot(kind:WeaponKind, distance:number, pan:number, variation:number, delay=0):void {
-    const gain = kind === 'shotgun' ? .91 : kind === 'smg' ? .65 : kind === 'pistol' ? .77 : .84;
-    this.sample(`${kind}-shot`, 'sfx', gain, distance, pan, delay, variation);
-    this.sample('shot-tail', 'sfx', kind === 'shotgun' ? .23 : .14, distance * .75, pan * .75, delay + .045, kind === 'shotgun' ? .82 : kind === 'smg' ? 1.22 : variation);
+    if(kind==='knife')return;
+    const gain = kind === 'sniper' ? 1.22 : kind === 'shotgun' ? .91 : kind === 'smg' ? .65 : kind === 'deagle' ? 1.05 : kind === 'pistol' ? .77 : .84;
+    this.sample(SHOT_ASSETS[kind], 'sfx', gain, distance, pan, delay, variation * (kind === 'm4' ? 1.12 : kind === 'deagle' ? .78 : 1));
+    // Sniper v4 has a denser low-mid body and five outdoor reflections; its
+    // 0.78 PCM ceiling leaves room for the stronger main voice and mechanics.
+    // Crack, pressure and reflection tail are mixed with headroom in the
+    // versioned clip; stacking the old rifle/shotgun tails would mask its attack.
+    if (kind !== 'sniper') this.sample('shot-tail', 'sfx', kind === 'shotgun' ? .23 : .14, distance * .75, pan * .75, delay + .045, kind === 'shotgun' ? .82 : kind === 'smg' ? 1.22 : variation);
     if (distance < 15) {
-      this.sample('weapon-mech', 'sfx', .20, distance, pan, delay + .014, kind === 'smg' ? 1.25 : variation);
-      this.sample(this.variants % 2 ? 'shell-1' : 'shell-2', 'sfx', kind === 'shotgun' ? .15 : .20, distance, Math.min(.85, pan + .32), delay + (kind === 'shotgun' ? .50 : .22), kind === 'shotgun' ? .70 : variation);
+      this.sample('weapon-mech', 'sfx', kind === 'sniper' ? .08 : .20, distance, pan, delay + .014, kind === 'smg' ? 1.25 : variation);
+      this.sample(this.variants % 2 ? 'shell-1' : 'shell-2', 'sfx', kind === 'sniper' ? .12 : kind === 'shotgun' ? .15 : .20, distance, Math.min(.85, pan + .32), delay + (kind === 'sniper' ? .36 : kind === 'shotgun' ? .50 : .22), kind === 'shotgun' ? .70 : variation);
     }
+    if (kind === 'sniper') this.sample('reload-bolt', 'sfx', .28, distance, pan, delay + .44, .72);
     if (kind === 'shotgun') this.sample('shotgun-pump', 'sfx', .48, distance, pan, delay + .34, 1.14);
+  }
+
+  private explosion(bomb:boolean, distance:number, pan:number, occluded=false, variation=1, offset=0):void {
+    const delay=offset+Math.min(.3,Math.max(0,distance)/343),cover=occluded?.42:1;
+    // The planted bomb carries a longer low-frequency decay than a hand grenade.
+    // Both use one prebalanced main voice, so repeated blasts stay within the pool.
+    const main=this.sample(bomb?'bomb-explosion-v3':'grenade-explosion-v2','sfx',
+      (bomb?1.20:.97)*cover,distance*(bomb?.46:.60),pan,delay,variation);
+    if(main && occluded)(main.nodes[1] as BiquadFilterNode).frequency.value=1100;
+    if(distance<24){
+      this.sample('grenade-distant','sfx',(bomb?.20:.12)*cover,distance*.8,pan*.65,delay+.18,bomb?.72:.90);
+      this.sample('impact','sfx',(bomb?.12:.075)*cover,distance,pan,delay+.28,.78);
+    }
   }
 
   play(event:GameEvent, distance=0, pan=0):void {
     if (!this.ctx || this.ctx.state !== 'running' || this.hidden) { this.skipped++; return; }
     if (this.auditionUntil > 0 || (this.scene !== 'combat' && event.type !== 'round')) return;
-    if (this.loading && !this.buffers.has(event.weapon ? `${event.weapon}-shot` : 'rifle-shot')) {
+    if (this.loading && !this.buffers.has(SHOT_ASSETS[event.weapon ?? 'rifle'])) {
       if (this.pending.length < 16) this.pending.push({event, distance, pan, queuedAt:performance.now()});
       return;
     }
@@ -359,15 +391,11 @@ export class GameAudio {
     const kind:WeaponKind = event.weapon ?? 'rifle';
     const variation = 1 + ((this.variants++ % 7) - 3) * .009;
     switch (event.type) {
+      case 'melee': this.sample('gear-rustle', 'sfx', .72, distance * 2, pan, 0, 1.65); break;
+      case 'weaponRack': this.sample(kind==='shotgun'?'shotgun-pump':'reload-bolt','sfx',.48,distance,pan,0,kind==='sniper'?.92:1.12); break;
       case 'shot': this.shot(kind, distance, pan, variation); break;
       case 'explosion': {
-        // 距离传播延迟 + 遮挡衰减；复用采样，不增加常驻音源。
-        const delay=Math.min(.18,distance/343),cover=event.occluded?.42:1;
-        this.sample(distance>20||event.occluded?'grenade-distant':'grenade-explosion','sfx',1.18*cover,distance*.6,pan,delay,variation*.94);
-        if(distance<18){
-          this.sample('grenade-distant','sfx',.32*cover,distance*.8,-pan*.25,delay+.11,.82);
-          this.sample('impact','sfx',.14*cover,distance,pan*.6,delay+.23,.75);
-        }
+        this.explosion(false,distance,pan,!!event.occluded,variation);
         break;
       }
       case 'grenadeThrow': this.sample('grenade-throw', 'sfx', .63, distance, pan); break;
@@ -375,28 +403,28 @@ export class GameAudio {
         const duration = WEAPONS[kind].reload;
         this.sample('gear-rustle', 'sfx', .29, distance, pan, duration * .08);
         if (kind === 'shotgun') {
-          const count = Math.max(1, Math.min(6, event.shells ?? 3));
+          const count = Math.max(1, Math.min(WEAPONS.shotgun.magazine, event.shells ?? 3));
           for (let index = 0; index < count; index++) {
             const time = duration * (.15 + .68 * ((index + .74) / count));
             this.sample('reload-in', 'sfx', .45, distance, pan, time, 1.42 + (index % 2) * .04);
           }
           this.sample('shotgun-pump', 'sfx', .63, distance, pan, duration * .88, .435 / (duration * .11));
         } else {
-          this.sample(kind === 'pistol' ? 'pistol-out' : 'reload-out', 'sfx', .61, distance, pan, duration * .20, variation);
-          this.sample(kind === 'pistol' ? 'pistol-in' : 'reload-in', 'sfx', .69, distance, pan, duration * .70, kind === 'smg' ? 1.15 : 1);
+          this.sample(isHandgun(kind) ? 'pistol-out' : 'reload-out', 'sfx', .61, distance, pan, duration * .20, variation);
+          this.sample(isHandgun(kind) ? 'pistol-in' : 'reload-in', 'sfx', .69, distance, pan, duration * .70, kind === 'smg' ? 1.15 : 1);
           this.sample('impact', 'sfx', .16, distance, pan, duration * .76, 1.3);
           this.sample('reload-bolt', 'sfx', .64, distance, pan, duration * .84, .32 / (duration * .14));
         }
         break;
       }
       case 'step': {
-        const actor=event.actorId??0, now=this.ctx.currentTime;
+        const actor=event.actorId??0, now=this.ctx.currentTime,snow=event.stepSurface==='snow';
         if(distance>=16 || now-(this.lastSteps.get(actor)??-Infinity)<.25)break;
         this.lastSteps.set(actor,now);
         // Steps have a much shorter audible range than weapons. No team bias.
-        const strength=(distance<.15?.20:.34) * Math.pow(Math.max(0,1-distance/16),2)
+        const strength=(distance<.15?(snow?.18:.10):(snow?.22:.17)) * Math.pow(Math.max(0,1-distance/16),2)
           /(1+Math.pow(distance/4,2)) * (event.occluded?.25:1) * (event.crouched?.28:1);
-        if(strength<.008)break;
+        if(strength<.004)break;
         for(const item of [...this.live])if(item.stepEndsAt!==undefined && (item.stepEndsAt<=now || item.stepActor===actor))this.stopSource(item);
         const steps=[...this.live].filter(item=>item.stepActor!==undefined);
         if(steps.length>=3){
@@ -404,30 +432,45 @@ export class GameAudio {
           if((quietest.stepStrength??0)>=strength)break;
           this.stopSource(quietest);
         }
-        const item=this.sample(`step-${1+(actor+Math.round(now*3))%4}` as Asset,'sfx',strength,0,pan,0,variation);
+        const sequence=this.stepSequence.get(actor)??0;this.stepSequence.set(actor,sequence+1);
+        const variant=1+(Math.abs(actor)+sequence)%4;
+        const item=this.sample((snow?`step-snow-${variant}-v1`:`step-${variant}`) as Asset,'sfx',strength,0,pan,0,variation);
         if(item){
-          item.stepActor=actor;item.stepStrength=strength;item.stepEndsAt=now+.20;
-          // Soften gravel hiss and fade the tail instead of stacking full washes.
-          (item.nodes[1] as BiquadFilterNode).frequency.value=event.occluded?900:Math.max(1400,3500-distance*170);
-          (item.nodes[2] as GainNode).gain.setTargetAtTime(.0001,now+.085,.035);
-          item.source.stop(now+.20);
+          const end=snow?.35:.20;
+          item.stepActor=actor;item.stepStrength=strength;item.stepEndsAt=now+end;
+          // Preserve the snow compression/release while keeping the three-step budget.
+          (item.nodes[1] as BiquadFilterNode).frequency.value=event.occluded?900:Math.max(1400,(snow?5200:3500)-distance*170);
+          (item.nodes[2] as GainNode).gain.setTargetAtTime(.0001,now+(snow?.20:.085),snow?.045:.035);
+          item.source.stop(now+end);
         }
         break;
       }
       case 'impact':
         if (this.ctx.currentTime - this.lastImpact > .035) {
           this.lastImpact = this.ctx.currentTime;
-          this.sample('impact', 'sfx', .33, distance, pan, 0, variation);
+          this.sample('impact', 'sfx', kind==='sniper'?.48:.33, distance, pan, 0, variation*(kind==='sniper'?.87:1));
           // Sparse glancing hits stay readable and do not whistle every bullet.
           if (distance < 14 && this.variants % 4 === 0) this.sample(this.variants % 8 ? 'ricochet-1' : 'ricochet-2', 'sfx', .26, distance, pan, .018, variation);
         }
         break;
-      case 'hit': this.sample('hit', 'ui', .70, 0, 0, 0, event.headshot ? 1.2 : 1); break;
+      case 'hit': {
+        const hurt=event.targetId===0,now=this.ctx.currentTime;
+        const sniper=kind==='sniper';
+        if(now-(hurt?this.lastPlayerHurt:this.lastBodyHit)<.075||!hurt&&distance>(sniper?30:18))break;
+        if(hurt){this.lastPlayerHurt=now;this.sample('hurt-body-v1','sfx',sniper?.63:.82,0,pan*.25);
+          if(sniper)this.sample('sniper-hit-v2','sfx',.48,0,pan*.25,0,variation);
+        }
+        else {this.lastBodyHit=now;const id:Asset=sniper?'sniper-hit-v2':`body-hit-${this.variants%3+1}-v1` as Asset;
+          this.sample(id,'sfx',sniper?.94:.78,distance*.45,pan,0,event.headshot?1.10:variation);
+          if(event.actorId===0)this.sample('hit','ui',.16,0,0,0,event.headshot?1.12:1);
+        }
+        break;
+      }
       case 'kill': this.sample('kill', 'ui', .75); break;
       case 'round': this.sample('ui-round', 'ui', .85); break;
       case 'bombTick': this.sample('ui-round', 'ui', .32, distance, pan, 0, 1.3); break;
-      case 'bombExplode': this.sample('grenade-explosion', 'sfx', 1.18, distance * .45, pan); break;
-      case 'plantComplete': case 'defuseComplete': case 'buy': case 'roundReward': case 'bombPickup': case 'bombDrop': case 'plantStart': case 'defuseStart': this.sample('ui-confirm', 'ui', .38, distance, pan); break;
+      case 'bombExplode': this.explosion(true,distance,pan,!!event.occluded,variation); break;
+      case 'plantComplete': case 'defuseComplete': case 'weaponPickup': case 'buy': case 'roundReward': case 'bombPickup': case 'bombDrop': case 'plantStart': case 'defuseStart': this.sample('ui-confirm', 'ui', .38, distance, pan); break;
     }
   }
 
@@ -438,25 +481,32 @@ export class GameAudio {
 
   /** 18.5 s bank audition: background first, then each important gameplay layer.
    * Uses the same bus as real combat, and never changes the saved master volume. */
-  async test():Promise<void> {
+  async test(profile:'all'|'snow-awp'='all'):Promise<void> {
     await this.unlock();
     if (!this.ctx || this.ctx.state !== 'running' || this.hidden) return;
     this.cancelAudition(); this.stopSources(); this.pending = []; this.peakHold = 0;
     this.eventCounts.test = (this.eventCounts.test ?? 0) + 1;
+    if(profile==='snow-awp'){
+      this.auditionUntil=this.ctx.currentTime+6;
+      for(let i=0;i<4;i++)this.sample(`step-snow-${i+1}-v1` as Asset,'sfx',.18,0,i%2?.13:-.13,.10+i*.42);
+      this.shot('sniper',0,0,1,2.1);
+      this.auditionTimer=setTimeout(()=>{this.auditionTimer=null;this.auditionUntil=0;this.stopSources();this.ensureScene();},6050);
+      return;
+    }
     this.auditionUntil = this.ctx.currentTime + 18.5;
     this.ensureScene();
     this.shot('rifle', 0, -.12, 1, 1.2);
-    this.shot('pistol', 0, .12, 1, 2.1);
+    this.shot('sniper', 0, .12, 1, 2.1);
     for (let i = 0; i < 3; i++) this.shot('rifle', 0, -.08, 1 + i * .009, 2.9 + i * .085);
     this.shot('pistol', 0, .10, 1, 3.8);
     this.sample('reload-out', 'sfx', .61, 0, -.12, 4.8);
     this.sample('reload-in', 'sfx', .69, 0, -.12, 5.55);
     this.sample('reload-bolt', 'sfx', .64, 0, -.12, 5.88);
-    this.sample('step-1', 'sfx', .20, 0, -.15, 6.55);
-    this.sample('step-3', 'sfx', .20, 0, .15, 6.88);
+    this.sample('step-1', 'sfx', .10, 0, -.15, 6.55);
+    this.sample('step-3', 'sfx', .10, 0, .15, 6.88);
     this.sample('ricochet-1', 'sfx', .28, 0, .55, 7.20);
     this.sample('grenade-throw', 'sfx', .63, 0, -.12, 7.55);
-    this.sample('grenade-explosion', 'sfx', 1.08, 0, .12, 8.25);
+    this.explosion(true,0,.12,false,1,8.25);
     this.sample('hit', 'ui', .70, 0, 0, 9.95);
     this.sample('kill', 'ui', .75, 0, 0, 10.15);
     this.sample('ui-confirm', 'ui', .62, 0, 0, 10.5);

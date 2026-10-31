@@ -1,3 +1,4 @@
+import {VOICE_ASSET_DIRECTORY} from '../src/render/voiceAssetVersion';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Simulation} from '../src/game/simulation';
@@ -28,7 +29,7 @@ test('assets still loading wait within their TTL rather than losing an immediate
  q.reset();q.enqueue([cue('grenade',20,1)],0);assert.equal(q.next(2,()=>true),null);
 });
 test('all voice assets are non-clipping PCM with recorded provenance and matching checksums',()=>{
- const base='public/assets/audio/voice/';const manifest=JSON.parse(readFileSync(base+'manifest.json','utf8'));
+ const base=`public/assets/audio/${VOICE_ASSET_DIRECTORY}/`;assert.match(VOICE_ASSET_DIRECTORY,/^voice-en-[a-f0-9]{12}$/);const manifest=JSON.parse(readFileSync(base+'manifest.json','utf8'));
  assert.equal(manifest.length,10);
  for(const item of manifest){assert.match(item.language,/^en-/);assert.doesNotMatch(item.text,/[\u3400-\u9fff]/);const file=readFileSync(base+item.file);assert.equal(file.toString('ascii',0,4),'RIFF');assert.equal(file.toString('ascii',8,12),'WAVE');assert.equal(createHash('sha256').update(file).digest('hex'),item.sha256);assert.ok(item.duration>.3&&item.duration<5);assert.ok(item.peak<.9&&item.rms>.03);}
 });

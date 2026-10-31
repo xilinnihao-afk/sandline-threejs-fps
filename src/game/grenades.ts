@@ -1,4 +1,4 @@
-import {MAP_BOXES} from './map';
+import {MAP_BOXES,getActiveMap} from './map';
 import type {Grenade} from './types';
 
 // Few arcade projectiles, swept in <= 4 cm substeps to keep the 8 cm radius outside cover.
@@ -6,6 +6,21 @@ import type {Grenade} from './types';
 const radius=.08;
 function solid(x:number,y:number,z:number){return y<radius||MAP_BOXES.some(b=>x>b.x-b.w/2-radius&&x<b.x+b.w/2+radius&&z>b.z-b.d/2-radius&&z<b.z+b.d/2+radius&&y<b.h+radius&&y>-radius);}
 export function advanceGrenade(g:Grenade,dt:number){
+ const geometry=getActiveMap().geometry;
+ if(geometry){
+  const steps=Math.max(1,Math.ceil(Math.hypot(g.vx,g.vy,g.vz)*dt/.04)),h=dt/steps;
+  for(let i=0;i<steps;i++){
+   g.vy-=9.81*h;
+   for(const [position,velocity,axis] of [['x','vx',[1,0,0]],['z','vz',[0,0,1]],['y','vy',[0,1,0]]] as const){
+    const delta=g[velocity]*h,sign=Math.sign(delta);if(!sign)continue;
+    if(geometry.ray(g.x,g.y,g.z,axis[0]*sign,axis[1]*sign,axis[2]*sign)<=Math.abs(delta)+radius){
+     if(Math.abs(g[velocity])>.3)g.bounces++;
+     g[velocity]=Math.abs(g[velocity])<.5?0:-g[velocity]*(position==='y'?.36:.48);
+     if(position==='y'){g.vx*=.91;g.vz*=.91;}
+    }else g[position]+=delta;
+   }
+  }return;
+ }
  const steps=Math.max(1,Math.ceil(Math.hypot(g.vx,g.vy,g.vz)*dt/.04)),h=dt/steps;
  for(let i=0;i<steps;i++){
   g.vy-=9.81*h;

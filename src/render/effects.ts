@@ -3,7 +3,7 @@ import type {GameEvent,Grenade} from '../game/types';
 import {ExplosionSystem} from './explosionSystem';
 import {MAP_BOXES} from '../game/map';
 
-interface Particle{x:number;y:number;z:number;vx:number;vy:number;vz:number;life:number;max:number;size:number;smoke:boolean;tone:'smoke'|'spark'|'dust'|'hit'|'blood'|'muzzle';}
+interface Particle{x:number;y:number;z:number;vx:number;vy:number;vz:number;life:number;max:number;size:number;smoke:boolean;tone:'smoke'|'spark'|'dust'|'hit'|'blood'|'bloodMist'|'muzzle';}
 interface Casing{p:THREE.Vector3;v:THREE.Vector3;r:THREE.Euler;spin:THREE.Vector3;life:number;bounced:boolean;}
 const hidden=new THREE.Matrix4().makeScale(0,0,0),dummy=new THREE.Object3D(),direction=new THREE.Vector3(),right=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);
 function flameTexture(){
@@ -38,7 +38,7 @@ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(ha
 void main(){
  vec2 p=gl_PointCoord*2.-1.;float d=length(p);
  float n=noise(p*3.2+vCloud*7.)*.65+noise(p*7.1+vCloud*11.)*.35;
- float mask=vCloud>0.?pow(max(0.,1.-smoothstep(.08,.96,d+(n-.5)*.30)),1.5)*(.40+.60*n):1.-smoothstep(.35,.85,d);
+ float mask=vCloud< -1.5?1.-smoothstep(.22,.9,length(vec2(p.x*1.7,p.y*.85))+(n-.5)*.22):vCloud<0.?pow(max(0.,1.-smoothstep(.05,.95,d+(n-.5)*.55)),1.2)*(.35+.65*n):vCloud>0.?pow(max(0.,1.-smoothstep(.08,.96,d+(n-.5)*.30)),1.5)*(.40+.60*n):1.-smoothstep(.35,.85,d);
  float alpha=mask*vAlpha;if(alpha<.008)discard;
  gl_FragColor=vec4(vColor*(vCloud>0.?(.8+n*.4):1.),alpha);
  #include <tonemapping_fragment>
@@ -56,7 +56,7 @@ void main(){
  private random(){this.rng=(Math.imul(this.rng,1664525)+1013904223)>>>0;return this.rng/4294967296;}
  reset(){this.particles.forEach(p=>p.life=0);this.holes.forEach(h=>h.life=0);this.cases.forEach(c=>c.life=0);this.trauma=0;this.grenades.forEach(g=>g.visible=false);this.shots=this.hits=this.blastCount=0;this.explosions.reset();}
  emit(e:GameEvent,distance=0){
-  if(e.type==='shot'){
+  if(e.type==='shot'&&e.weapon!=='knife'){
    this.shots++;const x=e.x??0,y=e.y??1.6,z=e.z??0;direction.set((e.endX??x)-x,(e.endY??y)-y,(e.endZ??z-1)-z).normalize();right.crossVectors(direction,up).normalize();const near=e.actorId===0?.04:0;
    const smokeCount=e.actorId===0?5:3;
    for(let i=0;i<smokeCount;i++){const p=this.spawn(x+direction.x*near,y+direction.y*near-.025,z+direction.z*near,true,.18);p.size=.075+this.random()*.10;p.life=p.max=.24+this.random()*.22;p.vx+=direction.x*.65;p.vz+=direction.z*.65;}
@@ -64,19 +64,21 @@ void main(){
    if(e.actorId!==0){const p=this.spawn(x,y,z,false,0);p.tone='muzzle';p.size=.30;p.max=p.life=.065;}
    const c=this.cases[this.caseCursor++%this.cases.length];c.p.set(e.ejectX??x+right.x*.22,e.ejectY??y-.13,e.ejectZ??z+right.z*.22);c.v.copy(right).multiplyScalar(1.7+this.random()).addScaledVector(direction,.5);c.v.y=1+this.random();c.spin.set(8+this.random()*14,5,14);c.r.set(0,0,0);c.life=2.3;c.bounced=false;
   }else if(e.type==='hit'){
-   this.hits++;
+   this.hits++;const heavy=e.weapon==='sniper',power=heavy?1.3:1;
    if(e.targetId!==0){
-    const hitDir=new THREE.Vector3(e.normalX??0,e.normalY??.12,e.normalZ??0).normalize();
-    for(let i=0;i<(e.headshot?15:10);i++){
+    const hitDir=new THREE.Vector3(e.normalX??0,e.normalY??.12,e.normalZ??0).normalize().multiplyScalar(-1);
+    right.crossVectors(hitDir,up).normalize();
+    for(let i=0;i<(e.headshot?24:heavy?24:18);i++){
      const p=this.spawn(e.x??0,e.y??1.2,e.z??0,false,.34);p.tone='blood';
-     const spread=(this.random()-.5)*.72;p.vx=hitDir.x*(1.2+this.random()*1.8)+right.x*spread;p.vz=hitDir.z*(1.2+this.random()*1.8)+right.z*spread;
-     p.vy=hitDir.y*(1+this.random()*1.5)+.25+this.random()*.6;p.size=(e.headshot?.045:.035)+this.random()*.075;p.max=p.life=.28+this.random()*.32;
+     const spread=(this.random()-.5)*2.3;p.vx=hitDir.x*((1.2+this.random()*1.8)*power)+right.x*spread;p.vz=hitDir.z*((1.2+this.random()*1.8)*power)+right.z*spread;
+     p.vy=hitDir.y*(1+this.random()*1.5)+.25+this.random()*.6;p.size=(.025+this.random()*.045)*power;p.max=p.life=.32+this.random()*.32;
     }
-    const flash=this.spawn(e.x??0,e.y??1.2,e.z??0,false,.08);flash.tone='hit';flash.size=e.headshot?.22:.14;flash.max=flash.life=.08;
-   }else this.trauma=Math.min(.6,this.trauma+.17);
+    for(let i=0;i<3;i++){const mist=this.spawn((e.x??0)+hitDir.x*.07,(e.y??1.2)+(this.random()-.5)*.10,(e.z??0)+hitDir.z*.07,false,0);mist.tone='bloodMist';mist.vx=hitDir.x*(.2+i*.2);mist.vz=hitDir.z*(.2+i*.2);mist.vy=.08;mist.size=(.24+i*.1)*power;mist.life=mist.max=.24+i*.055;}
+    const flash=this.spawn(e.x??0,e.y??1.2,e.z??0,false,.08);flash.tone='hit';flash.size=e.headshot?.22:heavy?.19:.14;flash.max=flash.life=.08;
+   }else this.trauma=Math.min(.6,this.trauma+(heavy?.30:.17));
   }else if(e.type==='explosion'||e.type==='bombExplode'){
    this.blastCount++;
-   this.explosions.spawn(new THREE.Vector3(e.x??0,e.y??0,e.z??0),e.occluded);
+   this.explosions.spawn(new THREE.Vector3(e.x??0,e.y??0,e.z??0),e.occluded,e.type==='bombExplode'?'bomb':'grenade');
   }else if(e.type==='impact'){
    for(let i=0;i<8;i++){const p=this.spawn(e.x!,e.y!,e.z!,i>2,.3);if(i>2){p.tone=e.surface==='metal'?'spark':'dust';p.size=e.surface==='metal'?.07+this.random()*.08:.11+this.random()*.14;p.max=p.life=e.surface==='metal'?.28:.45;}}
    const normal=new THREE.Vector3();let best=.08;for(const b of MAP_BOXES){for(const [dist,x,y,z] of [[Math.abs(e.x!-(b.x-b.w/2)),-1,0,0],[Math.abs(e.x!-(b.x+b.w/2)),1,0,0],[Math.abs(e.z!-(b.z-b.d/2)),0,0,-1],[Math.abs(e.z!-(b.z+b.d/2)),0,0,1],[Math.abs(e.y!-b.h),0,1,0]])if(dist<best){best=dist;normal.set(x,y,z);}}
@@ -89,12 +91,12 @@ void main(){
   for(let i=0;i<this.count;i++){
    const p=this.particles[i];p.life=Math.max(0,p.life-dt);
    if(p.life){
-    p.x+=p.vx*dt;p.y=Math.max(.025,p.y+p.vy*dt);p.z+=p.vz*dt;if(!p.smoke)p.vy-=7*dt;p.size+=dt*(p.smoke?.8:0);
+    p.x+=p.vx*dt;p.y=Math.max(.025,p.y+p.vy*dt);p.z+=p.vz*dt;if(!p.smoke&&p.tone!=='bloodMist')p.vy-=7*dt;p.size+=dt*(p.tone==='bloodMist'?.8:p.smoke?.8:0);
    }
    this.positions.set([p.x,p.y,p.z],i*3);const age=1-p.life/p.max;
-   this.colors.set(p.tone==='hit'?[.30,.05,.025]:p.tone==='blood'?[.62,.025,.012]:p.tone==='dust'?[.48,.39,.27]:p.tone==='muzzle'?[1,.88,.50]:p.smoke?[.10+age*.18,.095+age*.16,.085+age*.12]:[1,.56+age*.15,.17+age*.22],i*3);
-   this.sizes[i]=p.size;this.cloudFlags[i]=p.smoke?1+(i%7)*.13:0;
-   const smokeFade=p.smoke?Math.sin(Math.min(1,age)*Math.PI)*.55:.95;
+   this.colors.set(p.tone==='hit'?[.30,.05,.025]:p.tone==='bloodMist'?[.29,.008,.014]:p.tone==='blood'?[.28,.008,.014]:p.tone==='dust'?[.48,.39,.27]:p.tone==='muzzle'?[1,.88,.50]:p.smoke?[.10+age*.18,.095+age*.16,.085+age*.12]:[1,.56+age*.15,.17+age*.22],i*3);
+   this.sizes[i]=p.size;this.cloudFlags[i]=p.tone==='blood'?-2:p.tone==='bloodMist'?-1:p.smoke?1+(i%7)*.13:0;
+   const smokeFade=p.tone==='bloodMist'?.62:p.smoke?Math.sin(Math.min(1,age)*Math.PI)*.55:.95;
    this.alphas[i]=p.life>0?smokeFade*Math.min(1,p.life/(p.smoke?.5:.12)):0;
   }
   for(const key of ['position','color','size','alpha','cloud'])this.geo.getAttribute(key).needsUpdate=true;

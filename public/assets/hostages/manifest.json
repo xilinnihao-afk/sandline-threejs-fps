@@ -1,0 +1,47 @@
+{
+  "source": "https://github.com/lennyrivas/cstrike/blob/main/models/hostage.mdl",
+  "sourceGitBlob": "3672bf1992e7a7edaca7bf47b9d200649b5fe655",
+  "sourceSha256": "de4b65c44ce12615bdee14719e887c85ac3070b3a736ca0b6572b7583f457816",
+  "sourceBytes": 434908,
+  "conversion": "Original MDL geometry, rigid bone weights, normals, UVs, palette textures and local animation tracks. GoldSrc inch scale; Y up; -Z forward. Idle foot plane grounded. No weapon mesh.",
+  "files": [
+    {
+      "file": "hostage-1.glb",
+      "bytes": 193012,
+      "sha256": "4f0de64b7acbed2f429d58e229f0eb5e64c4dbfdd4ee9808bd17c3f34e92a7f1",
+      "triangles": 591,
+      "bones": 21,
+      "materials": 2,
+      "clips": [
+        "Idle",
+        "Walk",
+        "Run",
+        "Crouch"
+      ],
+      "sourceFeetZ": 0.040264279990444685,
+      "sourceTextureNames": [
+        "Hostage_Template1.BMP",
+        "Face-Unwrap1.bmp"
+      ]
+    },
+    {
+      "file": "hostage-2.glb",
+      "bytes": 171800,
+      "sha256": "756195f587135c89b2042659b3212ba6fc73df8e95d17c9ba8fdb17168524e7e",
+      "triangles": 591,
+      "bones": 21,
+      "materials": 2,
+      "clips": [
+        "Idle",
+        "Walk",
+        "Run",
+        "Crouch"
+      ],
+      "sourceFeetZ": 0.040264279990444685,
+      "sourceTextureNames": [
+        "Hostage_Template2.BMP",
+        "Face-Unwrap2.bmp"
+      ]
+    }
+  ]
+}

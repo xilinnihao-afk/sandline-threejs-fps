@@ -1,0 +1,1503 @@
+{
+  "files": [
+    {
+      "source": "assets-source/retired-20261023/assets/weapons/sketchfab/rifle.glb",
+      "file": "rifle.glb",
+      "before": 5719664,
+      "after": 4644624,
+      "gzipBytes": 3317969,
+      "sha256": "887bfbe625a1146ac3adfb957391e835e1a09b52e9419c7be34eafbe55067d5d",
+      "images": [
+        {
+          "image": 0,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 31082,
+          "after": 7074
+        },
+        {
+          "image": 1,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 15649,
+          "after": 10462
+        },
+        {
+          "image": 2,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 104336,
+          "after": 85422
+        },
+        {
+          "image": 3,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 228113,
+          "after": 28044
+        },
+        {
+          "image": 4,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 90584,
+          "after": 70146
+        },
+        {
+          "image": 5,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 242656,
+          "after": 187728
+        },
+        {
+          "image": 6,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 248450,
+          "after": 36394
+        },
+        {
+          "image": 7,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 53467,
+          "after": 38526
+        },
+        {
+          "image": 8,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 324963,
+          "after": 271656
+        },
+        {
+          "image": 9,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 9480,
+          "after": 2162
+        },
+        {
+          "image": 10,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 65641,
+          "after": 48344
+        },
+        {
+          "image": 11,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 40710,
+          "after": 33784
+        },
+        {
+          "image": 12,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 370,
+          "after": 174
+        },
+        {
+          "image": 13,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 25865,
+          "after": 17368
+        },
+        {
+          "image": 14,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 2750,
+          "after": 644
+        },
+        {
+          "image": 15,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 56747,
+          "after": 7976
+        },
+        {
+          "image": 16,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 78307,
+          "after": 68450
+        },
+        {
+          "image": 17,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 181577,
+          "after": 157274
+        },
+        {
+          "image": 18,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 53253,
+          "after": 7998
+        },
+        {
+          "image": 19,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 74837,
+          "after": 64904
+        },
+        {
+          "image": 20,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 97346,
+          "after": 80092
+        },
+        {
+          "image": 21,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 370,
+          "after": 174
+        },
+        {
+          "image": 22,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 2646,
+          "after": 1560
+        },
+        {
+          "image": 23,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 6365,
+          "after": 3744
+        },
+        {
+          "image": 24,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 263952,
+          "after": 37738
+        },
+        {
+          "image": 25,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 101881,
+          "after": 90648
+        },
+        {
+          "image": 26,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 270409,
+          "after": 237230
+        }
+      ]
+    },
+    {
+      "source": "assets-source/retired-20261023/assets/weapons/sketchfab/pistol.glb",
+      "file": "pistol.glb",
+      "before": 1677700,
+      "after": 1444132,
+      "gzipBytes": 1108141,
+      "sha256": "05326e714a047d9b34be425c2ef43815ee4f552769c3a0ba0b0f8c54c6f788cb",
+      "images": [
+        {
+          "image": 0,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 40267,
+          "after": 45426
+        },
+        {
+          "image": 1,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 49203,
+          "after": 36598
+        },
+        {
+          "image": 2,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 239511,
+          "after": 194640
+        },
+        {
+          "image": 3,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 45196,
+          "after": 8152
+        },
+        {
+          "image": 4,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 57113,
+          "after": 48270
+        },
+        {
+          "image": 5,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 221292,
+          "after": 176040
+        },
+        {
+          "image": 6,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 41699,
+          "after": 6310
+        },
+        {
+          "image": 7,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 52122,
+          "after": 44076
+        },
+        {
+          "image": 8,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 271601,
+          "after": 224520
+        }
+      ]
+    },
+    {
+      "source": "assets-source/retired-20261023/assets/weapons/sketchfab/smg.glb",
+      "file": "smg.glb",
+      "before": 5989168,
+      "after": 4869260,
+      "gzipBytes": 3501456,
+      "sha256": "827044bdc84149e9e4e51e52e289db1f56be93286aa1ea956211512b8e7b6533",
+      "images": [
+        {
+          "image": 0,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 226235,
+          "after": 31194
+        },
+        {
+          "image": 1,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 49687,
+          "after": 34838
+        },
+        {
+          "image": 2,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 437967,
+          "after": 386228
+        },
+        {
+          "image": 3,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 272270,
+          "after": 42820
+        },
+        {
+          "image": 4,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 42570,
+          "after": 29508
+        },
+        {
+          "image": 5,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 291435,
+          "after": 259942
+        },
+        {
+          "image": 6,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 324837,
+          "after": 49678
+        },
+        {
+          "image": 7,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 66021,
+          "after": 49866
+        },
+        {
+          "image": 8,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 245199,
+          "after": 201238
+        },
+        {
+          "image": 9,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 46005,
+          "after": 4446
+        },
+        {
+          "image": 10,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 47121,
+          "after": 32284
+        },
+        {
+          "image": 11,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 379030,
+          "after": 323762
+        },
+        {
+          "image": 12,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 100864,
+          "after": 20058
+        },
+        {
+          "image": 13,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 82429,
+          "after": 66270
+        },
+        {
+          "image": 14,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 286150,
+          "after": 245154
+        }
+      ]
+    },
+    {
+      "source": "assets-source/retired-20261023/assets/weapons/sketchfab/shotgun.glb",
+      "file": "shotgun.glb",
+      "before": 1424500,
+      "after": 1150580,
+      "gzipBytes": 741279,
+      "sha256": "eea3d6998593a576bb719c91a9a61e2cc79a2217f9cae3df8c336619da634b18",
+      "images": [
+        {
+          "image": 0,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 272302,
+          "after": 51076
+        },
+        {
+          "image": 1,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 64962,
+          "after": 49584
+        },
+        {
+          "image": 2,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 229192,
+          "after": 191696
+        }
+      ]
+    },
+    {
+      "source": "assets-source/retired-20261023/assets/weapons/sketchfab/sniper.glb",
+      "file": "sniper.glb",
+      "before": 4281052,
+      "after": 3249480,
+      "gzipBytes": 2502409,
+      "sha256": "38df8e4c3f0741805b4431624ee73547e2f18c251a3187f7deb462a6fd392080",
+      "images": [
+        {
+          "image": 0,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 19726,
+          "after": 4692
+        },
+        {
+          "image": 1,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 22305,
+          "after": 17544
+        },
+        {
+          "image": 2,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 152396,
+          "after": 111112
+        },
+        {
+          "image": 3,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 43340,
+          "after": 9690
+        },
+        {
+          "image": 4,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 42291,
+          "after": 33036
+        },
+        {
+          "image": 5,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 214781,
+          "after": 166078
+        },
+        {
+          "image": 6,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 2546,
+          "after": 1348
+        },
+        {
+          "image": 7,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 8795,
+          "after": 6976
+        },
+        {
+          "image": 8,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 133755,
+          "after": 80420
+        },
+        {
+          "image": 9,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 49834,
+          "after": 11390
+        },
+        {
+          "image": 10,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 45962,
+          "after": 34182
+        },
+        {
+          "image": 11,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 63338,
+          "after": 15404
+        },
+        {
+          "image": 12,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 57791,
+          "after": 44362
+        },
+        {
+          "image": 13,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 239808,
+          "after": 188848
+        },
+        {
+          "image": 14,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 41722,
+          "after": 8408
+        },
+        {
+          "image": 15,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 50941,
+          "after": 38622
+        },
+        {
+          "image": 16,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 248426,
+          "after": 208070
+        },
+        {
+          "image": 17,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 138039,
+          "after": 35594
+        },
+        {
+          "image": 18,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 47622,
+          "after": 36770
+        },
+        {
+          "image": 19,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 209569,
+          "after": 164954
+        },
+        {
+          "image": 20,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 78485,
+          "after": 19880
+        },
+        {
+          "image": 21,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 67125,
+          "after": 49750
+        },
+        {
+          "image": 22,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 247831,
+          "after": 187392
+        },
+        {
+          "image": 23,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 187395,
+          "after": 45616
+        },
+        {
+          "image": 24,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 53803,
+          "after": 42368
+        },
+        {
+          "image": 25,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 224563,
+          "after": 169484
+        },
+        {
+          "image": 26,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": false,
+          "before": 24294,
+          "after": 4970
+        },
+        {
+          "image": 27,
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 34492,
+          "after": 25252
+        },
+        {
+          "image": 28,
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 179535,
+          "after": 135598
+        }
+      ]
+    },
+    {
+      "source": "assets-source/glb3-20261023/rifle__m4a1_no_silencer_weapon_model_cs2.glb",
+      "file": "m4.glb",
+      "before": 7809900,
+      "after": 3462752,
+      "gzipBytes": 2695546,
+      "sha256": "14e08869b26722732f28877fea54c1c615e312f6712c6d1143708780ea580e00",
+      "sourceSha256": "c1a299c82685a40650a48b4ca9bd72b72d5fcab6a149bcbe58c8dbaca60b8022",
+      "provenance": {
+        "author": "6lucius (https://sketchfab.com/6lucius)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/rifle-m4a1-no-silencer-weapon-model-cs2-4710ad34989b4088914f6718bdafb215",
+        "title": "RIFLE | M4A1 (no silencer) Weapon Model (CS2)"
+      },
+      "images": [
+        {
+          "image": 0,
+          "role": "baseColor",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            1024,
+            1024
+          ],
+          "lossless": false,
+          "before": 687682,
+          "after": 145746
+        },
+        {
+          "image": 1,
+          "role": "occlusionRoughnessMetallic",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 1214274,
+          "after": 327928
+        },
+        {
+          "image": 2,
+          "role": "normal",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            1024,
+            1024
+          ],
+          "lossless": true,
+          "before": 1131306,
+          "after": 994048
+        }
+      ],
+      "estimatedTextureGpuBytesWithMipmaps": 12582912,
+      "sourceMuzzle": [
+        -0.0002542417496442795,
+        0.12022407352924347,
+        0.7000728249549866
+      ],
+      "muzzle": [
+        0,
+        0.061,
+        -0.646
+      ],
+      "normalization": {
+        "scale": 0.96083616468143,
+        "rotation": [
+          [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        ],
+        "translation": [
+          -0.0002442846676301058,
+          -0.05451563771221653,
+          0.026655288127443333
+        ]
+      },
+      "weaponSockets": {
+        "support": [
+          -0.012,
+          0.012,
+          -0.33
+        ],
+        "primaryGrip": [
+          0.024,
+          -0.065,
+          0.032
+        ]
+      },
+      "reload": {
+        "contact": [
+          -0.024,
+          -0.09,
+          -0.12
+        ],
+        "travel": [
+          0,
+          -0.23,
+          -0.025
+        ],
+        "rotation": [
+          0,
+          0,
+          1.5707963267948966
+        ],
+        "rack": [
+          -0.03,
+          0.083,
+          0.04
+        ],
+        "rackTravel": 0.06
+      },
+      "movingParts": {
+        "magazine": true,
+        "bolt": true,
+        "pump": false
+      },
+      "bounds": {
+        "min": [
+          -0.03381214663386345,
+          -0.14534665644168854,
+          -0.6460000276565552
+        ],
+        "max": [
+          0.04121021553874016,
+          0.14233770966529846,
+          0.3540000319480896
+        ]
+      },
+      "triangles": 43258,
+      "meshCount": 3,
+      "partitions": {
+        "body": {
+          "triangles": 37070,
+          "vertices": 31035,
+          "bounds": {
+            "min": [
+              -0.0338121460767154,
+              -0.10369721150344957,
+              -0.646
+            ],
+            "max": [
+              0.041210215827128,
+              0.14233771160945685,
+              0.3540000286351491
+            ]
+          }
+        },
+        "magazine": {
+          "triangles": 5318,
+          "vertices": 4090,
+          "bounds": {
+            "min": [
+              -0.01352149773799503,
+              -0.14534665293477633,
+              -0.17529261216588368
+            ],
+            "max": [
+              0.01195900382296422,
+              0.0720812872851118,
+              -0.07620581141188584
+            ]
+          }
+        },
+        "bolt": {
+          "triangles": 870,
+          "vertices": 894,
+          "bounds": {
+            "min": [
+              -0.028791164172297004,
+              0.07619275063401083,
+              -0.14142271436244017
+            ],
+            "max": [
+              0.028348813757448146,
+              0.09408559538602985,
+              0.05532581778549727
+            ]
+          }
+        }
+      },
+      "validation": {
+        "sourceBindIdentityMaxError": 2.4774429146882937e-07,
+        "trianglesPreserved": true,
+        "finitePositions": true,
+        "sourceMaterialAndTextureRolesPreserved": true,
+        "unusedSkinAnimationUVDataRemoved": true,
+        "browserVisualCheck": "owned by integration lead"
+      }
+    },
+    {
+      "source": "assets-source/deagle-20261025/desert_eagle_.50ae.glb",
+      "file": "deagle.glb",
+      "before": 7328292,
+      "after": 1474936,
+      "gzipBytes": 1099273,
+      "sha256": "15f49715567bb9cdfe519052428dbc21c49235ffe858fcabb7bf96e9517e78cb",
+      "sourceSha256": "bde122b6bfb1415bb893d29a0f2909dd544dda586115600f6ea6f763a6eae5df",
+      "provenance": {
+        "author": "drcrazzie (https://sketchfab.com/drcrazzie)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/desert-eagle-50ae-6df0ae09a0034540975c804a28df7037",
+        "title": "Desert Eagle .50AE"
+      },
+      "images": [
+        {
+          "image": 0,
+          "role": "baseColor",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 749155,
+          "after": 19180
+        },
+        {
+          "image": 1,
+          "role": "occlusionRoughnessMetallic",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 829595,
+          "after": 55892
+        },
+        {
+          "image": 2,
+          "role": "normal",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 832401,
+          "after": 192186
+        },
+        {
+          "image": 3,
+          "role": "baseColor",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "lossless": false,
+          "before": 934423,
+          "after": 28416
+        },
+        {
+          "image": 4,
+          "role": "occlusionRoughnessMetallic",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            256,
+            256
+          ],
+          "lossless": true,
+          "before": 1290359,
+          "after": 82848
+        },
+        {
+          "image": 5,
+          "role": "normal",
+          "originalSize": [
+            1024,
+            1024
+          ],
+          "size": [
+            512,
+            512
+          ],
+          "lossless": true,
+          "before": 720682,
+          "after": 199544
+        }
+      ],
+      "estimatedTextureGpuBytesWithMipmaps": 6291456,
+      "sourceMuzzle": [
+        0.57432299283915,
+        2.8200127953690455,
+        0.5498393280242138
+      ],
+      "muzzle": [
+        0,
+        0.069,
+        -0.225
+      ],
+      "eject": [
+        0.016,
+        0.072,
+        -0.065
+      ],
+      "normalization": {
+        "scale": 0.10333836580969213,
+        "rotation": [
+          [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        ],
+        "translation": [
+          0.05934959952692928,
+          -0.2224155138358589,
+          -0.1681805023840785
+        ]
+      },
+      "weaponSockets": {
+        "support": [
+          -0.039,
+          -0.015,
+          -0.03
+        ],
+        "primaryGrip": [
+          0.014762,
+          -0.023001,
+          -0.011958
+        ]
+      },
+      "reload": {
+        "contact": [
+          -0.002,
+          -0.065,
+          0.01
+        ],
+        "travel": [
+          0,
+          -0.17,
+          0.043
+        ],
+        "rotation": [
+          0,
+          0,
+          3.141592653589793
+        ],
+        "rack": [
+          -0.026,
+          0.078,
+          0.009
+        ],
+        "rackTravel": 0.037
+      },
+      "movingParts": {
+        "magazine": true,
+        "bolt": true,
+        "pump": false
+      },
+      "bounds": {
+        "min": [
+          -0.020783893764019012,
+          -0.06554150581359863,
+          -0.22499999403953552
+        ],
+        "max": [
+          0.020783893764019012,
+          0.0885525792837143,
+          0.04500000178813934
+        ]
+      },
+      "dimensions": [
+        0.041567787528038025,
+        0.15409408509731293,
+        0.26999999582767487
+      ],
+      "triangles": 20131,
+      "meshCount": 4,
+      "partitions": {
+        "body:0": {
+          "triangles": 10717,
+          "vertices": 8024,
+          "bounds": {
+            "min": [
+              -0.0197563875255434,
+              -0.06323978403965907,
+              -0.2129335369076131
+            ],
+            "max": [
+              0.0197563875255434,
+              0.05719627520386539,
+              0.04500000000000001
+            ]
+          }
+        },
+        "body:1": {
+          "triangles": 3952,
+          "vertices": 3493,
+          "bounds": {
+            "min": [
+              -0.015048608655515258,
+              0.031827054658990994,
+              -0.225
+            ],
+            "max": [
+              0.015048608655515265,
+              0.08855257979268122,
+              0.02952342186213322
+            ]
+          }
+        },
+        "bolt:1": {
+          "triangles": 4910,
+          "vertices": 4032,
+          "bounds": {
+            "min": [
+              -0.020783894063119493,
+              0.04122725451454351,
+              -0.19483494085797637
+            ],
+            "max": [
+              0.0207838940631195,
+              0.08852038602658413,
+              0.023998685489508925
+            ]
+          }
+        },
+        "magazine:0": {
+          "triangles": 552,
+          "vertices": 460,
+          "bounds": {
+            "min": [
+              -0.01313128692598671,
+              -0.0655415050162031,
+              -0.05024700314076293
+            ],
+            "max": [
+              0.013131286925986717,
+              0.06144005008681086,
+              0.022041904594388678
+            ]
+          }
+        }
+      },
+      "partitionSources": [
+        {
+          "node": 6,
+          "name": "DE_BODY_GRIP_Low_Body_0",
+          "group": "body",
+          "component": "authored fixed gun part",
+          "triangles": 2200
+        },
+        {
+          "node": 8,
+          "name": "DE_BODY_GRIP2_Low_Body_0",
+          "group": "body",
+          "component": "authored fixed gun part",
+          "triangles": 592
+        },
+        {
+          "node": 10,
+          "name": "DE_BODY_MAIN_Low_Body_0",
+          "group": "body",
+          "component": "authored fixed gun part",
+          "triangles": 4944
+        },
+        {
+          "node": 12,
+          "name": "DE_BODY_PARTSA_Low_Body_0",
+          "group": "body",
+          "component": "authored fixed gun part",
+          "triangles": 944
+        },
+        {
+          "node": 14,
+          "name": "DE_BODY_PARTSB_Low_Body_0",
+          "group": "body",
+          "component": "authored fixed gun part",
+          "triangles": 2037
+        },
+        {
+          "node": 16,
+          "name": "DE_TOP_BARRELL_Low_Slider Parts_0",
+          "group": "body",
+          "component": "fixed barrel",
+          "triangles": 3440
+        },
+        {
+          "node": 16,
+          "name": "DE_TOP_BARRELL_Low_Slider Parts_0",
+          "group": "bolt",
+          "component": "rear sight",
+          "triangles": 260
+        },
+        {
+          "node": 18,
+          "name": "DE_TOP_PARTSA_Low_Slider Parts_0",
+          "group": "bolt",
+          "component": "slide-mounted safety lever",
+          "triangles": 1039
+        },
+        {
+          "node": 18,
+          "name": "DE_TOP_PARTSA_Low_Slider Parts_0",
+          "group": "body",
+          "component": "front sight / hammer",
+          "triangles": 132
+        },
+        {
+          "node": 18,
+          "name": "DE_TOP_PARTSA_Low_Slider Parts_0",
+          "group": "body",
+          "component": "front sight / hammer",
+          "triangles": 190
+        },
+        {
+          "node": 18,
+          "name": "DE_TOP_PARTSA_Low_Slider Parts_0",
+          "group": "body",
+          "component": "front sight / hammer",
+          "triangles": 190
+        },
+        {
+          "node": 18,
+          "name": "DE_TOP_PARTSA_Low_Slider Parts_0",
+          "group": "bolt",
+          "component": "slide-mounted safety lever",
+          "triangles": 1039
+        },
+        {
+          "node": 20,
+          "name": "DE_TOP_SLIDER_Low_Slider Parts_0",
+          "group": "bolt",
+          "component": "authored complete slide",
+          "triangles": 2572
+        },
+        {
+          "node": 22,
+          "name": "DE_BODY_CLIP_Low.001_Body_0",
+          "group": "magazine",
+          "component": "authored seated magazine",
+          "triangles": 552
+        }
+      ],
+      "excludedSourceNodes": [
+        {
+          "node": 4,
+          "name": "DE_BODY_CLIP_Low_Body_0",
+          "triangles": 10806
+        },
+        {
+          "node": 24,
+          "name": "DE_BODY_CLIP_Low.002_Body_0",
+          "triangles": 3418
+        },
+        {
+          "node": 26,
+          "name": "DE_BODY_CLIP_Low.003_Body_0",
+          "triangles": 3418
+        },
+        {
+          "node": 28,
+          "name": "DE_BODY_CLIP_Low.004_Body_0",
+          "triangles": 3418
+        },
+        {
+          "node": 30,
+          "name": "DE_BODY_CLIP_Low.005_Body_0",
+          "triangles": 3418
+        }
+      ],
+      "validation": {
+        "assembledGunTrianglesPreserved": true,
+        "finitePositions": true,
+        "exactSourceTrianglesAtFloat32Precision": true,
+        "unitNormalsAndTangents": true,
+        "sourceMaterialAndTextureRolesPreserved": true,
+        "noCutTriangles": true,
+        "browserVisualCheck": "owned by integration lead"
+      }
+    }
+  ]
+}

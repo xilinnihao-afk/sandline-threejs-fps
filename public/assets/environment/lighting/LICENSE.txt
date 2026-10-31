@@ -1,0 +1,8 @@
+Studio Small 09 — Sergej Majboroda / Poly Haven
+Asset: https://polyhaven.com/a/studio_small_09
+Downloaded: 2026-10-08
+License: CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/)
+Provider license: https://polyhaven.com/license
+Source: https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr
+Source MD5: d5d7eb9d26d341d6aa4d11c1a54fd97c
+Used as a 1K local reflection probe for the first-person weapon scene.

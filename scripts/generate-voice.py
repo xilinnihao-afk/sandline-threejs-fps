@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-"""Generate short English callouts with local macOS synthesis, never a runtime API.
-Requires macOS say/afconvert and the named installed voice. Source recordings stay
-in artifacts/voice-source; processed PCM files and provenance ship with the game.
+"""Original English tactical radio callouts, synthesized locally on macOS.
+Use --preview to generate only a grenade sample outside the runtime asset folder.
 """
 from pathlib import Path
-import subprocess, wave, math, json, hashlib
+import subprocess, wave, math, json, hashlib, sys, shutil
 from array import array
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT/'artifacts/voice-source-en-v1'; OUT=ROOT/'public/assets/audio/voice'
+SOURCE=ROOT/'artifacts/voice-source-en-radio-v2'
+PREVIEW='--preview' in sys.argv
+OUT=ROOT/('artifacts/voice-preview-en-radio' if PREVIEW else 'public/assets/audio/voice')
 VOICE='Daniel'
-RATE_WPM=185
+RATE_WPM=190
+PITCH_FACTOR=.84  # About three semitones lower; effective cadence about 160 wpm.
 LINES={
  'grenade':'Frag out!',
- 'planted':'Bomb planted.',
+ 'planted':'Bomb has been planted.',
  'defusing':'Defusing. Cover me.',
- 'defused':'Bomb defused.',
- 'round-start':"Move out!",
+ 'defused':'Bomb has been defused.',
+ 'round-start':'Move out!',
  'round-win':'Round won.',
  'round-loss':'Round lost.',
  'round-draw':'Round over.',
@@ -25,28 +27,48 @@ LINES={
 SOURCE.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True)
 manifest=[]
 for name,text in LINES.items():
- raw=SOURCE/(name+'.wav')
+ if PREVIEW and name!='grenade':continue
+ # Cache identity includes voice, pace and text so edits never reuse stale speech.
+ key=hashlib.sha256(f'{VOICE}|{RATE_WPM}|{text}'.encode()).hexdigest()[:12]
+ raw=SOURCE/f'{name}-{key}.wav';aiff=raw.with_suffix('.aiff')
  if not raw.exists():
-  subprocess.run(['say','-v',VOICE,'-r',str(RATE_WPM),'-o',str(SOURCE/(name+'.aiff')),text],check=True)
-  subprocess.run(['afconvert',str(SOURCE/(name+'.aiff')),str(raw),'-f','WAVE','-d','LEI16@22050'],check=True)
+  subprocess.run(['say','-v',VOICE,'-r',str(RATE_WPM),'-o',str(aiff),text],check=True)
+  subprocess.run(['afconvert',str(aiff),str(raw),'-f','WAVE','-d','LEI16@22050'],check=True)
  with wave.open(str(raw),'rb') as w:
   rate=w.getframerate();channels=w.getnchannels();assert w.getsampwidth()==2
   pcm=array('h',w.readframes(w.getnframes()))
  samples=[sum(pcm[i:i+channels])/(32768*channels) for i in range(0,len(pcm),channels)]
- # Trim only leading/trailing silence, retaining consonant and breath margins.
- audible=[i for i,x in enumerate(samples) if abs(x)>.009]
- assert audible
- samples=samples[max(0,audible[0]-int(rate*.045)):min(len(samples),audible[-1]+int(rate*.09))]
- hp_alpha=1/(1+2*math.pi*230/rate);lp_alpha=1-math.exp(-2*math.pi*4300/rate)
- last=hp=lp=0.; processed=[]
- for x in samples:
-  hp=hp_alpha*(hp+x-last);last=x;lp+=lp_alpha*(hp-lp)
-  processed.append(math.tanh(lp*1.5))
- scale=.82/max(abs(x) for x in processed);fade=int(rate*.008)
- result=array('h',(round(x*scale*min(1,i/fade,(len(processed)-1-i)/fade)*32767) for i,x in enumerate(processed)))
+ audible=[i for i,x in enumerate(samples) if abs(x)>.009];assert audible
+ samples=samples[max(0,audible[0]-int(rate*.035)):min(len(samples),audible[-1]+int(rate*.065))]
+ pitched=[]
+ for i in range(int((len(samples)-1)/PITCH_FACTOR)):
+  pos=i*PITCH_FACTOR;j=int(pos);f=pos-j
+  pitched.append(samples[j]*(1-f)+samples[j+1]*f)
+ # Retain chest resonance, remove rumble/hiss; gentle radio saturation.
+ hp_alpha=1/(1+2*math.pi*105/rate);lp_alpha=1-math.exp(-2*math.pi*3500/rate)
+ last=hp=lp=body=env=0.;processed=[]
+ body_alpha=1-math.exp(-2*math.pi*330/rate)
+ for x in pitched:
+  hp=hp_alpha*(hp+x-last);last=x;lp+=lp_alpha*(hp-lp);body+=body_alpha*(lp-body)
+  dry=lp+.28*body
+  coefficient=1-math.exp(-1/(rate*(.003 if abs(dry)>env else .065)))
+  env+=coefficient*(abs(dry)-env)
+  gain=1 if env<=.12 else (.12+(env-.12)/3)/env
+  processed.append(math.tanh(dry*gain*1.45))
+ # Very quiet early reflections add presence without long reverb or radio noise.
+ reflected=[x+(processed[i-int(rate*.026)]*.065 if i>=int(rate*.026) else 0)+(processed[i-int(rate*.052)]*.025 if i>=int(rate*.052) else 0) for i,x in enumerate(processed)]
+ rms=math.sqrt(sum(x*x for x in reflected)/len(reflected))
+ scale=min(.14/max(rms,1e-9),.70/max(abs(x) for x in reflected));fade=int(rate*.008)
+ result=array('h',(round(x*scale*min(1,i/fade,(len(reflected)-1-i)/fade)*32767) for i,x in enumerate(reflected)))
  path=OUT/(name+'.wav')
  with wave.open(str(path),'wb') as w:
   w.setnchannels(1);w.setsampwidth(2);w.setframerate(rate);w.writeframes(result.tobytes())
- manifest.append({'id':name,'text':text,'file':name+'.wav','voice':VOICE,'generator':'macOS say; local synthesis, not ElevenLabs','language':'en-GB','rate_wpm':RATE_WPM,'sample_rate':rate,'duration':round(len(result)/rate,3),'peak':max(abs(x) for x in result)/32768,'rms':round(math.sqrt(sum((x/32768)**2 for x in result)/len(result)),4),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'processing':'230Hz highpass, 4300Hz lowpass, soft saturation, normalized peak 0.82, 8ms edge fades'})
-(OUT/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
-print(json.dumps({'clips':len(manifest),'bytes':sum(p.stat().st_size for p in OUT.glob('*.wav')),'durations':{m['id']:m['duration'] for m in manifest}},ensure_ascii=False))
+ manifest.append({'id':name,'text':text,'file':name+'.wav','voice':VOICE,'generator':'macOS say with offline DSP; not ElevenLabs or Counter-Strike recordings','language':'en-GB','rate_wpm':RATE_WPM,'pitch_factor':PITCH_FACTOR,'sample_rate':rate,'duration':round(len(result)/rate,3),'peak':max(abs(x) for x in result)/32768,'rms':round(math.sqrt(sum((x/32768)**2 for x in result)/len(result)),4),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'processing':'Pitch -3.02 semitones, 105Hz highpass, 3500Hz lowpass, low-mid body, 3:1 envelope compression, soft saturation, subtle 26/52ms reflections, RMS target 0.14 / peak cap 0.70, 8ms fades'})
+(OUT/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'preview':PREVIEW,'clips':len(manifest),'bytes':sum((OUT/m['file']).stat().st_size for m in manifest),'levels':[{k:m[k] for k in ['id','duration','peak','rms']} for m in manifest]},indent=2))
+
+if not PREVIEW:
+ revision=hashlib.sha256(''.join(m['sha256'] for m in manifest).encode()).hexdigest()[:12]
+ folder='voice-en-'+revision
+ shutil.copytree(OUT,OUT.parent/folder,dirs_exist_ok=True)
+ (ROOT/'src/render/voiceAssetVersion.ts').write_text('// Generated by scripts/generate-voice.py. Content-based paths prevent stale voice caches.\nexport const VOICE_ASSET_DIRECTORY = '+json.dumps(folder)+';\n')

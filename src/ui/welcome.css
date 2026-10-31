@@ -9,10 +9,37 @@
 @media(max-width:600px){.welcome-controls{grid-template-columns:1fr;gap:10px;margin:14px 0}.welcome-controls article{padding:12px 15px}.community-dialog{padding:18px}.main-menu>.community-links{top:auto;bottom:55px;left:20px;right:20px;gap:22px}}
 @media(max-height:500px) and (orientation:landscape){.welcome-controls{margin:12px 0}.loading-shell{padding:18px 28px}.main-menu>.community-links{top:55px;right:4vw;left:auto;bottom:auto;gap:15px}.community-links .text-button{font-size:10px}}
 
-.loading-shell.is-loading 
 
 .wechat-feedback{text-align:center;padding:18px;background:#101b17;border:1px solid #aebc8d35;margin:20px 0}.wechat-feedback img{display:block;width:min(260px,100%);height:auto;margin:0 auto;background:#fff;padding:12px;box-sizing:border-box;user-select:auto;-webkit-user-select:auto;-webkit-touch-callout:default;touch-action:auto}.wechat-feedback p{font-size:13px;margin:14px 0 0}.wechat-share-actions button{flex:1;min-width:120px}.wechat-share-actions button[aria-pressed="true"]{border-color:#dfb673;color:#f2d49c;background:#364636}#wechat-share-guide{padding:16px;background:#101b17;border-left:2px solid #dfb673;line-height:1.9}#wechat-copy-status{font-size:13px;color:#c5caba}
 
 .loading-shell{display:flex;align-items:center}.loading-card{width:100%;max-width:520px;margin:auto}.loading-brand{font-size:18px;letter-spacing:2px;color:#e4c185;margin-bottom:28px}.loading-browser-tip{margin-top:24px}.loading-links{justify-content:center}.loading-links button{flex:none;font-size:12px}#entry-failure a{color:#e4c185}
 
 html,body{touch-action:manipulation}.loading-shell,.community-dialog{touch-action:pan-y}.community-dialog button,.loading-shell button{touch-action:manipulation}
+
+/* Static image appears before the game bundle, models or WebGL are ready. */
+.loading-shell{padding:0;display:block;background:#142026;overflow:hidden}
+.loading-art,.loading-shade{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.loading-shade{background:linear-gradient(90deg,#0b131abf,transparent 85%),linear-gradient(0deg,#071019f5 0%,#0b151924 65%)}
+.loading-title{position:absolute;left:7vw;top:16vh;color:#fff0cc}
+.loading-title>span{font:11px monospace;letter-spacing:4px;color:#d5dcd7}
+.loading-title h1{font-size:clamp(40px,6vw,84px);letter-spacing:.16em;line-height:1.1;margin:22px 0 12px}
+.loading-title p{font-size:14px;letter-spacing:5px;color:#ccd1c7}
+.loading-card{position:absolute;left:max(7vw,env(safe-area-inset-left));right:max(7vw,env(safe-area-inset-right));bottom:max(5vh,env(safe-area-inset-bottom));width:auto;max-width:none;margin:0}
+.loading-brand{font:10px monospace;letter-spacing:3px;margin:0 0 12px;color:#dfbc7b}
+#startup-progress-area{position:relative;margin:0;padding-top:6px}
+#startup-label{font-weight:400;font-size:13px;letter-spacing:1px}
+#startup-progress{appearance:none;display:block;border:0;border-radius:0;width:100%;height:3px;margin:18px 0;background:#f4dfb12e}
+#startup-progress::-webkit-progress-bar{background:#f4dfb12e}#startup-progress::-webkit-progress-value{background:#e8c17b;transition:width .16s}
+#startup-progress::-moz-progress-bar{background:#e8c17b}
+#startup-progress-text{position:absolute;right:0;top:-17px;font:48px/1 monospace;font-variant-numeric:tabular-nums;color:#f5d594}
+#startup-detail{margin:10px 0;max-width:80%;font-size:11px;color:#bcc5c7}
+.loading-browser-tip{margin:14px 0 0;font-size:10px}.loading-links{position:absolute;right:0;bottom:0;margin:0;gap:12px}.loading-links button{padding:2px 8px;border:0;background:transparent;min-height:32px;color:#c1c9c8;font-size:11px}
+.loading-shell.is-complete{opacity:0;transition:opacity .24s ease;pointer-events:none}
+@media(max-height:500px){.loading-title{top:12vh}.loading-title h1{font-size:40px;margin:14px 0 8px}.loading-card{bottom:18px}.loading-title p{font-size:11px}.loading-brand{margin-bottom:4px}#startup-progress-text{font-size:36px;top:-10px}.loading-browser-tip{margin-top:8px}}
+@media(orientation:portrait){.loading-art{object-position:65% center}.loading-title{top:24vh}.loading-title>span{font-size:9px;letter-spacing:2px}.loading-title h1{font-size:42px}.loading-links{position:static;justify-content:flex-start;margin-top:8px}.loading-card{bottom:6vh}#startup-progress-text{font-size:38px}}
+
+/* Show a landscape-only gate even while the main game assets are still loading. */
+#portrait-startup{display:none}
+@media(orientation:portrait){#portrait-startup{display:flex;position:fixed;inset:0;z-index:100000;background:#112219;color:#f0eadb;align-items:center;justify-content:center;flex-direction:column;padding:24px;text-align:center;gap:16px;font:16px system-ui}#portrait-startup>span{font-size:54px;color:#dfaa5f}#portrait-startup>strong{font-size:22px}#portrait-startup>p{font-size:14px;color:#b6c2a6}#startup-status{display:none}}
+
+@media(orientation:portrait){dialog[open]{display:none!important}dialog::backdrop{display:none!important}}

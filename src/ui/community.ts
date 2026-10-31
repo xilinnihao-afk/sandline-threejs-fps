@@ -1,6 +1,6 @@
 import { siteConfig, telemetry } from '../analytics/telemetry';
 
-export const controls = `<div class="welcome-controls"><article><h3>手机 · 建议横屏</h3><p>左下摇杆移动，右侧空白处滑动瞄准。按住开火按钮射击，也可边拖动边瞄准；「精瞄」降低瞄准速度。</p><p>换弹、切枪、手雷、蹲伏使用屏幕按钮；靠近目标后按住「目标」安放或拆除炸弹。</p></article><article><h3>电脑 · 键鼠操作</h3><p>WASD / 方向键移动，鼠标瞄准，左键开火。R 换弹，1 / 2 切枪，G 手雷，C 蹲伏，按住 E 安放 / 拆除，Esc 暂停。</p></article></div>`;
+export const controls = `<div class="welcome-controls"><article><h3>手机 · 建议横屏</h3><p>左下摇杆移动，右侧空白处滑动瞄准。按住开火按钮射击，也可边拖动边瞄准；「精瞄」降低瞄准速度。</p><p>换弹、切枪、手雷、蹲伏使用屏幕按钮；靠近目标后按住「目标」安放或拆除炸弹。</p></article><article><h3>电脑 · 键鼠操作</h3><p>WASD / 方向键移动，鼠标瞄准，左键开火。R 换弹，1 / 2 切枪，G 手雷，空格跳跃，C 蹲伏，按住 E 安放 / 拆除，Esc 暂停。</p></article></div>`;
 function safeURL(value: string | undefined) { try { const url = new URL(value || ''); return ['https:', 'http:'].includes(url.protocol) ? url.href : ''; } catch { return ''; } }
 function shareURL() { return safeURL(siteConfig.shareUrl) || location.origin + location.pathname; }
 async function copy(text: string): Promise<boolean> {

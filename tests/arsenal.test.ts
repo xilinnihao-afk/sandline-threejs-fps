@@ -1,13 +1,14 @@
+import {advanceWeaponSwitch,resetWeaponSwitch} from '../src/game/weaponSwitch';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {Simulation,WEAPONS} from '../src/game/simulation.ts';
-import {WEAPON_KINDS,EMPTY_INPUT,type Grenade} from '../src/game/types.ts';
+import {WEAPON_KINDS,FIREARM_KINDS,EMPTY_INPUT,type Grenade} from '../src/game/types.ts';
 import {buy} from '../src/game/economy';
 import {advanceGrenade} from '../src/game/grenades.ts';
 const ready=()=>{const sim=new Simulation(71);sim.start();sim.state.phase='playing';sim.state.actors.forEach(a=>{a.guns[a.weapon].cooldown=999;a.grenades=0;});return sim;};
 
 test('available weapons consume one round per discharge and respect cooldown and reserve',()=>{
- for(const kind of WEAPON_KINDS){const sim=ready(),p=sim.state.player;p.weapon=kind;p.guns[kind].cooldown=0;
+ for(const kind of FIREARM_KINDS){const sim=ready(),p=sim.state.player;p.weapon=kind;p.inventory=[...WEAPON_KINDS];p.guns[kind].cooldown=0;
   assert.ok(sim.fire(p));assert.equal(p.guns[kind].ammo,WEAPONS[kind].magazine-1);assert.equal(sim.fire(p),false);
   assert.equal(sim.events.filter(e=>e.type==='shot').length,1,'one discharge emits one sound');assert.ok(sim.reload(p));assert.equal(sim.fire(p),false);
   const total=p.guns[kind].ammo+p.guns[kind].reserve;sim.state.actors.forEach(a=>a.guns[a.weapon].cooldown=999);
@@ -20,17 +21,20 @@ test('shot events expose sampled tracer and typed impact feedback',()=>{
  sim.fire(p);const shot=sim.events.find(e=>e.type==='shot');assert.ok(shot);assert.equal(typeof shot!.tracer,'boolean');assert.equal(shot!.pelletCount,1);
  const impact=sim.events.find(e=>e.type==='impact');if(impact)assert.ok(['wall','crate','metal'].includes(impact.surface!));
 });
-test('only AK and pistol can be selected or purchased; bots reset with AK',()=>{
- assert.deepEqual(WEAPON_KINDS,['rifle','pistol']);
- const sim=ready(),p=sim.state.player;p.money=16000;
+test('seven firearm classes can be purchased; selecting or firing an unowned class is rejected',()=>{
+ assert.equal(FIREARM_KINDS.length,7);assert.equal(WEAPON_KINDS.length,8);
+ const sim=ready(),p=sim.state.player;
+ assert.deepEqual(p.inventory,['rifle','pistol','knife']);
  assert.ok(sim.state.actors.every(a=>a.weapon==='rifle'));
- for(const kind of ['smg','shotgun'] as const){
+ for(const kind of ['smg','shotgun','m4','sniper','deagle'] as const){
   sim.update(1/60,{...EMPTY_INPUT,switchWeapon:kind});assert.equal(p.weapon,'rifle');
-  const money=p.money;assert.equal(buy(p,kind),false);assert.equal(p.money,money);
   p.weapon=kind;p.guns[kind].cooldown=0;assert.equal(sim.fire(p),false);p.weapon='rifle';
+  p.money=16000;assert.ok(buy(p,kind));assert.ok(p.inventory.includes(kind));
+  assert.equal(p.weapon,kind);assert.equal(p.money,16000-WEAPONS[kind].price);
+  assert.equal(sim.fire(p),false);advanceWeaponSwitch(p,1.1);assert.ok(sim.fire(p));p.weapon='rifle';resetWeaponSwitch(p);
  }
  sim.update(1/60,{...EMPTY_INPUT,switchWeapon:'pistol'});assert.equal(p.weapon,'pistol');
- sim.update(1/60,{...EMPTY_INPUT,switchWeapon:'rifle'});assert.equal(p.weapon,'rifle');
+ sim.update(1/60,{...EMPTY_INPUT,switchWeapon:'sniper'});assert.equal(p.weapon,'sniper');
 });
 test('one grenade per round, throwing locks fire briefly, restart clears projectiles',()=>{
  const sim=ready(),p=sim.state.player;p.grenades=1;p.guns.rifle.cooldown=0;assert.ok(sim.throwGrenade(p));assert.equal(p.grenades,0);assert.equal(sim.throwGrenade(p),false);assert.equal(sim.fire(p),false);assert.equal(sim.state.grenades.length,1);

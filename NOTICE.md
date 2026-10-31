@@ -1,20 +1,18 @@
-# Source license and third-party credits
+# 源码许可与第三方资源
 
-SANDLINE's original game source, tests, tooling, and documentation are released under the MIT License in [LICENSE](LICENSE). Dependencies retain their own licenses. Screenshots depict third-party game assets; this license does not grant rights to extract or redistribute the depicted assets.
+沙线行动原创源码、测试、工具和文档采用 [MIT License](LICENSE)。Three.js、Rapier、Vite、TypeScript 等依赖保留各自许可。
 
-The repository includes no third-party model, texture, or audio bundle. Some assets do not yet have sufficiently documented standalone redistribution terms. The asset inventory records expected files and checksums for local integration, not a distribution license. The hosted demo does not grant permission to extract or redistribute its assets.
+本仓库延续源码发行方式：包含资源元数据和署名，不分发第三方模型、地图、贴图、音频二进制包。代码的 MIT 许可不覆盖这些素材，也不授权从在线演示或截图提取、再分发素材。
 
-The game uses Three.js, TypeScript, Vite, and Rapier. Project asset records include:
+在线游戏涉及的素材来源包括：
 
-- Mixamo / Three.js Soldier reference animations, integrated under Mixamo's game-use terms.
-- Poly Haven environmental textures (CC0).
-- Michel Baradari / OpenGameArt gun and explosion sounds (CC BY 3.0).
-- SpringySpringo / OpenGameArt reload recordings (CC0).
-- Synthesized English voice callouts generated with the macOS Daniel voice.
+- Valve / Counter-Strike 相关 BSP 地图、角色、枪械与手臂资产。
+- Sketchfab 模型及各模型记录的作者、来源和许可。
+- Mixamo 动画供体，按其动画使用条款集成。
+- Poly Haven 环境纹理与光照，CC0。
+- OpenGameArt 音效，按各条目适用的 CC BY / CC0 等条款。
+- 原创合成及处理音效，以及系统语音生成的历史语音资源。
 
-These acknowledgments describe the demo's recorded asset sources; they do not relicense third-party material. Additional attribution is available in the live game's credit pages:
+具体来源见 [资源接入说明](ASSETS.md)、[模型与地图署名](public/assets/CREDITS.html)、[音效署名](public/assets/audio/CREDITS.html) 和子目录内元数据。资源清单仅记录版本与校验值，不替代许可证。
 
-- http://39.105.40.112/assets/CREDITS.html
-- http://39.105.40.112/assets/audio/CREDITS.html
-
-See [ASSETS.md](ASSETS.md) for the asset requirements and local setup limitations. The personal WeChat QR image, credentials, deployment logs, and generated build output are excluded.
+个人反馈二维码、凭据、部署日志、历史制作归档、依赖目录和构建输出均不纳入源码发行版。

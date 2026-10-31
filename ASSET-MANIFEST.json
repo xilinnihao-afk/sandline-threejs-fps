@@ -1,15 +1,40 @@
 {
-  "note": "Reference inventory only. Files are not included or licensed by this manifest. Obtain your own authorized copies; replacements may need loader changes.",
+  "sourceVersion": "0.39-bloodstrike-team-rounds",
   "files": [
     {
       "path": "public/assets/CREDITS.html",
-      "bytes": 2060,
-      "sha256": "c4b88b5ed55a727ba6cee4c59bf3e9a8d412d1b5a5319cf58743d40d8be7e8dc"
+      "bytes": 10282,
+      "sha256": "fdb312ed93d6f32cafebe9d8a76d9679c3a188d66124d5198f675fb5a3586450"
     },
     {
       "path": "public/assets/audio/CREDITS.html",
-      "bytes": 2757,
-      "sha256": "7b12af47e12e869ad3c36f1e43e9dfa07a2a5538540bffec16f9d67d3da5b878"
+      "bytes": 4163,
+      "sha256": "8e0ec2f3efdabd9887532131856d6990b5bc2f4560ea4945b82dda5b133be12a"
+    },
+    {
+      "path": "public/assets/audio/body-hit-1-v1.wav",
+      "bytes": 16802,
+      "sha256": "a3744d4bb717e4d66792fb19282e6a4516a794d70ffbd161d6472e7d8b04650f"
+    },
+    {
+      "path": "public/assets/audio/body-hit-2-v1.wav",
+      "bytes": 17860,
+      "sha256": "c3728a38f2d5f13a4f08c8a14bcb3052ce58b0df5d14d84a8b6c0c6e03eb549d"
+    },
+    {
+      "path": "public/assets/audio/body-hit-3-v1.wav",
+      "bytes": 18918,
+      "sha256": "24c27f14dd2250539c73638f9cd6788b6ca505d4661d96c9f825a9093aa9fd31"
+    },
+    {
+      "path": "public/assets/audio/bomb-explosion-v2.wav",
+      "bytes": 230444,
+      "sha256": "7971a079d691eb2731e9a05a624bbb998fcbacb3f3e7d61a7486f9ce8e50a5f2"
+    },
+    {
+      "path": "public/assets/audio/bomb-explosion-v3.wav",
+      "bytes": 320044,
+      "sha256": "3a3acdd7889827a74e88c752edad7ab6e00adee6d572dc48dd506294b29df620"
     },
     {
       "path": "public/assets/audio/city-bed.wav",
@@ -27,6 +52,11 @@
       "sha256": "87c7d0a14ecc5406719c21ffa6655445c05b0460859c63a891b36c370557b225"
     },
     {
+      "path": "public/assets/audio/grenade-explosion-v2.wav",
+      "bytes": 156844,
+      "sha256": "d64b59aa32d1a22817c40bf900cf7ef38ec061d36238e7ec56f24805ee7bf4ad"
+    },
+    {
       "path": "public/assets/audio/grenade-explosion.wav",
       "bytes": 110320,
       "sha256": "c69bb277d32d4310abe68ecc30fb00a18ebc244500f796017ad073aa26d8cd0a"
@@ -42,6 +72,11 @@
       "sha256": "cbf39b597a6c645939d763738b4ea06e12b466426866c2c70aac607f320c9bf2"
     },
     {
+      "path": "public/assets/audio/hurt-body-v1.wav",
+      "bytes": 24740,
+      "sha256": "174b879132217d9a142a4a0578a09b57700ef13521ef5534db2cb9d0c729199c"
+    },
+    {
       "path": "public/assets/audio/impact.wav",
       "bytes": 11564,
       "sha256": "29f5521ee79f4c638b98602c837fb4e19fef75282fc625733196eedaf6014de6"
@@ -53,8 +88,8 @@
     },
     {
       "path": "public/assets/audio/manifest.json",
-      "bytes": 20332,
-      "sha256": "c9be8c5d05bbecc3cd7337b08416da23b8169948f7a7244406167027ff2ec6f4"
+      "bytes": 27805,
+      "sha256": "fd7c57a5f8241bbbd928b4338d94ea6e77edda02c191f392dc2a017040e743ee"
     },
     {
       "path": "public/assets/audio/menu-score.wav",
@@ -137,6 +172,26 @@
       "sha256": "72c665ae56c6b1ca07f479ea5d5a557a418cd9b87e27b3b12926c93c5ac281ba"
     },
     {
+      "path": "public/assets/audio/sniper-hit-v2.wav",
+      "bytes": 24364,
+      "sha256": "ab1d18e3d657e12f1b98832ba27f36ba3f54ffc1977fae14e09873628099db52"
+    },
+    {
+      "path": "public/assets/audio/sniper-shot-v2.wav",
+      "bytes": 92844,
+      "sha256": "f12726de27996ec3887e5def22fd297fa4a949d83918c3c124396249175afe4b"
+    },
+    {
+      "path": "public/assets/audio/sniper-shot-v3.wav",
+      "bytes": 179244,
+      "sha256": "17f314cb7ca776f6cb63aca81f17d53eb71db83db039879339ad212224c1dc89"
+    },
+    {
+      "path": "public/assets/audio/sniper-shot-v4.wav",
+      "bytes": 204844,
+      "sha256": "ac09887d9b1c05c70cb61997adcb305c8c6194459ff0158bd2c962546ab922d6"
+    },
+    {
       "path": "public/assets/audio/step-1.wav",
       "bytes": 15404,
       "sha256": "7e74a4218127489484e0ba0d5d9115b690d0f4a850d0b42c8ecaf1b97da5c1cd"
@@ -155,6 +210,26 @@
       "path": "public/assets/audio/step-4.wav",
       "bytes": 17324,
       "sha256": "fe08ef50ae5617421e48f756d84033bc446281b1bc6999934a102f8929736331"
+    },
+    {
+      "path": "public/assets/audio/step-snow-1-v1.wav",
+      "bytes": 19244,
+      "sha256": "2d661fa581e257d0e63b52fb5fa59f1fdf305fcc54cf3757a678ab5a21fdb234"
+    },
+    {
+      "path": "public/assets/audio/step-snow-2-v1.wav",
+      "bytes": 20012,
+      "sha256": "bcfa90517a4ad29cae0a949f6bfbdecefb3131a5bbb3b74eb07d2d39f952ec13"
+    },
+    {
+      "path": "public/assets/audio/step-snow-3-v1.wav",
+      "bytes": 20780,
+      "sha256": "cd87b32ecc6cd5fb0591b43d79c430db6965e3c34c2a837ee1cb98100e1a5e19"
+    },
+    {
+      "path": "public/assets/audio/step-snow-4-v1.wav",
+      "bytes": 21548,
+      "sha256": "fba9b39c270041b0580029be8b4302875a83a9621d293ac31becc53e1f0b2505"
     },
     {
       "path": "public/assets/audio/tension-bed.wav",
@@ -178,58 +253,113 @@
     },
     {
       "path": "public/assets/audio/voice/defused.wav",
-      "bytes": 40648,
-      "sha256": "ab8fae8d7247e25d837119b28c4a48abae09483e19fac6d443506fae8762f517"
+      "bytes": 63664,
+      "sha256": "1d791d26d64e339c6729b3831d13778915aaf84de75331f346f73ff3bda20d1e"
     },
     {
       "path": "public/assets/audio/voice/defusing.wav",
-      "bytes": 69330,
-      "sha256": "beee07713a2dde6bb64bf551082ed0d5ebf16227d08328342d608e85a159b7f2"
+      "bytes": 74648,
+      "sha256": "8779f8ca4454254d8800d71ee07fcbe7179035b9adb2e2e175062ccbbadaa3b3"
     },
     {
       "path": "public/assets/audio/voice/grenade.wav",
-      "bytes": 29708,
-      "sha256": "e0d6f55dd27f6777a5679421e5e3774e29e22b5b1099daca6ca81b1157f5e673"
+      "bytes": 32372,
+      "sha256": "71b3efeb1a5c7340c64b394765ccbe17e6e2b30ed799e615c25accae80197d8b"
     },
     {
       "path": "public/assets/audio/voice/manifest.json",
-      "bytes": 5086,
-      "sha256": "a0a550b3cf7e2848c2b58b47d45005755fd82559100a39371ee541220c98d837"
+      "bytes": 6622,
+      "sha256": "35361c116bd75addc2135db4c12f977416d8ab0bcfd7d05276ed325db8bd5c22"
     },
     {
       "path": "public/assets/audio/voice/match-loss.wav",
-      "bytes": 40660,
-      "sha256": "6ebe6ef792d68504ab1274e075a3390ab215ac32b50d06b0a6f3e0773bb0f23e"
+      "bytes": 43562,
+      "sha256": "e043f5c8229323effca740624224ebcf23be32a2cc7f595e5871d80714bcc0f5"
     },
     {
       "path": "public/assets/audio/voice/match-win.wav",
-      "bytes": 44756,
-      "sha256": "99fcbfb43c84c722f71688055c05e466aff5e02f64e9d7538093c4812bbe6c62"
+      "bytes": 50270,
+      "sha256": "135fd849c9a352712a8836f345a461597db8c72c0dcbfee3accbaf294c976808"
     },
     {
       "path": "public/assets/audio/voice/planted.wav",
-      "bytes": 36552,
-      "sha256": "482ed15e299381a9a14d73de9372f86152249b34ae0a4d4660efe0f1f8352138"
+      "bytes": 59398,
+      "sha256": "9a04618ea93a3ee8fe853277db5f53bd39eddf8b1b77e9e7d36976c3b47f6b36"
     },
     {
       "path": "public/assets/audio/voice/round-draw.wav",
-      "bytes": 28888,
-      "sha256": "eb04079a555b5e8eabf909c4c07119138f5fa38d152d292420b71230a6a6ce3f"
+      "bytes": 31376,
+      "sha256": "ba5dbc9026ab7bfcac377e5c0fdde7ea7cdcdaf97d018c74cbb1af1aaa174b56"
     },
     {
       "path": "public/assets/audio/voice/round-loss.wav",
-      "bytes": 34008,
-      "sha256": "84bb0ba172f2e10132a713444a8d0e9af33ad0eb641590bc19dd7eb290d7455d"
+      "bytes": 36862,
+      "sha256": "c93224a3763f1a296f5c1807e5c9b5de8a25e3778b5227098563eca9d92dca46"
     },
     {
       "path": "public/assets/audio/voice/round-start.wav",
-      "bytes": 25300,
-      "sha256": "3d261b19efb1145a4353c360c7f519811e8f89e398968fcaedd025179bdba71c"
+      "bytes": 27108,
+      "sha256": "98a9832c6088adc8e8e4a0007fa584e17bed134b515104a8648f74d2b6185e93"
     },
     {
       "path": "public/assets/audio/voice/round-win.wav",
-      "bytes": 30936,
-      "sha256": "880e2cb5992cb9b25d01f428b1f5759e407365064bc2daff37fc16ad6da8e805"
+      "bytes": 33204,
+      "sha256": "2551bb333a0c7cca3e2c57cf4ee431278bcb940cdeb1c4a412e8d0c56ca0166c"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/defused.wav",
+      "bytes": 63664,
+      "sha256": "1d791d26d64e339c6729b3831d13778915aaf84de75331f346f73ff3bda20d1e"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/defusing.wav",
+      "bytes": 74648,
+      "sha256": "8779f8ca4454254d8800d71ee07fcbe7179035b9adb2e2e175062ccbbadaa3b3"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/grenade.wav",
+      "bytes": 32372,
+      "sha256": "71b3efeb1a5c7340c64b394765ccbe17e6e2b30ed799e615c25accae80197d8b"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/manifest.json",
+      "bytes": 6622,
+      "sha256": "35361c116bd75addc2135db4c12f977416d8ab0bcfd7d05276ed325db8bd5c22"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/match-loss.wav",
+      "bytes": 43562,
+      "sha256": "e043f5c8229323effca740624224ebcf23be32a2cc7f595e5871d80714bcc0f5"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/match-win.wav",
+      "bytes": 50270,
+      "sha256": "135fd849c9a352712a8836f345a461597db8c72c0dcbfee3accbaf294c976808"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/planted.wav",
+      "bytes": 59398,
+      "sha256": "9a04618ea93a3ee8fe853277db5f53bd39eddf8b1b77e9e7d36976c3b47f6b36"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/round-draw.wav",
+      "bytes": 31376,
+      "sha256": "ba5dbc9026ab7bfcac377e5c0fdde7ea7cdcdaf97d018c74cbb1af1aaa174b56"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/round-loss.wav",
+      "bytes": 36862,
+      "sha256": "c93224a3763f1a296f5c1807e5c9b5de8a25e3778b5227098563eca9d92dca46"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/round-start.wav",
+      "bytes": 27108,
+      "sha256": "98a9832c6088adc8e8e4a0007fa584e17bed134b515104a8648f74d2b6185e93"
+    },
+    {
+      "path": "public/assets/audio/voice-en-a84848162d26/round-win.wav",
+      "bytes": 33204,
+      "sha256": "2551bb333a0c7cca3e2c57cf4ee431278bcb940cdeb1c4a412e8d0c56ca0166c"
     },
     {
       "path": "public/assets/audio/weapon-mech.wav",
@@ -242,54 +372,44 @@
       "sha256": "8ad34e71e08d4b4b800df201ffbcecf3b62e4b4459f955c88ec56dfb01fff58f"
     },
     {
-      "path": "public/assets/characters/ct-uniform.jpg",
-      "bytes": 254932,
-      "sha256": "fc13bae1f96195a13be91f2485d4a3cd65629e8c54972896521ca01059504893"
+      "path": "public/assets/characters/counter_strike_source_terrorist_1reuploaded.glb",
+      "bytes": 2039928,
+      "sha256": "ea920cde49ec347b6ee5a949124c05c7f680c0f1cd5d5e5f679585fd5152f24b"
     },
     {
-      "path": "public/assets/characters/insurgent-uniform.jpg",
-      "bytes": 261982,
-      "sha256": "d99ec740cd93f711ad52e9203276180f42a64c293f6b23ed2134bd3c203f7250"
+      "path": "public/assets/characters/counter_strike_source_terrorist_2.glb",
+      "bytes": 1493336,
+      "sha256": "91cd8608697663b492ed178af2648d14c5048c7c95e0c75a5d3bd53664f3973f"
     },
     {
-      "path": "public/assets/characters/modern_tactical_female_character.glb",
-      "bytes": 15361744,
-      "sha256": "e06c4e4b2863936effe00e139df3e689a2a9796f0aaa4949a5d30815fc2e7b2a"
+      "path": "public/assets/characters/counter_strike_source_terrorist_3.glb",
+      "bytes": 1583036,
+      "sha256": "e5c26f0ff79f8b36db06e6a563689a052d1a0e07a167610d08c11d330f494131"
     },
     {
-      "path": "public/assets/characters/soldier-texture-0.jpg",
-      "bytes": 365808,
-      "sha256": "64e72c583d859ac947b83abbc6bcf58ff8001589565f81ce5d76589a9e7a9e47"
+      "path": "public/assets/characters/gign_cscz_counter_strike_condition_zero.glb",
+      "bytes": 641492,
+      "sha256": "712da4014e09b693cd0ded65648d62985712cd5755711fe46bbb92bd9d4fa2d1"
     },
     {
-      "path": "public/assets/characters/soldier-texture-1.jpg",
-      "bytes": 296774,
-      "sha256": "1269e411b662f8ede260861670a4c53835c1c25a316471b955a3b56426df1a14"
+      "path": "public/assets/characters/gsg9_cscz_counter_strike_condition_zero.glb",
+      "bytes": 298336,
+      "sha256": "ad3297cec95ee6bee9e9957b55128d2d9186f8a5d87ae0cca7a18eb731eead35"
     },
     {
-      "path": "public/assets/characters/soldier.bin",
-      "bytes": 1808464,
-      "sha256": "c4f399978b9cad52b1ea45a4e98984e9ce85d596e0296870638da9aef7f5215d"
+      "path": "public/assets/characters/locomotion.glb",
+      "bytes": 533916,
+      "sha256": "ef4278d4162fd15e20a50dd03808a0090a0bf83763c85f501f2fdafd29cd7bc0"
     },
     {
-      "path": "public/assets/characters/soldier.glb",
-      "bytes": 2160468,
-      "sha256": "dfb230fc1f942f259dd00281a1186953ad602fc5d69067ce63e24b2aa439736b"
+      "path": "public/assets/characters/sas_cscz_counter_strike_condition_zero.glb",
+      "bytes": 266168,
+      "sha256": "90bbc6dabaf4cb47fbfa5624ef9fe11aec87e455a36642e3c949fcc419745990"
     },
     {
-      "path": "public/assets/characters/soldier.gltf",
-      "bytes": 351741,
-      "sha256": "28917c71437cc0fba53be0122d11fea06f2c1ca033e085b8aac2110a5e4d25bc"
-    },
-    {
-      "path": "public/assets/characters/soldier_fully_rigged_character.glb",
-      "bytes": 10666740,
-      "sha256": "7342655ec00ec326d24b70864c23146f7d34b31a088ef0f3749c317a8d736857"
-    },
-    {
-      "path": "public/assets/characters/spetsnaz_gru_operator__high-poly_3d_character.glb",
-      "bytes": 37194588,
-      "sha256": "df378660e3da42933aa1bf89e4b3e1a1f7a4577cc1a850f83e6a605eb6e04ff1"
+      "path": "public/assets/characters/unarmed_idle_counter_terrorist.glb",
+      "bytes": 351232,
+      "sha256": "abf5984b0fbe17f0dc939da32766f2b7eed224d1e95d9555c752a704b43ec95c"
     },
     {
       "path": "public/assets/environment/V03-SOURCES.md",
@@ -315,6 +435,16 @@
       "path": "public/assets/environment/freight_station_4k.hdr",
       "bytes": 25778949,
       "sha256": "e6ca4d20067ce5ac1c4747208c50a3cde0f6eae03fe713528f0f46ba872f20d7"
+    },
+    {
+      "path": "public/assets/environment/lighting/LICENSE.txt",
+      "bytes": 448,
+      "sha256": "13d221fb0bd7475c0763bbb4e3d863e1c55afaf7b6588f91166086a1eda54d70"
+    },
+    {
+      "path": "public/assets/environment/lighting/studio-small-09-1k.hdr",
+      "bytes": 1615248,
+      "sha256": "e7cfda5f4e98e623db12b8bfd0184e048488e4855d9c83e2751fb44a32e80c45"
     },
     {
       "path": "public/assets/environment/paving-diff.jpg",
@@ -367,39 +497,1219 @@
       "sha256": "896390a81361a6a3b1e6e2b53c4fad03c31773df5130df4ee492f822f4be543a"
     },
     {
-      "path": "public/assets/player/fps_arms.glb",
-      "bytes": 10314692,
-      "sha256": "35fa9f574e53ee8008238e5d2a4d25827ef17737f42aef65af86f72a93f30edc"
+      "path": "public/assets/hostages/hostage-1.glb",
+      "bytes": 193012,
+      "sha256": "4f0de64b7acbed2f429d58e229f0eb5e64c4dbfdd4ee9808bd17c3f34e92a7f1"
     },
     {
-      "path": "public/assets/player/fps_arms_albedo.png",
-      "bytes": 4280276,
-      "sha256": "c388b8708509cd606c6257d01a48a3fd04022659cf6bc129c9868a165cb45ae4"
+      "path": "public/assets/hostages/hostage-2.glb",
+      "bytes": 171800,
+      "sha256": "756195f587135c89b2042659b3212ba6fc73df8e95d17c9ba8fdb17168524e7e"
     },
     {
-      "path": "public/assets/player/fps_arms_ao.png",
-      "bytes": 1339194,
-      "sha256": "9f7f37d86a9d818c9063a40a427bbaa92589d42773c285508d70a4f639059075"
+      "path": "public/assets/hostages/manifest.json",
+      "bytes": 1371,
+      "sha256": "4e9e16b59cc57dc7bbf6cbe34e11444af49d422d1021d1988dc56d6730ac1144"
     },
     {
-      "path": "public/assets/player/fps_arms_normal.png",
-      "bytes": 2902274,
-      "sha256": "9f78779b21248cbef81ccb9988d53e0b349c011ef7c00b0f94c000094bb1ba38"
+      "path": "public/assets/maps/assault/cs_assault.bsp",
+      "bytes": 1041700,
+      "sha256": "2457e165671e3830ec91471dea6f471440747cbb4b1fa1b6a85cddc30adb3648"
     },
     {
-      "path": "public/assets/player/fps_arms_specgloss.png",
-      "bytes": 1401292,
-      "sha256": "484489addcbae2c46ea1972bca754fd03d0624dd7bbbcbba2397f1356a183c3f"
+      "path": "public/assets/maps/assault/geometry.bin",
+      "bytes": 441796,
+      "sha256": "108adb4066cca5e214bc2b466bbae5760e5a48779b99765f63d5e9b3e3be0ff3"
     },
     {
-      "path": "public/assets/weapons/beretta_apx_a1_full_size_standard.glb",
-      "bytes": 9024620,
-      "sha256": "8db6a0c29a1fa88acec0135ee3edc40d681548e0fa6e1b411ed4e0e7bb3af527"
+      "path": "public/assets/maps/assault/lightmaps.webp",
+      "bytes": 127288,
+      "sha256": "f06d462a0775ac492cab5d0d8409533251b11b07fb4eeab45428159aedbd5f4d"
     },
     {
-      "path": "public/assets/weapons/ss2-v5_a1_kal.5.56_mm_pindad.glb",
-      "bytes": 12170436,
-      "sha256": "27446982dc8ef386880f4ce4e330fdb319111c9127c3573202dcf8535e23cee8"
+      "path": "public/assets/maps/assault/manifest.json",
+      "bytes": 23331,
+      "sha256": "c6dffd4f24d696b89292a11526aa65e350da0616f13f71eafc4bc2055127d5d4"
+    },
+    {
+      "path": "public/assets/maps/assault/navigation.json",
+      "bytes": 548815,
+      "sha256": "6301506c8707c166e535ac2022faf8585cc41ebe233b5431ad6b65e65577d3c9"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-bk.webp",
+      "bytes": 75940,
+      "sha256": "935e6166fc436501b5de598b622a5a9ec4be23bb483db76bd7474feb2bd24e8c"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-dn.webp",
+      "bytes": 75958,
+      "sha256": "a1be449a978cce310ee6f23ecaee8af791022d83dbcb5f89a598d22753ce49a3"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-ft.webp",
+      "bytes": 40044,
+      "sha256": "2d7713f30621526b8ab04621bf946a0df5304dd711e221a231e87714ae5f6146"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-lf.webp",
+      "bytes": 64092,
+      "sha256": "b6e31cbdf82eb49f2aa4bf9ca7da07c61dde2b34d371e7df763b4b620380f7b9"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-rt.webp",
+      "bytes": 65282,
+      "sha256": "de3f1804fd18d0696109ead64e82dccae1bc462cb75802d3c8211a7d4904a622"
+    },
+    {
+      "path": "public/assets/maps/assault/sky-up.webp",
+      "bytes": 36076,
+      "sha256": "ed62cdc18f6a028af8768523c2c4f42c9f5a93bf1162451ff0d2d23729c961fc"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-00.webp",
+      "bytes": 3428,
+      "sha256": "ce29933fa289a70d08d34ee175de4441200326b93d7dba89700a8689cbd6ca51"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-01.webp",
+      "bytes": 692,
+      "sha256": "b2e88779daf7e319dcd192ee23d267d418a85716f011b08a0e2b201ba20f113b"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-02.webp",
+      "bytes": 284,
+      "sha256": "e69627c9b1c3269f3724e234ddd1e63af6559e266610620fe71e194659431fd3"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-03.webp",
+      "bytes": 284,
+      "sha256": "f62df0d8d0ec659d6f9a8c74af05f6b88eb67facb7f02f1eeb32dd934295fc66"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-04.webp",
+      "bytes": 292,
+      "sha256": "7818b440a34f0c272cc62142062207fbe814a7be6b8b6a4dcde788608e5dd033"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-05.webp",
+      "bytes": 894,
+      "sha256": "30f3271d7f69ca0ead8070a094f8f9e64e9ab6f4be749c3e5c1976aba5be32f6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-100.webp",
+      "bytes": 2316,
+      "sha256": "2e23f69b29b77b9bf05f287d435e2de4d8e56538dfa560abde4685c0a9e8264a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-101.webp",
+      "bytes": 1646,
+      "sha256": "fe3d03b5429c0657b83764534d6015fd5019d8b02eb938db29920b55425ee554"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-102.webp",
+      "bytes": 2366,
+      "sha256": "f40e1c6260e296bab4e44ad2c342c75d36ed8f9b056407ccaedcacdd617fa6cb"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-103.webp",
+      "bytes": 1980,
+      "sha256": "ac692768729703d521880b0b034fe2aafc8aee84f490c9c56963b65ec0b90a4b"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-104.webp",
+      "bytes": 16380,
+      "sha256": "aa90560d42bc873010ca962c1fa0e95720a50833bf27f1a8ed07a214300a2675"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-105.webp",
+      "bytes": 4962,
+      "sha256": "8b18b9af7b1b4a2c8d49319b74a4c7b61395a20b8f0d889989f842a35f6ed475"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-106.webp",
+      "bytes": 13610,
+      "sha256": "c4b30e85849c01628e99643c594b3d9f666a8749d471b4d40497685d62c6306a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-107.webp",
+      "bytes": 7226,
+      "sha256": "0500dbed2acba68f347c5f8c5a8f6facd6110487756c519489af1f62b0316ca6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-108.webp",
+      "bytes": 30960,
+      "sha256": "16c340d21e7080d0ccf2e69ac9e48854fbbd272848f03c166779adedcd83d2dd"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-109.webp",
+      "bytes": 16164,
+      "sha256": "daf5facf8dbb5355c4a002ba2b12dcd37291d292ed9f5d868f006e508ad34625"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-110.webp",
+      "bytes": 1400,
+      "sha256": "f3873409e9bc7eeb4bdfd880997dd7634f35a1ee1ed2a378f4c9833c32b248f6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-111.webp",
+      "bytes": 4722,
+      "sha256": "c5fafcbb7ef646aefb7b83cf8e35d509eb27b33f362e96af7de45a284b6bfdf9"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-113.webp",
+      "bytes": 578,
+      "sha256": "90f1f12dadb251e52fa25ec290637c5114781a8b7aa71aab7f1fd3fe551fc9a6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-114.webp",
+      "bytes": 190,
+      "sha256": "206d6139e0f0daf7bb1d1e7e16f738e1b7479b83abe8c371308dd4d2df0460ca"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-115.webp",
+      "bytes": 3426,
+      "sha256": "94808a3bc5e670d4ba75e8abcbffa3dcada4b2ae7b0d8f49614a44f85193de01"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-116.webp",
+      "bytes": 29340,
+      "sha256": "599e5ca33f15deac68597b0094d1faf1f78bdb4e4bdefa79ed0a8b188ddb945d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-117.webp",
+      "bytes": 3744,
+      "sha256": "4f466814a245b5351442ed5221ee8fe7f97af633070add0029cdd8efb98280f6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-119.webp",
+      "bytes": 794,
+      "sha256": "1ebac15301882f8482028f3c8f227f10488949c07939f5bd21567d8166ddfc6c"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-120.webp",
+      "bytes": 14682,
+      "sha256": "edbb97a7da7f689be3dc0a3913aa5112a53fd546e22b1c0bdefc39eb4230c937"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-121.webp",
+      "bytes": 6286,
+      "sha256": "971e44ec16e7fc5f583b731147388438219d4431bb779d6ea4a61cdef86c2355"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-122.webp",
+      "bytes": 4216,
+      "sha256": "7407f17dc65b772108030a155e6ae8f5759c72296d0e8146ad37f2949613da23"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-123.webp",
+      "bytes": 4076,
+      "sha256": "4855bd1cce274791c8c2d6f8ce88cb73fbabf3f3058781a7161faf8c0a5bb49e"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-124.webp",
+      "bytes": 6866,
+      "sha256": "4b7797d8ed07aa8d28ae680a278ddd04be1fec06a7150b48e83163a3c2537a33"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-125.webp",
+      "bytes": 7760,
+      "sha256": "7d6cd9bc6ea06a477c4be5e347787dbde4715931d1a63f8c98db1d87d2e26b52"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-126.webp",
+      "bytes": 12082,
+      "sha256": "3f857ed89f39263be2752b44b85198582f5e9ddba3fad9180eca92ac2f863eea"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-127.webp",
+      "bytes": 1420,
+      "sha256": "9238d9a9795a957724739476c25a24db3f20ee52f462ce80eb8c538c93262134"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-128.webp",
+      "bytes": 7658,
+      "sha256": "c04500b04a6d8789935770e2fa8beafd7dc8f074174a5f2917c95761c3e21602"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-129.webp",
+      "bytes": 6924,
+      "sha256": "026eb4ad3951a8e917a6b501d8d0c6c75165e13dcdc4e14aa7617a110cbd5ac0"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-13.webp",
+      "bytes": 1752,
+      "sha256": "ae70c818698dc0df33100393564209757268a90992ff03f5a1f71fe138bc7225"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-130.webp",
+      "bytes": 3196,
+      "sha256": "2375e13a0ff2f7bbf757b19f42e3336b42cf6c657b7414b8dae8a49f6a6cb890"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-131.webp",
+      "bytes": 13990,
+      "sha256": "a384663b5bb7b02d12e73282372d8a6dd5bd3c1017bfc7db7ee6d0258c02d98e"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-132.webp",
+      "bytes": 13408,
+      "sha256": "04e1975ecf8776980d134901a762046d84ff75f1ee9b6b9d20e4f4d5fd12ed4d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-133.webp",
+      "bytes": 5428,
+      "sha256": "14db25026f923f9bcf75b0083a9640f779b7f34b49a3cec84aa420b5f044fc8d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-134.webp",
+      "bytes": 4716,
+      "sha256": "eabccdcef3fa0cb8e8ed90ab5a3ad4d8853183d96f6e470c6ecaf32ea6896d59"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-135.webp",
+      "bytes": 5808,
+      "sha256": "82f1e3cfa73d6b7e5c3a7adda70bf7c1a2494c43a7ff62557e43ee384542d6e6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-136.webp",
+      "bytes": 2118,
+      "sha256": "3ae7320606df1eb963dfcfa1be866aa251dcbaa19dcbda201dabd52f0756bb38"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-137.webp",
+      "bytes": 2020,
+      "sha256": "137da1b0bc72c5c1c7b70dc80c1439844f528719c7db714558a55afb96380dd7"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-138.webp",
+      "bytes": 2950,
+      "sha256": "772fd0c5d2c5fc939a1e908b817723ee78438a2ffcc2e3f9cb4134ab99a05443"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-139.webp",
+      "bytes": 1930,
+      "sha256": "76a92b6893e13719f0a3c84b34b711d3a3930415940c7ae619f3aad666cd8254"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-140.webp",
+      "bytes": 3472,
+      "sha256": "48fb6fc8fff9f1da57a4f0b4c8cfa6b285e42de5db95e3c52705cdbdb50a7200"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-141.webp",
+      "bytes": 998,
+      "sha256": "c9d1d08ce37fc34416dcd714085c63fd9b4effdda3452336fc9a316c6b879348"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-142.webp",
+      "bytes": 614,
+      "sha256": "07004ce0862743ab8998992dae135679b1136999b84d61b76557ede3857b9c2d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-143.webp",
+      "bytes": 2122,
+      "sha256": "9001053e8fd3fd6a62827024fe3b9c35800331ac819da00fc9f4d5f60d8da499"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-144.webp",
+      "bytes": 1468,
+      "sha256": "575f55b933e5ff860f7b90599b129b0e1c45a85fd641a4d355e578de632e76b7"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-145.webp",
+      "bytes": 292,
+      "sha256": "87c56a5a4786327b8136812b9ac3dad10e1217734ebd255d6280590ea1387686"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-146.webp",
+      "bytes": 3010,
+      "sha256": "3dc2fd326a8b194e7d47ec6dd3a8ac4b57f892360a94e63469d7a00a97b3e363"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-147.webp",
+      "bytes": 2988,
+      "sha256": "d2416eb10909d683d28d2f409a38b1bc7ec4bd2f00ad1250a84e9cee3aa67d4a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-148.webp",
+      "bytes": 3664,
+      "sha256": "09640841bc2cda89ccdf11664e01d899010b2734f0ac8951bcb1e9b3a469362d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-150.webp",
+      "bytes": 14968,
+      "sha256": "c177b3810e140fa038303b589c51622fc1b75931ddaa8f3393eefd395fc4bad1"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-151.webp",
+      "bytes": 34,
+      "sha256": "dfc9085cca4c8ee793dba7894c2809d28eb7689a93d89670fd63066960d941cf"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-152.webp",
+      "bytes": 640,
+      "sha256": "37075aca967e92c353838cd1a8e6526e27f1c4765bb340f0e77e881d034154bd"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-153.webp",
+      "bytes": 270,
+      "sha256": "0752dede825675b4e6f710216a98aa3f8b0f01e0a3ae4125c5612ea31503c9de"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-154.webp",
+      "bytes": 778,
+      "sha256": "1d3ca8ae2f558c822dd720f3d6f39ab32f1dc0fe8e57310368b291e719a34789"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-155.webp",
+      "bytes": 2094,
+      "sha256": "4ede1f18d138334ec2e03c9a5ff4690ccae992b6f6bbc57265ba6adf0363f4b1"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-156.webp",
+      "bytes": 1800,
+      "sha256": "28b2bdf858a353ca07a60efc6f2722e003ddef7b767548221fd061a607b4a075"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-157.webp",
+      "bytes": 7950,
+      "sha256": "9307b3ad759156c57cc04a36372362b9c7b3db0078d2d509a7c7e457d82d4c5d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-158.webp",
+      "bytes": 2364,
+      "sha256": "ac30302f7a15ad5dc55b446294803c75587050e5512bf080e4d46d0c046e5a13"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-159.webp",
+      "bytes": 378,
+      "sha256": "0553d14418ff45508cbebc4fd9fa29a25a3b171dd35cbd46663d2b76b0a4f116"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-16.webp",
+      "bytes": 2014,
+      "sha256": "dc76a5ecd610e642f66afb901e61d37a6533a20832ebaf2dda34f2c7ba1924df"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-160.webp",
+      "bytes": 13180,
+      "sha256": "9c603997655bc200a7c63501fddf44fd0a4f1c74b7b25540c58e2ef01e53af94"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-161.webp",
+      "bytes": 23682,
+      "sha256": "c17182dd775908b6f7d15b453f611ca6bff8c7eb1d0b1eab8d88b944c319b861"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-162.webp",
+      "bytes": 18884,
+      "sha256": "bb9a7c3a9fbe8dffaf424f8e758f4d854774be7c7f4598ebd12e7f9b84b1bfc2"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-163.webp",
+      "bytes": 13804,
+      "sha256": "bd7b2db760932abb8c678f66284c28789d57e8074d7b3344d90ba477d5611e65"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-164.webp",
+      "bytes": 14040,
+      "sha256": "6a9446e3270b14d57cd43c55c5918946292199ad1e417645c92a68663451ca11"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-165.webp",
+      "bytes": 11944,
+      "sha256": "3af4ed9dd2f4eb665a6aed794ae6bb50965942ec5734605e9037f2c5d4e875e0"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-166.webp",
+      "bytes": 11440,
+      "sha256": "ce35e353bab865cd0bdae93917942351d0ce1fcaf67954dccb5f7481dbb7b334"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-167.webp",
+      "bytes": 11006,
+      "sha256": "e837ff11fbbb9775efe74d3702b5c0488aeeb924d57063436fdc25c7a78ab424"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-169.webp",
+      "bytes": 5218,
+      "sha256": "5fa6bf78ec3e11f407526c8508cf498107ee7c3d9eaeab65fc6e3f361fdedc6b"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-17.webp",
+      "bytes": 13406,
+      "sha256": "6ba17c44d894ae67686978869459ef6e9281132d0b055f4c3517954252677939"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-170.webp",
+      "bytes": 10340,
+      "sha256": "a31920439406566cf7b9bd5cad670f7f4a3143691b72b4b9c45768426221d7e0"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-171.webp",
+      "bytes": 7410,
+      "sha256": "c6ec3edaf9e81980fc4deaecee6907769584d5f0d97118f89c2471df20fcb366"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-172.webp",
+      "bytes": 37904,
+      "sha256": "a25b115ded7e32e75f1f375098c47e98e3c764d01b17da639e52c10ef1597db4"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-173.webp",
+      "bytes": 9982,
+      "sha256": "9bf060bda38d6836489a1b58d015c48d51e8895f4dbd515191184f7a96bb24cb"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-174.webp",
+      "bytes": 1762,
+      "sha256": "e51a4426ef6ec968e71df4fd0b2b57b56c1a7c509228954e291399150209f7ba"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-175.webp",
+      "bytes": 6378,
+      "sha256": "c02f5ac96703212969b31ff975ac2b3ee70cc5d9c8284496475f2fc4fec98cab"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-176.webp",
+      "bytes": 15802,
+      "sha256": "795d815e5c33f2fca616f466b58ce615454f5990f078ecc5fdb2f0af72b9d247"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-177.webp",
+      "bytes": 13110,
+      "sha256": "2fd96303cc39ac5893ed6914edfecba5161f99613bd4c5aff038e84355696322"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-178.webp",
+      "bytes": 39064,
+      "sha256": "6df242ef585a102f854378d6432a9918a6a933d8d973d36be2ecb6e4651df92a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-179.webp",
+      "bytes": 1876,
+      "sha256": "c4760ba45e67fb4b858fc007841e0d2f13305d76064bf9b71b1eea95aacaeeeb"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-180.webp",
+      "bytes": 1846,
+      "sha256": "788391a28fdd8fad07309c29834b31d20abd0dfb2754c0db7b4a8370fcf4b5e8"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-181.webp",
+      "bytes": 1854,
+      "sha256": "14763ab56aebdb20e522d4e6efdd4cbaa1c2814fd171b7be180bf86a5f12e4d6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-27.webp",
+      "bytes": 736,
+      "sha256": "d2195b6a6ed125075235a2c2cb96d4f13622dc4301746f08e38a8f941aa4fc99"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-35.webp",
+      "bytes": 584,
+      "sha256": "281f3fb2389a7065053f7c4d8d6933b55d4cc9115b0d3dadbbee47c26f07826f"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-36.webp",
+      "bytes": 928,
+      "sha256": "ac38da8e403f892ac8de411f59bbbf7d15ed1db858f5c409aab50c8ceff51ad4"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-37.webp",
+      "bytes": 872,
+      "sha256": "fd72999aae585ecc8865150d399dab9bc92b01643edf20148c85914ab0d798d9"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-38.webp",
+      "bytes": 34,
+      "sha256": "a285bdbe2a9f84ff2bd19022cfe45d1f11eda49d8003665ef796db6f2963b9c6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-39.webp",
+      "bytes": 8952,
+      "sha256": "7e5672d8b6508215bcba7ab24fe52f25b58cd6115f9032a94444f9c5f7a74b83"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-40.webp",
+      "bytes": 2194,
+      "sha256": "cacdbf9bea4c88923a4e78d13fa3fdf4e70d716077c831bc29298d02174f73e3"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-41.webp",
+      "bytes": 24712,
+      "sha256": "a03a263dda40160f39d137de8174a01e8f7e5c038fce1631e1f7639a98b8c50d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-42.webp",
+      "bytes": 11580,
+      "sha256": "6ee17dae88a78e2933cd5e0e64e7c96a50e069bb25e922fe1640a81540cdc895"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-43.webp",
+      "bytes": 22740,
+      "sha256": "242dfcec989b7d0ac124785cce2e4574640ea49489293edb224eb4f27764c728"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-44.webp",
+      "bytes": 21564,
+      "sha256": "e45f348db6312ba00b39a7af6b767280f0fed00b04035980a8077555b0b67cd9"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-45.webp",
+      "bytes": 4530,
+      "sha256": "ef4521279752b34df71809893b4a5d13f1af2525abef65eee387d6c20d593f07"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-46.webp",
+      "bytes": 10376,
+      "sha256": "40fa7854fd280ebf503ef487aaa3d4e2a1aadd5ee01d33e1484ceb9a09b4931b"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-47.webp",
+      "bytes": 7876,
+      "sha256": "77b0e7a6ef40713265cb6ee1fd85679e90b83d459d9f80654a8d1226a933cd23"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-48.webp",
+      "bytes": 2178,
+      "sha256": "9ed5f500f80f4f553329d3b2a61640d004d82ab05200aa916c1c34894e9532c7"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-49.webp",
+      "bytes": 3370,
+      "sha256": "753002907f3928a7632ca430abcaa1e4fc6f22bf22f233096eff3a4b96a3b564"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-50.webp",
+      "bytes": 1944,
+      "sha256": "c4eacceab0bb49562c363a7e751167dd9db037d5a91faec8b3f8d14f02e94264"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-51.webp",
+      "bytes": 4550,
+      "sha256": "23fcad315bbb76b4ce4f67debe08d9f491d98d5a082069a5151d79368a5b2ff2"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-52.webp",
+      "bytes": 11710,
+      "sha256": "eac261f3ef3d361ce2fc69f138b8183ba85b5338b95efd354a6468d1df02df8a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-54.webp",
+      "bytes": 4960,
+      "sha256": "305e6444a35df6d639f22add24646d26ecd1abbedaa7bef1aa743c4cea4d9cef"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-56.webp",
+      "bytes": 24760,
+      "sha256": "931632de9a26ad7b39bdeb0e8ea9625d369bc5f0be258e7131fa5b3e0a098315"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-57.webp",
+      "bytes": 19824,
+      "sha256": "785cbebd84aaf04bcb71a21dba7831e9a473994d3f4c93e8a1f78f9a735123e5"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-58.webp",
+      "bytes": 13338,
+      "sha256": "9e8ed7d208b2cad9155b4dae4caaadd5390502d02ed1ed22076c1d8a0711a782"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-60.webp",
+      "bytes": 3296,
+      "sha256": "8ae25e8368d1b5548b583a76fd2f4e2ac2cbc3c3f0b83f8f586b9f83f0f5e7ca"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-61.webp",
+      "bytes": 2148,
+      "sha256": "fa52bb67ec260399ab469ef8a5900bbb54da6497b4ed8bbe4037b934b0b0dfea"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-62.webp",
+      "bytes": 8222,
+      "sha256": "f70becec90edd4a1bce0c2cafd1139cc37b9540fdbd4f2bff9638e034e6ce375"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-64.webp",
+      "bytes": 2650,
+      "sha256": "89bf365f8e0439888852aba74d1c98883a810c91ac7fbdea1be97a421f509e61"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-65.webp",
+      "bytes": 7396,
+      "sha256": "02ecccf00a89c95f22079288190f3df4f9a13dc6768b500da939cde167e3ebf6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-67.webp",
+      "bytes": 7128,
+      "sha256": "099eb64a61bdf40dc23c6c9a86a901f018f997fcd36461aff28d1ada817aedfc"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-68.webp",
+      "bytes": 7968,
+      "sha256": "12be0c928a7a9287db562294fda43c29f85d01666f9bd06c807e54e1ea29c85a"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-69.webp",
+      "bytes": 1372,
+      "sha256": "3d40a9e916daaaf5e11130aec5d24a83eb1c28284950b2f6a17e6d019d421108"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-70.webp",
+      "bytes": 2900,
+      "sha256": "61a39b53dd21c66107fa324013c3a38781773ede4540b73feb177b3f01c5d48d"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-72.webp",
+      "bytes": 2538,
+      "sha256": "57567fef0c87fcd57dd0a0d963a0a9c0c2875a2a6667c4701620813ad9715cf6"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-73.webp",
+      "bytes": 166,
+      "sha256": "49d61fbc07868fd867b2fffc8e3083017d120cfbf45e999ea45e9a279dd50349"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-74.webp",
+      "bytes": 3948,
+      "sha256": "28a48014da59c71a25da9c32222280f18515ab7f25f9e1580d594c1c1950a21c"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-75.webp",
+      "bytes": 338,
+      "sha256": "ae6286f2475e9b09e8d0d76e1414e24025504c9f7f0d0567b659045b53a8a740"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-76.webp",
+      "bytes": 38,
+      "sha256": "cc6f2e459656ff095392e8fec6564199fa63bee1b9439bb9c951e4e9e9ea660f"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-77.webp",
+      "bytes": 19080,
+      "sha256": "2c5699f6d3c5d430a1617183bf4fedb269c915b425c2f06553c066dbaada979b"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-78.webp",
+      "bytes": 2126,
+      "sha256": "8cf9bf31bd33ae7cca3b39ae301f401e6c06800773720d78548a0d94dacd0c63"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-80.webp",
+      "bytes": 752,
+      "sha256": "4e8a5d601be50082196267f0327df6448571dd11904183c696dabf7e5745f6ac"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-81.webp",
+      "bytes": 972,
+      "sha256": "ce71eee9726a3a73a2645ffc0c692e9bb75e352ce2a979c2f7ec8383f886ec65"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-82.webp",
+      "bytes": 9458,
+      "sha256": "01ccf4a2b627569c11130801b0f5115dfc5fb5eb34dc9db8a9853899d621501f"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-83.webp",
+      "bytes": 388,
+      "sha256": "cf7d3008d260353466d7d5bcd58e7a3170fc923af54881833616632755cbf2c2"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-84.webp",
+      "bytes": 5074,
+      "sha256": "5c0bce22997fbc0d965bdf7b34f7d61c5cfac9790b82a341c00949b925e80fa5"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-85.webp",
+      "bytes": 804,
+      "sha256": "b9fd3f588ba98568fcf50822f926573c56bf1b780e72775aa08a31156a84e859"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-86.webp",
+      "bytes": 2822,
+      "sha256": "3ed9d7649eceb37d21127e03f6eae2e1c63f63f30bc3fbe3b7681d95a9697f49"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-87.webp",
+      "bytes": 1268,
+      "sha256": "bab7c4c4c7e31a89f65a2cdad1aa4201d3a54960001018122bdaa08dd2448417"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-88.webp",
+      "bytes": 1510,
+      "sha256": "24c99708bdd32cdb7e35452efed03e40b7ee084cb3bf1fdad902bce672d468d3"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-89.webp",
+      "bytes": 2364,
+      "sha256": "ac30302f7a15ad5dc55b446294803c75587050e5512bf080e4d46d0c046e5a13"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-90.webp",
+      "bytes": 4054,
+      "sha256": "a71bda2d5916a9f26089c4228451a5ee8fc85f2d54181437c1314fd513fd5ae4"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-91.webp",
+      "bytes": 2146,
+      "sha256": "c4289c29bf91bd565e5a2f1a66b1925800fedfeabd53f8b74f58323a308b4f43"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-92.webp",
+      "bytes": 3244,
+      "sha256": "c1bfdf0b0d1f9800d9ddd2a46e69a96a0de957435231c0ebe738018afd8d3626"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-94.webp",
+      "bytes": 2262,
+      "sha256": "4c2bb875fbbc720d8a40d1f17534676cdc5ebeb48097e64dde78a084a0dddbcc"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-95.webp",
+      "bytes": 1348,
+      "sha256": "21d6b53819973de07219582eb8a48fed8e5645cb7ba0ccd5c6ee27b33bbdbc01"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-96.webp",
+      "bytes": 1122,
+      "sha256": "8b9a9804889504a6bb479d3543faf4b61797c28c8cf97c2659da40925c7f2005"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-97.webp",
+      "bytes": 1756,
+      "sha256": "ce14a207b7b36f8574b89166758c7c051fc50d8eaf09e5c48880397b79d08214"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-98.webp",
+      "bytes": 2042,
+      "sha256": "a90d53d0b5bbad7bdd7cf3d22fc0544540637fbbb7da636dc87c34bcd3ee6c40"
+    },
+    {
+      "path": "public/assets/maps/assault/texture-99.webp",
+      "bytes": 2480,
+      "sha256": "9a7b2ed74c0f796443b261f9884b4d8db406f0eb4a06ffe3d51dccaa6b754ede"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/cs_bloodstrike.bsp",
+      "bytes": 152380,
+      "sha256": "4d274b42c9fea481333dafd53aaac8edc83dbd051511610c448a1b39378eeeba"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/geometry.bin",
+      "bytes": 66672,
+      "sha256": "a529e75a67e80114af5d9912728fc3d58791babccdae6ae875b00f5e64a737cc"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/lightmaps.webp",
+      "bytes": 32694,
+      "sha256": "8613f0c9d89b19dabc294862ffe27b937b2df69a01f51f6d97363093dd24fc11"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/manifest.json",
+      "bytes": 1784,
+      "sha256": "d5f4030af9e367d1a11bb19edad902a1bdc4945478a1de1d86f5f3aae4f945e2"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/navigation.json",
+      "bytes": 115374,
+      "sha256": "100320fdc8fc716af7f28c820294e3f959cf552e34863ab64d1b40a9fd5fb557"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-07.webp",
+      "bytes": 1804,
+      "sha256": "90b032206cf7ff30a00239e53fc06e1c011e6bf80e6c2d24af38da01f719a72d"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-08.webp",
+      "bytes": 2776,
+      "sha256": "1a1a956f09be5fe35659b59bde5376ead64255214d7bdfdcac9f973bf4f6690f"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-09.webp",
+      "bytes": 2662,
+      "sha256": "dc34d894a8eb4b9ecb54814930e6f1e50c8eb327f5ecda6211025114b2d842e9"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-11.webp",
+      "bytes": 4402,
+      "sha256": "1a09d7ee198fe9faa913419b5a4a6b14428a0cdff83c8c6e61af2579894e023d"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-12.webp",
+      "bytes": 2178,
+      "sha256": "9ed5f500f80f4f553329d3b2a61640d004d82ab05200aa916c1c34894e9532c7"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-13.webp",
+      "bytes": 1944,
+      "sha256": "c4eacceab0bb49562c363a7e751167dd9db037d5a91faec8b3f8d14f02e94264"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-14.webp",
+      "bytes": 9184,
+      "sha256": "c8ce122f9bcfb49197f5d4011cf8b2e18bbbd01a73d1ecdea8abdd77ba77064e"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-15.webp",
+      "bytes": 378,
+      "sha256": "0553d14418ff45508cbebc4fd9fa29a25a3b171dd35cbd46663d2b76b0a4f116"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-16.webp",
+      "bytes": 370,
+      "sha256": "373f090f638ed4bd73d2d2e7ffea2e1e64d48b25f80c281303f9d01021c3fe2a"
+    },
+    {
+      "path": "public/assets/maps/bloodstrike/texture-17.webp",
+      "bytes": 16118,
+      "sha256": "94e4589cc1de639cde0c5d681a3ca9153c939745e63cc6f252bb0588c9db9213"
+    },
+    {
+      "path": "public/assets/maps/dust2/de_dust2.bsp",
+      "bytes": 2057288,
+      "sha256": "15945389528d113562ede0a2c80647ebfa799079ed1c05a25379bcf84e4e9286"
+    },
+    {
+      "path": "public/assets/maps/dust2/geometry.bin",
+      "bytes": 610028,
+      "sha256": "3276f9a4e53933c1a7af0a670c5cbd84185b0c8a4c3d70b4337737850cc1c6ae"
+    },
+    {
+      "path": "public/assets/maps/dust2/lightmaps.webp",
+      "bytes": 121694,
+      "sha256": "da382c169f5294155602326b68ea4ed2ced330e044de70729f52e37852299226"
+    },
+    {
+      "path": "public/assets/maps/dust2/manifest.json",
+      "bytes": 5531,
+      "sha256": "8429f4adfad2a0d3c9d2bd16832916edae634a24c0b311176a74c85d488ebef4"
+    },
+    {
+      "path": "public/assets/maps/dust2/navigation.json",
+      "bytes": 533974,
+      "sha256": "297208147d5cdda48b9ddc1fb9fbb235506fadff4a5463d6e7f0d3e0c97c4c74"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-bk.webp",
+      "bytes": 81926,
+      "sha256": "86063e9a5f2bf95423835a0d4ecab6d5a81a1277fdd3174cea06b82cb6df4a02"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-dn.webp",
+      "bytes": 73016,
+      "sha256": "ea3e7051c0c1df031a37f7504af2f8628aa9ce3ff19cf9b217c64896e6276c18"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-ft.webp",
+      "bytes": 80742,
+      "sha256": "7479027d098d9f372fb101e1ec316af0a43cbf778200fc3abfc02de026855935"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-lf.webp",
+      "bytes": 80798,
+      "sha256": "9c3c4dd64628ef93ec59d52c501c742c4ca0b25dc81a803d357ca0bccc4fa984"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-rt.webp",
+      "bytes": 81232,
+      "sha256": "1ef25fcea77ca7d68c5e48411be51569acad48e709fbf6cbe6d6b8d24089637a"
+    },
+    {
+      "path": "public/assets/maps/dust2/sky-up.webp",
+      "bytes": 48990,
+      "sha256": "685c3987194f8d45a6f8cd850f097c1545f9b2e3e1a671a140f80283bf70ed73"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-00.webp",
+      "bytes": 610,
+      "sha256": "703e2684fefcda9a7dc8361fe4086daa9899417a3c24a814e898667e73cb229e"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-03.webp",
+      "bytes": 34,
+      "sha256": "a285bdbe2a9f84ff2bd19022cfe45d1f11eda49d8003665ef796db6f2963b9c6"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-05.webp",
+      "bytes": 2542,
+      "sha256": "99ccfd99468aac7558ddf975e20dbf1253c1a1486c8c39379882b6c4ad30b70e"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-07.webp",
+      "bytes": 38,
+      "sha256": "d0685fafaaf7ff1faadf702cfc672aa8c07e434ffbb119d79231284f65c8f1b3"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-08.webp",
+      "bytes": 28664,
+      "sha256": "b86921e7d7fe06df9b91b096e3b7c12c2cfe8c4284534c3d08aa963fd6ce072a"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-11.webp",
+      "bytes": 28752,
+      "sha256": "a478c61a8acbdc34ddb0131c1a7de7121e073329d0bd8099d8bfa8ce395759e8"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-12.webp",
+      "bytes": 28616,
+      "sha256": "f5447e2b7db573eebfb52f948ffe23faf2b562ad3c5c3f8afe1dc35234bc2bcc"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-13.webp",
+      "bytes": 53498,
+      "sha256": "9ed4819e8395357a9a9b4ea6a70d8143d6ae8d7e67bfd730a5548b15072adcf9"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-14.webp",
+      "bytes": 18068,
+      "sha256": "c8b4eb1f696a567235503a9f6bf1a2edccb45ec4a69eeab4248073ee2650f70c"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-15.webp",
+      "bytes": 17242,
+      "sha256": "731310dd80bfa3a892c8b942f0bf203a3356458321dd162c53275e98b51be4e4"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-16.webp",
+      "bytes": 5094,
+      "sha256": "87230af047d23cef2e35f336a07185fa004eef59227ecef1c0e4987a1c1e0236"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-17.webp",
+      "bytes": 2456,
+      "sha256": "5fb62c4103931fc95874994e43feb39b2cced1c3c238c3e5cb055cd592bc7dec"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-18.webp",
+      "bytes": 40132,
+      "sha256": "dccf3484b66b64532ce7f33b3897fc631909e33ca735043a5c2a687b3b0335c2"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-19.webp",
+      "bytes": 24066,
+      "sha256": "962e16e552b4e86988c0dfa00b4144a02f911e1105f0e6c778708d14354ad194"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-20.webp",
+      "bytes": 23914,
+      "sha256": "9fcf1a487809bf6bc8e3797096b9146a3162afb4a1453a806e178f073630ba68"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-21.webp",
+      "bytes": 26392,
+      "sha256": "111520b462df20e428a6ef816db759f9c31145917a6a91ff16216786065ea703"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-22.webp",
+      "bytes": 24362,
+      "sha256": "234e14d16ae48d9aef8c9ad2a9ab32b679f3dec94ed3011319559350c43ba45e"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-23.webp",
+      "bytes": 30320,
+      "sha256": "5a6116e27769117c7c7bbefbb823d158d64096cb70045a547bb91337681ec452"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-24.webp",
+      "bytes": 16456,
+      "sha256": "68b615936617f5ca2bf67425ad4cdd11f02899bb419013486be83d9fdeeee14d"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-27.webp",
+      "bytes": 16546,
+      "sha256": "b217b113410f5801447450a89e1e6577ac8d32244d730f3f9e03ce4056ea593f"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-29.webp",
+      "bytes": 4254,
+      "sha256": "d69b90d08ee26e6ec509cfef06685bfd838ac5b9058d7c09eacc45f7580cda38"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-30.webp",
+      "bytes": 4168,
+      "sha256": "761cb187fbdfa4a35e9f4d909284343b07b154e124023753b7d946d4e853eb57"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-31.webp",
+      "bytes": 4304,
+      "sha256": "7c0e5d740054d773eac90503652c2e894d2424648e48e8d5ad0a162a42265c53"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-32.webp",
+      "bytes": 47204,
+      "sha256": "1b2f7fe8040128cb075daa547fbfb93fddca349c56a1f64878839e4fb6449193"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-33.webp",
+      "bytes": 16552,
+      "sha256": "d58b6ca7e8a12a66e444daf187ad75e8cd03390e2a3684e7b34feb970572dd52"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-34.webp",
+      "bytes": 16346,
+      "sha256": "43250da7de03647baffcd87a5df6c9889636553b1c767bbe298d58c10b3c58d1"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-35.webp",
+      "bytes": 4508,
+      "sha256": "7e363bcca91f323689bf8acd6d0342095cf892a261aef62b42df45ca6af442b5"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-36.webp",
+      "bytes": 4672,
+      "sha256": "0a57f38ce614297d9bea2050708b334d1f0b0285c792da1e323bd59c13787152"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-37.webp",
+      "bytes": 62392,
+      "sha256": "d78b2cebfa30f90fb08832a3d2f3aa295d4f124b18bc6fc36154fff4c468dfe4"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-39.webp",
+      "bytes": 56230,
+      "sha256": "2ad3821bb5c8d4c9ad8a76fbdca2266bbed8c852ab0e7362ffa99cb17293c4c8"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-40.webp",
+      "bytes": 3678,
+      "sha256": "b291633c9c052c752509bd611a4a190a7f590f11c8f0e249aafa4868bd0130ce"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-41.webp",
+      "bytes": 27448,
+      "sha256": "5e44036fd6033e531f9ed50f05477e5e5c2f76f4d9bdff411086d13537822c7c"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-42.webp",
+      "bytes": 25694,
+      "sha256": "8821b91b19b06997525b1066c41df31d23641565fcca90dc97791371c21eb037"
+    },
+    {
+      "path": "public/assets/maps/dust2/texture-43.webp",
+      "bytes": 28308,
+      "sha256": "a6e140ef19ab1380be01fe03ecdc2eb3800ee9c071edb8764a1b2a79d3c3cb9c"
+    },
+    {
+      "path": "public/assets/runtime/classic-knife.glb",
+      "bytes": 183156,
+      "sha256": "bd23ba2d9f83785db40a793ded39141d7cb73b7f27e2916e3d7815440ab0791b"
+    },
+    {
+      "path": "public/assets/runtime/cs16-ak47.glb",
+      "bytes": 202044,
+      "sha256": "5eb7ccd8ac7dca3171b260890d466e2f61e32ed81a6536b1819c257000583ea9"
+    },
+    {
+      "path": "public/assets/runtime/cs16-arms-rigged.glb",
+      "bytes": 280472,
+      "sha256": "29516e039ed6eaeebb7d19ee4898e8483f3553bec1c4bb98308bcaa379b99d79"
+    },
+    {
+      "path": "public/assets/runtime/cs16-attribution.txt",
+      "bytes": 1216,
+      "sha256": "a34e165e6b6e5c66f76cbf7c852b08edca8db2d56e1f518cabe96ad317a77fef"
+    },
+    {
+      "path": "public/assets/runtime/deagle.glb",
+      "bytes": 1474936,
+      "sha256": "15f49715567bb9cdfe519052428dbc21c49235ffe858fcabb7bf96e9517e78cb"
+    },
+    {
+      "path": "public/assets/runtime/m4.glb",
+      "bytes": 3462752,
+      "sha256": "14e08869b26722732f28877fea54c1c615e312f6712c6d1143708780ea580e00"
+    },
+    {
+      "path": "public/assets/runtime/manifest.json",
+      "bytes": 32126,
+      "sha256": "8823c7cddec1bf04ca38a43187d0d14da64c6612e7165909d6bf172b7a47c7bb"
+    },
+    {
+      "path": "public/assets/runtime/pistol.glb",
+      "bytes": 1444132,
+      "sha256": "05326e714a047d9b34be425c2ef43815ee4f552769c3a0ba0b0f8c54c6f788cb"
+    },
+    {
+      "path": "public/assets/runtime/rifle.glb",
+      "bytes": 4644624,
+      "sha256": "887bfbe625a1146ac3adfb957391e835e1a09b52e9419c7be34eafbe55067d5d"
+    },
+    {
+      "path": "public/assets/runtime/shotgun.glb",
+      "bytes": 1150580,
+      "sha256": "eea3d6998593a576bb719c91a9a61e2cc79a2217f9cae3df8c336619da634b18"
+    },
+    {
+      "path": "public/assets/runtime/smg.glb",
+      "bytes": 4869260,
+      "sha256": "827044bdc84149e9e4e51e52e289db1f56be93286aa1ea956211512b8e7b6533"
+    },
+    {
+      "path": "public/assets/runtime/sniper.glb",
+      "bytes": 3249480,
+      "sha256": "38df8e4c3f0741805b4431624ee73547e2f18c251a3187f7deb462a6fd392080"
+    },
+    {
+      "path": "public/assets/ui/assault-preview.jpg",
+      "bytes": 110036,
+      "sha256": "dbcf51d21de43146e1e7002d228ed3bc294ab9badf1db4f11d0eb6e792ea2659"
+    },
+    {
+      "path": "public/assets/ui/bloodstrike-preview.jpg",
+      "bytes": 94889,
+      "sha256": "1dbec3e2fc90f21572e78f0972b940df824b217e66d4cf314a81479c1916acfd"
+    },
+    {
+      "path": "public/assets/ui/desert-preview.jpg",
+      "bytes": 262769,
+      "sha256": "51097060a855fca7235d507933a6afe0e59e8664000da8728f23e201474a83e0"
+    },
+    {
+      "path": "public/assets/ui/dust2-preview.jpg",
+      "bytes": 195917,
+      "sha256": "ffd6f6a9307bf57c5e6d3049b9ebcdb8a2d6e8a177fef4016c2cd19256481b37"
+    },
+    {
+      "path": "public/assets/ui/shop/deagle.png",
+      "bytes": 66733,
+      "sha256": "2d92d51d9f985a66b41e42fde254721c7ec17cc2796e68a8031fa629a43ade51"
+    },
+    {
+      "path": "public/assets/ui/shop/m4.png",
+      "bytes": 45476,
+      "sha256": "1b433bfb22c3bfac24a975a41b8c015fececbecec927d07356a085cf73930a9e"
+    },
+    {
+      "path": "public/assets/ui/shop/pistol.png",
+      "bytes": 54865,
+      "sha256": "461b5abe8d1f46298dadbe88ef22d47a43b5ee2186be99a3a4b7f0cf69a7c156"
+    },
+    {
+      "path": "public/assets/ui/shop/rifle.png",
+      "bytes": 74608,
+      "sha256": "1186f10e794c5c84a8d18e5977b74468531bcb7a1bbb1d1985796e8d03af8e24"
+    },
+    {
+      "path": "public/assets/ui/shop/shotgun.png",
+      "bytes": 35412,
+      "sha256": "0a5ee60e55e08fc0cf70e3ed9c9c383cc3363102bd3836c7f6528bcff2e1562c"
+    },
+    {
+      "path": "public/assets/ui/shop/smg.png",
+      "bytes": 73512,
+      "sha256": "168a84c7ad2e69e27e0935f78d10e733e2585df3d247f6cbaa58d423de8d0549"
+    },
+    {
+      "path": "public/assets/ui/shop/sniper.png",
+      "bytes": 39069,
+      "sha256": "ad026d4fd91078280f4d64f2bb75d3c83b52ced938a5239d5f5c071e01597b6f"
+    },
+    {
+      "path": "public/assets/ui/snow-preview.jpg",
+      "bytes": 35339,
+      "sha256": "2a1c3533ab6c39e1652181dd219332d434a991657d54011bd8536e9720c73062"
     }
   ]
 }

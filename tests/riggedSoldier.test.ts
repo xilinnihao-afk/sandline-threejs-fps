@@ -7,11 +7,12 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {adaptSoldierAnimations} from '../src/render/riggedSoldier';
+import {prepareRosterSoldier} from '../src/render/soldierRoster';
 
 
 test('new soldier retargets real idle/walk/run without scaling bones or moving actor root',async()=>{
- const donor=await loadCPU('public/assets/characters/soldier.gltf');
- const target=await loadCPU('public/assets/characters/soldier_fully_rigged_character.glb');
+ const donor=await loadCPU('public/assets/characters/locomotion.glb');
+ const target=prepareRosterSoldier(await loadCPU('public/assets/characters/unarmed_idle_counter_terrorist.glb'),'urban');
  const result=adaptSoldierAnimations(donor,target);
  assert.deepEqual(result.animations.map(c=>c.name),['Idle','Walk','Run']);
  assert.ok(result.scene.getObjectByName('mixamorigLeftHandIndex1'));

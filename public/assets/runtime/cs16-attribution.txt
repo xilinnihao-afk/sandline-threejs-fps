@@ -1,0 +1,20 @@
+Classic AK first-person view and hands, integrated 2026-10-17.
+
+AK47 CS 1.6 — Tapani Neoxa (@tapani_psx)
+https://sketchfab.com/3d-models/ak47-cs-16-6c32e8e6cc0f4bdf97b64f15cac0521e
+Uploader license: Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+The uploader explicitly credits the original CS 1.6 model to Valve.
+The uploader's CC label does not establish clearance of Valve's underlying rights.
+Original download retained without modification as cs16-ak47.glb.
+Runtime changes: canonical coordinates, rigid magazine/charging-handle separation,
+classic unlit material presentation, first-person framing and procedural animation.
+
+CS1.6 hands with M4A1 — crikozo (@guzmano)
+https://sketchfab.com/3d-models/cs1-6-hands-with-m4a1-d0b473f16f6a468fb23072faa8d29797
+Uploader license: Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Changes: extracted hands-only GLB; omitted M4/light nodes and unused buffers;
+retained original hand geometry, textures and all skin joints. Runtime removes
+the upload's mirror/stretch wrapper, fits the AK pose, and animates the support arm.
+No original animation clips were supplied; firing/reloading are locally authored.

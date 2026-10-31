@@ -3,10 +3,12 @@ import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 
 export type CharacterModelId = 'A' | 'B';
+// Reused supplied filenames must bypass the previous service worker's cache.
+export const CHARACTER_ASSET_REVISION = 'glb3-20261023';
 // 【修改模型文件名的位置】文件放在 public/assets/characters/，浏览器不能读取 /Users/... 路径。
 export const CHARACTER_MODEL_FILES = {
-  A: 'spetsnaz_gru_operator__high-poly_3d_character.glb',
-  B: 'modern_tactical_female_character.glb',
+  A: 'unarmed_idle_counter_terrorist.glb',
+  B: 'counter_strike_source_terrorist_1reuploaded.glb',
 } as const;
 export interface CharacterAssetInfo {
   skins: number; skinnedPrimitives: number; triangles: number;
@@ -60,6 +62,7 @@ export interface CharacterLoadOptions {
 }
 
 const templates = new Map<string, Promise<{ gltf: GLTF; info: CharacterAssetInfo }>>();
+let locomotionDonor: Promise<GLTF> | undefined;
 
 /** 保留作者法线、UV 和切线，不焊接硬边、不重新生成已有法线。 */
 export function prepareCharacterMaterials(scene: THREE.Object3D, maxTextureSize = 2048): void {
@@ -138,18 +141,27 @@ export class CharacterLocomotion {
 }
 
 export async function loadCharacterModel(id: CharacterModelId, options: CharacterLoadOptions = {}) {
-  const url = options.url ?? `${import.meta.env.BASE_URL}assets/characters/${CHARACTER_MODEL_FILES[id]}`;
+  const url = options.url ?? `${import.meta.env.BASE_URL}assets/characters/${CHARACTER_MODEL_FILES[id]}?v=${CHARACTER_ASSET_REVISION}`;
+  const useRosterAnimations = !options.url && !options.staticPreview;
   const maxSize = Math.min(2048, Math.max(256, options.maxTextureSize ?? 2048));
-  const key = `${url}:${maxSize}:${!!options.staticPreview}`;
+  const key = `${url}:${maxSize}:${!!options.staticPreview}:${useRosterAnimations}`;
   let template = templates.get(key);
   if (!template) {
     template = (async () => {
       const response = await fetch(url); if (!response.ok) throw new Error(`人物 ${id} 加载失败：HTTP ${response.status}`);
-      const data = await response.arrayBuffer(), info = inspectCharacterGLB(data);
-      if (!options.staticPreview) assertAnimatedCharacter(info);
+      const data = await response.arrayBuffer(); let info = inspectCharacterGLB(data);
+      if (!options.staticPreview && !useRosterAnimations) assertAnimatedCharacter(info);
       const resourcePath = new URL('.', new URL(url, location.href)).href;
-      const gltf = await new GLTFLoader().parseAsync(data, resourcePath);
+      let gltf = await new GLTFLoader().parseAsync(data, resourcePath);
       prepareCharacterMaterials(gltf.scene, maxSize);
+      if (useRosterAnimations) {
+        const [{adaptSoldierAnimations}, {prepareRosterSoldier}] = await Promise.all([import('./riggedSoldier'), import('./soldierRoster')]);
+        locomotionDonor ??= new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/characters/locomotion.glb`);
+        locomotionDonor.catch(() => { locomotionDonor = undefined; });
+        gltf = adaptSoldierAnimations(await locomotionDonor, prepareRosterSoldier(gltf, id === 'A' ? 'urban' : 'terrorist1'));
+        info = {...info, clips: gltf.animations.map(clip => clip.name)};
+        assertAnimatedCharacter(info);
+      }
       return { gltf, info };
     })();
     templates.set(key, template);
@@ -184,7 +196,7 @@ export async function loadCharacterModel(id: CharacterModelId, options: Characte
   };
 }
 
-/** 模型 A：GRU 男性角色。 */
+/** 模型 A：新的都市反恐精英。 */
 export const loadModelA = (options: CharacterLoadOptions = {}) => loadCharacterModel('A', options);
-/** 模型 B：女性战术角色。 */
+/** 模型 B：毛领蒙面角色；游戏阵容通过 soldierRoster 完成骨骼适配。 */
 export const loadModelB = (options: CharacterLoadOptions = {}) => loadCharacterModel('B', options);

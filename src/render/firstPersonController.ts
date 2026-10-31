@@ -1,12 +1,10 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
+import {FirstPersonMotion,type FirstPersonMotionFrame} from './firstPersonMotion';
+import {getActiveMap} from '../game/map';
 
 export interface ControllerMapBox { x:number; z:number; w:number; h:number; d:number; }
-export interface FirstPersonFrame {
-  x:number; y:number; z:number; yaw:number; pitch:number;
-  speed:number; moving:boolean; crouched?:boolean;
-  lookDX?:number; lookDY?:number; cameraKick?:number;
-}
+export interface FirstPersonFrame extends FirstPersonMotionFrame {}
 
 /**
  * Camera and locomotion presentation are intentionally separate from the
@@ -19,11 +17,8 @@ export class FirstPersonController {
   readonly body:RAPIER.RigidBody;
   private readonly camera:THREE.Camera;
   private readonly ray = new RAPIER.Ray({x:0,y:0,z:0},{x:0,y:-1,z:0});
-  private readonly velocity = new THREE.Vector3();
-  private readonly sway = new THREE.Vector2();
-  private bobTime = 0;
-  private last = new THREE.Vector3();
-  private initialized = false;
+  private readonly motion=new FirstPersonMotion();
+  readonly weaponMotion=this.motion.offset;
 
   private constructor(camera:THREE.Camera, world:RAPIER.World, body:RAPIER.RigidBody){
     this.camera=camera; this.world=world; this.body=body;
@@ -48,41 +43,21 @@ export class FirstPersonController {
     const position={x:frame.x,y:frame.y,z:frame.z};
     this.body.setNextKinematicTranslation(position);
     this.world.step();
-    const rawSpeed=Math.max(0,frame.speed);
-    const blend=1-Math.exp(-delta*12);
-    this.velocity.lerp(new THREE.Vector3(frame.moving?rawSpeed:0,0,0),blend);
-    if(!this.initialized){this.last.set(frame.x,frame.y,frame.z);this.initialized=true;}
-    const distance=Math.hypot(frame.x-this.last.x,frame.z-this.last.z);
-    const measured=delta>0?distance/delta:0;
-    this.last.set(frame.x,frame.y,frame.z);
-    const strideSpeed=Math.max(rawSpeed,measured);
-    const moving=frame.moving&&strideSpeed>.04;
-    if(!reducedMotion&&moving)this.bobTime+=delta*(strideSpeed>2.2?11.5:8.2);
-    const intensity=reducedMotion?0:THREE.MathUtils.clamp(strideSpeed/4,0,1);
-    const breathing=reducedMotion?0:Math.sin(this.bobTime*.48)*.004;
-    const bobY=(Math.sin(this.bobTime*2)*.014+Math.sin(this.bobTime*4)*.004)*intensity+breathing;
-    const bobX=Math.cos(this.bobTime*2)*.010*intensity;
-    // Input look deltas are already radians (the input layer applies the
-    // pointer sensitivity). A tenth of that impulse gives a visible but
-    // restrained inertia lag instead of a camera that feels disconnected.
-    const targetSwayX=THREE.MathUtils.clamp(-(frame.lookDY??0)*.12,-.045,.045);
-    const targetSwayY=THREE.MathUtils.clamp(-(frame.lookDX??0)*.12,-.055,.055);
-    this.sway.x=THREE.MathUtils.damp(this.sway.x,targetSwayX,9,delta);
-    this.sway.y=THREE.MathUtils.damp(this.sway.y,targetSwayY,9,delta);
-    const kick=frame.cameraKick??0;
-    this.camera.position.set(frame.x+bobX,frame.y+bobY+kick*.035,frame.z);
+    this.motion.update(frame,delta,reducedMotion);
+    this.camera.position.set(frame.x,frame.y,frame.z);
     this.camera.rotation.order='YXZ';
-    this.camera.rotation.set(frame.pitch-this.sway.x-kick,frame.yaw+this.sway.y,kick*.08+this.sway.y*.18,'YXZ');
+    this.camera.rotation.set(frame.pitch,frame.yaw,0,'YXZ');
   }
 
   /** Rapier ray probe used by the third-person foot solver. */
   groundHeight(x:number,y:number,z:number,maxDistance=2.2):number|null{
+    if(getActiveMap().geometry){const floor=getActiveMap().geometry!.ground(x,z,y+.12);return floor!=null&&y-floor<maxDistance?floor:null;}
     this.ray.origin.x=x;this.ray.origin.y=y+.12;this.ray.origin.z=z;
     const hit=this.world.castRay(this.ray,maxDistance,true);
     return hit?this.ray.origin.y-hit.timeOfImpact:null;
   }
 
-  diagnostics(){return {engine:'Rapier3D kinematic proxy + map colliders',bobTime:+this.bobTime.toFixed(3),sway:[+this.sway.x.toFixed(4),+this.sway.y.toFixed(4)]};}
+  diagnostics(){return {engine:'Rapier3D kinematic proxy + map colliders',...this.motion.diagnostics()};}
 }
 
 export interface LocomotionMixer { mixer:THREE.AnimationMixer; idle:THREE.AnimationAction; walk:THREE.AnimationAction; run:THREE.AnimationAction; }

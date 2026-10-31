@@ -4,14 +4,14 @@ import fs from 'node:fs';
 import * as THREE from 'three';
 import {inspectCharacterGLB, assertAnimatedCharacter, CHARACTER_MODEL_FILES, CharacterLocomotion, prepareCharacterMaterials} from '../src/render/characterModelLoader';
 
-test('downloaded A/B assets accurately reject missing skin and animation instead of breaking live characters',()=>{
+test('asset validation distinguishes missing skin from missing clips',()=>{
+ const base={skins:0,skinnedPrimitives:0,triangles:0,clips:[],materials:0,normalMaterials:0,roughnessMaterials:0};
+ assert.throws(()=>assertAnimatedCharacter(base),/骨骼蒙皮/);
+ assert.throws(()=>assertAnimatedCharacter({...base,skins:1,skinnedPrimitives:1}),/不包含动画/);
  for(const file of Object.values(CHARACTER_MODEL_FILES)){
   const b=fs.readFileSync(new URL(`../public/assets/characters/${file}`,import.meta.url));
   const info=inspectCharacterGLB(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength));
-  assert.equal(info.skins,0);assert.equal(info.skinnedPrimitives,0);assert.deepEqual(info.clips,[]);
-  assert.throws(()=>assertAnimatedCharacter(info),/骨骼蒙皮/);
-  if(file.startsWith('modern')){assert.equal(info.normalMaterials,0);assert.equal(info.roughnessMaterials,0);}
-  else assert.ok(info.normalMaterials>0 && info.roughnessMaterials>0);
+  assert.ok(info.skins>0&&info.skinnedPrimitives>0);
  }
 });
 

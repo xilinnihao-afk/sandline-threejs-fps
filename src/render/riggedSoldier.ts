@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import {GLTFLoader, type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
-import {prepareCharacterMaterials} from './characterModelLoader';
+import {CHARACTER_ASSET_REVISION,prepareCharacterMaterials} from './characterModelLoader';
+import {SOLDIER_MODELS,prepareRosterSoldier,type SoldierModelId} from './soldierRoster';
 
-// 【更换人物 GLB 文件名的位置】保留旧 soldier.gltf 只作为动画来源，不再显示旧模型。
-export const RIGGED_SOLDIER_FILE = 'soldier_fully_rigged_character.glb';
+// 【更换人物 GLB 文件名的位置】locomotion.glb 仅包含骨架和动作，不下载旧人物外观。
+export const RIGGED_SOLDIER_FILE = 'gign_cscz_counter_strike_condition_zero.glb';
 const jointName = (name: string) => name.replace(/_0\d*$/, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
 const bonesOf = (root: THREE.Object3D) => {
   const bones = new Map<string, THREE.Bone>();
@@ -38,7 +39,7 @@ export function adaptSoldierAnimations(donor: GLTF, target: GLTF): GLTF {
   const dstRest = new Map([...dstBones].map(([k,b])=>[k,b.getWorldQuaternion(new THREE.Quaternion()).normalize()]));
   const rest = [...dstBones.values()].map(b=>({bone:b,q:b.quaternion.clone(),p:b.position.clone(),s:b.scale.clone()}));
   const srcHip=srcBones.get('mixamorighips')!,dstHip=dstBones.get('mixamorighips')!;
-  const sourceHeight=new THREE.Box3().setFromObject(source).getSize(new THREE.Vector3()).y;
+  const sourceHeight=source.userData.animationDonorHeight??new THREE.Box3().setFromObject(source).getSize(new THREE.Vector3()).y;
   const hipBase=srcHip.getWorldPosition(new THREE.Vector3()).y,hipPosition=dstHip.position.clone();
   const clips:THREE.AnimationClip[]=[];
   for(const name of ['Idle','Walk','Run']){
@@ -72,14 +73,15 @@ export function adaptSoldierAnimations(donor: GLTF, target: GLTF): GLTF {
   }
   mixer.stopAllAction();mixer.uncacheRoot(source);
   for(const saved of rest){saved.bone.quaternion.copy(saved.q);saved.bone.position.copy(saved.p);saved.bone.scale.copy(saved.s);}
-  scene.updateMatrixWorld(true);scene.userData.importedSoldier=true;
+  scene.updateMatrixWorld(true);scene.userData.importedSoldier=true;scene.userData.authoredOutfit=!!model.userData.authoredOutfit;scene.userData.soldierModelId=model.userData.soldierModelId;
   // 原渲染器使用厘米制 Z-up 骨盆后移；新资产以 Y-up 厘米制表示，在此预先转换位移向量。
   const worldOrigin=dstHip.parent!.worldToLocal(new THREE.Vector3());
   scene.userData.crouchHipOffset=dstHip.parent!.worldToLocal(new THREE.Vector3(0,0,.05)).sub(worldOrigin).toArray();
   return {...target,scene,scenes:[scene],animations:clips};
 }
 
-export async function loadRiggedSoldier(donor:GLTF):Promise<GLTF>{
+const sourceTemplates=new Map<string,Promise<GLTF>>();
+export async function loadRiggedSoldier(donor:GLTF,id:SoldierModelId='gign'):Promise<GLTF>{
   const loader=new GLTFLoader();
   // Three.js r160+ 不再内置旧 specular-glossiness 扩展；恢复它的 Albedo 与粗糙度。
   loader.register(parser=>({
@@ -106,7 +108,12 @@ export async function loadRiggedSoldier(donor:GLTF):Promise<GLTF>{
       }));
     },
   }));
-  const gltf=await loader.loadAsync(import.meta.env.BASE_URL+'assets/characters/'+RIGGED_SOLDIER_FILE);
-  prepareCharacterMaterials(gltf.scene,2048);
-  return adaptSoldierAnimations(donor,gltf);
+  const definition=SOLDIER_MODELS.find(model=>model.id===id)!;
+  let template=sourceTemplates.get(definition.file);
+  if(!template){
+    template=loader.loadAsync(import.meta.env.BASE_URL+'assets/characters/'+definition.file+'?v='+CHARACTER_ASSET_REVISION).then(gltf=>{prepareCharacterMaterials(gltf.scene,2048);return gltf;});
+    sourceTemplates.set(definition.file,template);
+    template.catch(()=>sourceTemplates.delete(definition.file));
+  }
+  return adaptSoldierAnimations(donor,prepareRosterSoldier(await template,id));
 }

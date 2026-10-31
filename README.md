@@ -1,18 +1,26 @@
-# SANDLINE — Three.js Browser FPS
+# 沙线行动 · SANDLINE
 
-**A tactical first-person shooter built with Three.js, playable in desktop and mobile browsers.**
+基于 Three.js、TypeScript、Vite 和 Rapier 的单机战术射击游戏，支持电脑与手机浏览器。
 
-**[Play the live demo](http://39.105.40.112/)** · **[Development journal](DEVLOG.md)** · **[Donate](#donate)**
+**[在线游玩](https://ihca.cn/sandline/)** · [资源接入说明](ASSETS.md) · [许可与署名](NOTICE.md) · [开发记录](DEVLOG.md)
 
-No installation required. On mobile, rotate to landscape and open the demo in Chrome where available. The game UI is Chinese; this repository's documentation is in English. The latest source update uses short English voice callouts and a quieter combat mix with distance-aware, limited-overlap footsteps. Deployment of this audio update to the hosted demo is pending.
+本仓库同步至 **2026-10-31 / 0.39-bloodstrike-team-rounds**，包含最新游戏源码、测试、构建和资源处理脚本。第三方模型、地图、贴图和音频延续原仓库的独立资源发布方式：源码可以安装、编译和运行核心测试，本地完整游玩还需要补齐授权资源。直接体验请打开在线版。
 
-> Game source code and tests are now available under the [MIT License](LICENSE). Third-party game assets are distributed separately and are not included in this repository. See [ASSETS.md](ASSETS.md) for local setup and [NOTICE.md](NOTICE.md) for credits.
+## 玩法
 
-![SANDLINE desktop gameplay scene](gameplay.png)
+- **Bloodstrike 血战**：3v3 / 5v5 / 8v8 / 10v10。首局全员 USP 和匕首，每次击杀获得 $600，余额跨局保留；第二局起在己方出生补给区买枪。全歼对方赢一回合，先赢 3 回合获胜，阵亡后观战队友。
+- **经典沙漠 2 / Dust2**：安放 C4、守点、拆弹与回合胜负。
+- **仓库突击 / Assault**：护送人质、守卫救援区和队伍协作。
+- **沙漠旧城、雪地竞技场**：自由交火、刀战、手枪战、军备竞赛、据点守卫。
+- 支持最多 20 人的机器人队伍、掩体与侧翼战术、不同部位命中伤害、跑步、蹲伏、跳跃、投雷及枪械补给。
+- 第一人称换枪、拉栓、换弹与匕首动作；脚步材质、雪地踩踏、空间枪声和战斗反馈。
+- 手机摇杆、拖动瞄准、开火辅助与可选陀螺仪；电脑键鼠控制。
 
-## Run and build from source
+这是单机机器人对战，目前不提供联网多人匹配。
 
-Requires **Node.js 22.12+** and npm.
+## 安装、测试与构建
+
+需要 Node.js **22.15 或更新版本**及 npm。
 
 ```sh
 git clone https://github.com/xilinnihao-afk/sandline-threejs-fps.git
@@ -22,108 +30,57 @@ npm run test:core
 npm run build
 ```
 
-Compilation and the core tests work without proprietary asset files. **Playing locally requires separately supplied character assets**; a fresh clone is not a complete playable asset bundle. Follow [ASSETS.md](ASSETS.md) to prepare the assets, then run:
+上述命令不需要二进制素材。配置本地完整游戏时，请先按 [ASSETS.md](ASSETS.md) 补齐资源，再运行：
 
 ```sh
 npm run dev
-# Open http://localhost:5190/
+# http://localhost:5190/
 ```
 
-`npm run preview` serves the production build. `npm test` runs the complete original test suite and needs the model and audio fixtures listed in the asset guide. The hosted demo remains the quickest way to play.
+`npm run preview` 预览正式构建，`npm run typecheck` 检查 TypeScript。`npm test` 执行全部原项目测试，其中部分需要模型、地图、音效或历史制作夹具；它们明确列在 [scripts/asset-dependent-tests.json](scripts/asset-dependent-tests.json)，不会在核心测试中假装通过。
 
-Public configuration lives in `public/site-config.js`. Analytics and the personal feedback QR are disabled in this source release. Configure your own public analytics identifier and optional feedback image; never add server secrets.
+## 操作
 
-## Source layout
-
-| Directory | Contents |
+| 操作 | 电脑按键 |
 | --- | --- |
-| `src/game/` | Match simulation, bots, avoidance, collision, grenades and objectives |
-| `src/render/` | Three.js world, characters, animation, weapons, effects and audio |
-| `src/ui/` | HUD, mobile input, aiming, browser behavior and startup |
-| `src/analytics/` | Session tracking and optional analytics providers |
-| `tests/` | Gameplay, input, effects, animation and audio tests |
-| `scripts/` | Build helpers, asset inspection/preparation and audio generation |
+| 移动 / 奔跑 / 跳跃 | WASD / Shift / 空格 |
+| 瞄准 / 开火 | 鼠标 / 左键 |
+| 换弹 / 蹲下 / 手雷 | R / C / G |
+| 切换已拥有的武器 | 数字 1–8 / 滚轮 |
+| 匕首劈砍 / 刺击 | 左键 / 右键或 Q |
+| 商店 / 快捷购买 | B / 商店内数字 1–9 |
+| 目标交互 | E |
+| 暂停 | Esc |
 
-The game UI and some source comments remain in Chinese. Repository setup and development documentation are in English.
+手机横屏使用左侧摇杆、右侧瞄准区域和操作按钮。低性能设备建议 3v3 或 5v5。
 
-## The game
+## 代码结构
 
-- Single-player **3v3 tactical combat with bots**, two bomb sites, and a first-to-three-rounds match.
-- Rifle and pistol, reloading, crouching, grenades, and bomb planting/defusing.
-- Mobile touch controls: movement joystick, swipe aiming, and drag-to-aim on the fire button.
-- Animated soldier models, cover-aware blast damage, layered explosions, and camera shake.
-- Bot avoidance and path recovery, staged loading progress, and short objective/result voice callouts.
-
-Built with **Three.js, TypeScript, Vite, and Rapier**, with custom combat, bot, grenade, and objective systems. This is a single-player prototype, not an online multiplayer game.
-
-## Mobile controls
-
-![Mobile landscape control layout](mobile-controls.png)
-
-Use the left joystick to move and swipe on the right to aim. Hold the fire button to shoot; dragging it also adjusts aim. On-screen buttons handle reload, weapon switching, grenades, crouching, and objective interaction.
-
-Desktop controls:
-
-| Action | Input |
+| 目录 | 内容 |
 | --- | --- |
-| Move | WASD / arrow keys |
-| Aim / fire | Mouse / left button |
-| Reload | R |
-| Switch weapon | 1 / 2 |
-| Throw grenade | G |
-| Crouch | C |
-| Plant / defuse | Hold E near the objective |
-| Pause | Esc |
+| `src/game/` | 回合、赏金、武器、命中、机器人、地图和目标 |
+| `src/render/` | 场景、人物、手臂、动画、特效、音频 |
+| `src/ui/` | HUD、商店、键鼠、触屏、陀螺仪、加载流程 |
+| `src/analytics/` | 可选的统计接口 |
+| `tests/` | 玩法、输入、动画、声音与资源回归测试 |
+| `scripts/` | 构建、资源准备与核心测试入口 |
+| `minitool/runtime/` | 小工具运行时与共享运动适配源码 |
+| `public/assets/` | 资源元数据与署名；二进制资源另行提供 |
 
-Fullscreen depends on the browser and operating system. Some iPhone and embedded browsers restrict it. WeChat's embedded browser may perform worse than a standalone browser; use Chrome where available. Browser viewport checks are not a substitute for testing on physical phones.
+公开配置在 `public/site-config.js`，源码发行版默认关闭第三方统计和个人反馈二维码。不要把服务端凭据写入前端。
 
-## Explosions: impact with a fixed budget
+## 验证
 
-![Layered grenade explosion](explosion.png)
+当前线上游戏完整资源环境通过 **479 项测试**。本源码发行版单独验证了干净依赖安装、**215 项核心测试**、TypeScript 与生产构建。电脑和手机视口验证不能替代实体设备性能测试。
 
-The effect combines a brief flash, noisy fireballs, an expanding ring, staggered smoke, debris, sparks, and a short-lived light. Each explosion has **34 visual elements**, with at most **two concurrent effects**. Procedural 64×64 textures keep the effect self-contained.
+## 许可与反馈
 
-The biggest lesson: camera shake must be a temporary render offset. Adding shake back into the player's camera state causes drift. Blast damage and cover checks remain separate from the visual particles.
+原创代码采用 [MIT License](LICENSE)。第三方素材保留各自许可；代码许可不授予模型、地图或音频的再分发权，详情见 [NOTICE.md](NOTICE.md)。旧版开发截图保留在开发记录中，不代表最新版全部界面。
 
-[Read the explosion development story →](DEVLOG.md#3-explosions-more-impact-without-unbounded-particles)
-
-## Characters: a GLB is not necessarily an animated character
-
-![Current soldier models in the game](characters.png)
-
-Two early character downloads looked usable in a preview but contained **no skins and no animation clips**. The final soldier asset has a 65-joint skeleton, but its single animation was not a complete locomotion set. Bringing over idle/walk/run animations required bind-pose-aware retargeting, independent skeletons, and transform validation.
-
-[Read the GLB and animation development story →](DEVLOG.md#1-glb-models-preview-quality-is-not-animation-readiness)
-
-## Development lessons
-
-- **GLB imports:** inspect skinning and animation data before integrating; a convincing static preview can hide an unusable rig.
-- **Mobile aiming:** preserve small accumulated movements and pending motion on pointer release so aim does not depend on frame rate.
-- **Explosions:** time the layers, cap concurrency, clean up effects, and keep camera shake out of simulation state.
-- **Mobile browser behavior:** handle unsupported fullscreen and prevent unintended zoom across both the canvas and HUD.
-- **Bots:** collision separation alone cannot make two approaching teammates pass each other; steering must start before contact.
-- **Audio:** unlock playback through a user gesture and discard stale announcements after pause/background transitions.
-
-The [development journal](DEVLOG.md) explains the problems, fixes, and validation behind these lessons.
-
-## Screenshots and validation
-
-Screenshots are current **in-engine fixed capture scenes**, not performance footage. The mobile image is a browser viewport preview, not a physical-phone capture. Chinese text in screenshots reflects the current game UI.
-
-The original game validation passed a production build and 67 automated tests covering gameplay and related systems. This public source release additionally passed a clean dependency installation, production build, and all 56 asset-independent tests. Vite was updated to 7.3.6 to address development-server advisories; the release dependency audit reported zero known vulnerabilities at publication. The full suite requires the original asset fixtures; `npm run test:core` runs the asset-independent checks. Those results do not establish performance on every mobile device.
-
-## Feedback
-
-Please open a GitHub issue with your device, OS, browser version, steps to reproduce, and expected/actual behavior. A screenshot is helpful. The live demo also includes an in-game feedback entry.
+问题请通过 GitHub Issues 提交设备、浏览器、复现步骤和预期行为。
 
 ## Donate
 
-If you enjoy SANDLINE, you can support its development with a voluntary donation via **Alipay**. Thank you for your support!
+如果喜欢沙线行动，可以通过支付宝自愿支持开发。捐赠不影响游戏和源码访问。
 
-Open Alipay and scan the QR code below. On the same phone, save the image and select it from your album in Alipay's scanner. Choose your own amount and confirm the recipient in Alipay before paying.
-
-<a href="donate-alipay.png"><img src="donate-alipay.png" alt="Donate to SANDLINE via Alipay — scan this payment QR code in Alipay" width="320"></a>
-
-[Open the full-size Alipay QR code](donate-alipay.png)
-
-Donations are optional. The game and its source remain free to access.
+<a href="donate-alipay.png"><img src="donate-alipay.png" alt="通过支付宝自愿支持沙线行动开发" width="280"></a>
