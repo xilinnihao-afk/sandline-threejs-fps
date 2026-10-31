@@ -4,7 +4,29 @@
 
 **[在线游玩](https://ihca.cn/sandline/)** · [资源接入说明](ASSETS.md) · [许可与署名](NOTICE.md) · [开发记录](DEVLOG.md)
 
+![沙线行动：沙漠旧城中的 AK-47 第一人称视角与机器人小队](docs/screenshots/desert-rifle.webp)
+
+*沙漠旧城 · AK-47 第一人称视角*
+
 本仓库同步至 **2026-10-31 / 0.39-bloodstrike-team-rounds**，包含最新游戏源码、测试、构建和资源处理脚本。第三方模型、地图、贴图和音频延续原仓库的独立资源发布方式：源码可以安装、编译和运行核心测试，本地完整游玩还需要补齐授权资源。直接体验请打开在线版。
+
+## 游戏画面
+
+以下图片截取自 **0.39 版本完整资源环境**，包含游戏引擎场景定格、补给商店和手机横屏视口。点击图片可查看大图；[截图说明](docs/screenshots/README.md)。
+
+| 经典沙漠 2 · Dust2 地图场景 | 雪地竞技场 · AWP 第一人称视角 |
+| --- | --- |
+| [![Dust2 地图中的石墙、木门与坡道](docs/screenshots/dust2.webp)](docs/screenshots/dust2.webp) | [![雪地竞技场中的 AWP 狙击步枪与机器人小队](docs/screenshots/snow-awp.webp)](docs/screenshots/snow-awp.webp) |
+
+| 经典匕首 · 最新双手握持细节 | 补给商店 · 武器图片、价格与快捷购买 |
+| --- | --- |
+| [![经典匕首和最新调整的第一人称双手握持姿势](docs/screenshots/knife-grip.webp)](docs/screenshots/knife-grip.webp) | [![补给商店中的枪械、弹药、手雷及数字购买快捷键](docs/screenshots/supply-shop.webp)](docs/screenshots/supply-shop.webp) |
+
+**手机横屏 · Bloodstrike 血战**
+
+[![Bloodstrike 首局手枪开局，展示手机横屏摇杆、瞄准、开火、跑步与蹲伏按钮](docs/screenshots/mobile-bloodstrike.webp)](docs/screenshots/mobile-bloodstrike.webp)
+
+*844 × 390 浏览器视口，展示触屏操作布局。*
 
 ## 玩法
 
